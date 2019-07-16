@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<header class="mb-5" th:fragment="header">
+    <nav class="navbar fixed-top static-top navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">FilmZone</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Movies<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Statistics<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Rankings
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Highest rated</a>
+                        <a class="dropdown-item" href="#">Most searched</a>
+                        <a class="dropdown-item" href="#">Most expected</a>
+                    </div>
+                </li>
+            </ul>
+            <form class="my-2 my-lg-2">
+                <div class="input-group">
+                    <input class="form-control input-lg" type="search" placeholder="Search for a movie" aria-label="Search">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>
+                    </div>
+                </div>
+            </form>
+            <button class="btn btn-outline-warning ml-2 my-2 my-sm-0" type="submit">Login</button>
+            <button class="btn btn-outline-warning ml-2 my-2 my-sm-0" type="submit">Register</button>
+        </div>
+    </nav>
+    <br>
+</header>
+</body>
+</html>
