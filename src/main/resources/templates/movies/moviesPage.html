@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+<header th:replace="fragments/header :: header"></header>
+<body>
+<main role="main" class="container">
+
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-sm">
+                <div class="form-group">
+                    <label for="years_filter">Production years</label>
+                    <div class="input-group" id="years_filter">
+                        <input type="text" class="form-control border-dark" placeholder="From">
+                        <div class="input-group-append">
+                            <span class="input-group-text bg-dark text-white border-dark"> - </span>
+                        </div>
+                        <input type="text" class="form-control border-dark" placeholder="To">
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    <label for="categories_filter">Categories</label>
+                    <div class="input-group" id="categories_filter">
+                        <input type="text" id="categories_input" class="form-control border-dark bg-white" readonly>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-dark dropdown-toggle bg-dark text-white" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                            <div class="dropdown-menu dropdown-menu-right px-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" value="Comedy" name="category" type="checkbox" id="defaultCheck1" onclick="getCategories()">
+                                    <label class="form-check-label" for="defaultCheck1">Comedy</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" value="Thriller" name="category" type="checkbox" id="defaultCheck2" onclick="getCategories()">
+                                    <label class="form-check-label" for="defaultCheck2">Thriller</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" value="Horror" name="category" type="checkbox" id="defaultCheck3" onclick="getCategories()">
+                                    <label class="form-check-label" for="defaultCheck3">Horror</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" value="Porn" name="category" type="checkbox" id="defaultCheck4" onclick="getCategories()">
+                                    <label class="form-check-label" for="defaultCheck4">Porn</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                <div class="form-group">
+                    <label for="country_filter">Countries</label>
+                    <div class="input-group" id="country_filter">
+                        <input type="text" id="countries_input" class="form-control border-dark bg-white" readonly>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-dark dropdown-toggle bg-dark text-white" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                            <div class="dropdown-menu dropdown-menu-right px-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" value="USA" name="country" type="checkbox" id="defaultCheck5" onclick="getCountries()">
+                                    <label class="form-check-label" for="defaultCheck5">USA</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" value="Germany" name="country" type="checkbox" id="defaultCheck6" onclick="getCountries()">
+                                    <label class="form-check-label" for="defaultCheck6">Germany</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" value="Poland" name="country" type="checkbox" id="defaultCheck7" onclick="getCountries()">
+                                    <label class="form-check-label" for="defaultCheck7">Poland</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" value="Russia" name="country" type="checkbox" id="defaultCheck8" onclick="getCountries()">
+                                    <label class="form-check-label" for="defaultCheck8">Russia</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm">
+                    <div class="form-group">
+                        <label for="rate_filter">Rate</label>
+                        <div class="input-group" id="rate_filter">
+                            <input type="text" class="form-control border-dark" placeholder="From">
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-dark text-white border-dark"> - </span>
+                            </div>
+                            <input type="text" class="form-control border-dark" placeholder="To">
+                        </div>
+                    </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <button type="button" class="btn btn-dark btn-lg btn-block">Search</button>
+        </div>
+    </div>
+
+</main>
+</body>
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>

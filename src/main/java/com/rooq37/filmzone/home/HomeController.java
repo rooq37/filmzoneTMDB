@@ -1,4 +1,4 @@
-package com.rooq37.filmzone.controllers.home;
+package com.rooq37.filmzone.home;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
