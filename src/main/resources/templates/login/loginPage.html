@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+<header th:replace="fragments/header :: header"></header>
+<body>
+<main role="main" class="container">
+
+    <form class="col-md-4 mx-auto pt-4">
+        <img class="mb-4" src="/docs/4.3/assets/brand/bootstrap-solid.svg" alt="LOGO.PNG" width="72" height="72">
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <div class="form-group">
+            <label for="inputEmail" class="sr-only">Email address</label>
+            <input type="email" id="inputEmail" class="form-control border-dark" placeholder="Email address" required="" autofocus="">
+        </div>
+        <div class="form-group">
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input type="password" id="inputPassword" class="form-control border-dark" placeholder="Password" required="">
+        </div>
+        <button class="btn btn-lg btn-dark btn-block" type="submit">Sign in</button>
+    </form>
+    <div class="col mt-4 text-center" >You don't have an account yet?</div>
+    <div class="row">
+        <div class="col-md-4 mx-auto text-center mt-3">
+            <form>
+                <button type="submit" class="btn btn-lg btn-dark btn-block">Register</button>
+            </form>
+        </div>
+    </div>
+
+</main>
+</body>
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>

@@ -5,34 +5,123 @@
 <body>
 <main role="main" class="container">
     <div class="jumbotron">
-        <h1 class="display-4">Welcome to Film Zone</h1>
-        <p class="lead">It will be a great application.</p>
+        <h1 class="display-4">Most popular last week</h1>
         <hr class="my-4">
-        <p>Stay tuned!</p>
+        <div id="carouselExampleCaptions" class="carousel slide rounded" data-ride="carousel">
+            <ol class="carousel-indicators" style="position: absolute; bottom: -50px;">
+                <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active bg-dark pb-1"></li>
+                <li data-target="#carouselExampleCaptions" data-slide-to="1" class="bg-dark pb-1"></li>
+                <li data-target="#carouselExampleCaptions" data-slide-to="2" class="bg-dark pb-1"></li>
+            </ol>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="card mb-3 border-dark">
+                        <div class="row no-gutters">
+                            <div class="col-md-auto">
+                                <img style="max-height: 400px" src="../images/the_godfather.jpg" class="d-block mx-auto" alt="...">
+                            </div>
+                            <div class="col">
+                                <div class="card-body">
+                                    <h3 class="card-title"><a class="text-dark" href="/movie">The Godfather</a></h3>
+                                    <h7>
+                                        <a href="#" class="badge badge-pill badge-dark">#drama</a>
+                                        <a href="#" class="badge badge-pill badge-dark">#gangster</a>
+                                    </h7>
+                                    <p class="card-text">The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.</p>
+                                    <h3><span class="text-warning">★</span><span class="text-dark">9,2</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="card mb-3 border-dark">
+                        <div class="row no-gutters">
+                            <div class="col-md-auto">
+                                <img style="max-height: 400px" src="../images/the_shawshank_redemtion.jpg" class="d-block mx-auto" alt="...">
+                            </div>
+                            <div class="col">
+                                <div class="card-body">
+                                    <h3 class="card-title">The Shawshank Redemption</h3>
+                                    <h7 class="text-muted">
+                                        <a href="#" class="badge badge-pill badge-dark">#drama</a>
+                                    </h7>
+                                    <p class="card-text">Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.</p>
+                                    <h3><span class="text-warning">★</span><span class="text-dark">9,3</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="card mb-3 border-dark">
+                        <div class="row no-gutters">
+                            <div class="col-md-auto">
+                                <img style="max-height: 400px" src="../images/the_lord_of_the_rings_the_fellowship_of_the_ring.jpg" class="d-block mx-auto" alt="...">
+                            </div>
+                            <div class="col">
+                                <div class="card-body">
+                                    <h3 class="card-title">The Lord of the Rings: The Fellowship of the Ring</h3>
+                                    <h7 class="text-muted">
+                                        <a href="#" class="badge badge-pill badge-dark">#drama</a>
+                                    </h7>
+                                    <p class="card-text">A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.</p>
+                                    <h3><span class="text-warning">★</span><span class="text-dark">8,8</span></h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="jumbotron">
-        <h1 class="display-4">Welcome to Film Zone</h1>
-        <p class="lead">It will be a great application.</p>
+        <h1 class="display-4">General statistics</h1>
         <hr class="my-4">
-        <p>Stay tuned!</p>
+        <table class="table">
+            <tbody>
+            <tr>
+                <th scope="row">Movies in database</th>
+                <td class="text-right">3</td>
+            </tr>
+            <tr>
+                <th scope="row">Registered accounts</th>
+                <td class="text-right">1</td>
+            </tr>
+            <tr>
+                <th scope="row">Active users (login at least once a week)</th>
+                <td class="text-right">1</td>
+            </tr>
+            <tr>
+                <th scope="row">Number of ratings</th>
+                <td class="text-right">26</td>
+            </tr>
+            <tr>
+                <th scope="row">Number of searches</th>
+                <td class="text-right">503</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
     <div class="jumbotron">
-        <h1 class="display-4">Welcome to Film Zone</h1>
-        <p class="lead">It will be a great application.</p>
+        <h1 class="display-4">Last week statistics</h1>
         <hr class="my-4">
-        <p>Stay tuned!</p>
-    </div>
-    <div class="jumbotron">
-        <h1 class="display-4">Welcome to Film Zone</h1>
-        <p class="lead">It will be a great application.</p>
-        <hr class="my-4">
-        <p>Stay tuned!</p>
-    </div>
-    <div class="jumbotron">
-        <h1 class="display-4">Welcome to Film Zone</h1>
-        <p class="lead">It will be a great application.</p>
-        <hr class="my-4">
-        <p>Stay tuned!</p>
+        <table class="table">
+            <tbody>
+            <tr>
+                <th scope="row">New accounts</th>
+                <td class="text-right">0</td>
+            </tr>
+            <tr>
+                <th scope="row">Number of ratings</th>
+                <td class="text-right">3</td>
+            </tr>
+            <tr>
+                <th scope="row">Number of searches</th>
+                <td class="text-right">86</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
 </main>
 </body>
