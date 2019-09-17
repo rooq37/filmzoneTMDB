@@ -11,6 +11,7 @@ public class MovieSummary {
     private List<String> categories;
     private String description;
 
+    private int year;
     private int duration;
     private String director;
     private String scenario;
@@ -48,6 +49,14 @@ public class MovieSummary {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
     }
 
     public int getDuration() {

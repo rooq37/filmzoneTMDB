@@ -1,18 +1,19 @@
-package com.rooq37.filmzone.commons;
+package com.rooq37.filmzone.entities;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "COMMENT")
-public class Comment {
+public class CommentEntity {
 
     @Id
     @GeneratedValue
     private Long id;
 
-    @Column(name = "author")
-    private String author;
+    @ManyToOne
+    @JoinColumn(name = "id_author")
+    private UserEntity user;
 
     @Column(name = "content")
     private String content;
@@ -23,12 +24,24 @@ public class Comment {
     @Column(name = "rating")
     private int rating;
 
-    public String getAuthor() {
-        return author;
+    @ManyToOne
+    @JoinColumn(name = "id_movie")
+    private MovieEntity movie;
+
+    public Long getId() {
+        return id;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public UserEntity getUser() {
+        return user;
+    }
+
+    public void setUser(UserEntity user) {
+        this.user = user;
     }
 
     public String getContent() {
@@ -53,6 +66,14 @@ public class Comment {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public MovieEntity getMovie() {
+        return movie;
+    }
+
+    public void setMovie(MovieEntity movie) {
+        this.movie = movie;
     }
 
 }
