@@ -98,9 +98,11 @@
     <div class="jumbotron pb-3 pt-4">
 
         <div class="row pb-4">
-            <div class="col"></div>
             <div class="col">
                 <div class="input-group">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-dark bg-dark text-white px-4" type="button">Sort</button>
+                    </div>
                     <select class="custom-select border-dark">
                         <option selected>Sort by...</option>
                         <option value="1">Name ascending</option>
@@ -110,12 +112,25 @@
                         <option value="5">Rate ascending</option>
                         <option value="6">Rate descending</option>
                     </select>
+                </div>
+            </div>
+            <div class="col text-center">
+                <h4>
+                    <span class="badge bg-dark text-white py-2">Number of results <span class="badge badge-light">386</span></span>
+                </h4>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <select class="custom-select border-dark">
+                        <option selected>10 results per page</option>
+                        <option value="1">20 results per page</option>
+                        <option value="2">50 results per page</option>
+                    </select>
                     <div class="input-group-append">
-                        <button class="btn btn-outline-dark bg-dark text-white px-4" type="button">Sort</button>
+                        <button class="btn btn-outline-dark bg-dark text-white px-4" type="button">Show</button>
                     </div>
                 </div>
             </div>
-            <div class="col"></div>
         </div>
 
         <div class="card mb-3 border-dark">
@@ -125,9 +140,13 @@
                 </div>
                 <div class="col-md-10">
                     <div class="card-body">
-                        <h5 class="card-title">The Godfather</h5>
+                        <h3 class="card-title"><a class="text-dark" href="/movie/1">The Godfather</a></h3>
+                        <h7>
+                            <a href="#" class="badge badge-pill badge-dark">#drama</a>
+                            <a href="#" class="badge badge-pill badge-dark">#gangster</a>
+                        </h7>
                         <p class="card-text">The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.</p>
-                        <p class="card-text"><small class="text-warning">Users rate: 9,2</small></p>
+                        <h3><span class="text-warning">★</span><span class="text-dark">9,2</span></h3>
                     </div>
                 </div>
             </div>
@@ -140,9 +159,12 @@
                 </div>
                 <div class="col-md-10">
                     <div class="card-body">
-                        <h5 class="card-title">The Shawshank Redemption</h5>
+                        <h3 class="card-title">The Shawshank Redemption</h3>
+                        <h7 class="text-muted">
+                            <a href="#" class="badge badge-pill badge-dark">#drama</a>
+                        </h7>
                         <p class="card-text">Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.</p>
-                        <p class="card-text"><small class="text-warning">Users rate: 9,3</small></p>
+                        <h3><span class="text-warning">★</span><span class="text-dark">9,3</span></h3>
                     </div>
                 </div>
             </div>
@@ -155,9 +177,12 @@
                 </div>
                 <div class="col-md-10">
                     <div class="card-body">
-                        <h5 class="card-title">The Lord of the Rings: The Fellowship of the Ring</h5>
+                        <h3 class="card-title">The Lord of the Rings: The Fellowship of the Ring</h3>
+                        <h7 class="text-muted">
+                            <a href="#" class="badge badge-pill badge-dark">#drama</a>
+                        </h7>
                         <p class="card-text">A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.</p>
-                        <p class="card-text"><small class="text-warning">Users rate: 8,8</small></p>
+                        <h3><span class="text-warning">★</span><span class="text-dark">8,8</span></h3>
                     </div>
                 </div>
             </div>
@@ -171,6 +196,10 @@
                 <li class="page-item active"><a class="page-link border-dark bg-dark" href="#">1</a></li>
                 <li class="page-item"><a class="page-link border-dark text-dark" href="#">2</a></li>
                 <li class="page-item"><a class="page-link border-dark text-dark" href="#">3</a></li>
+                <li class="page-item disabled">
+                    <a class="page-link border-dark" href="#" tabindex="-1" aria-disabled="true">...</a>
+                </li>
+                <li class="page-item"><a class="page-link border-dark text-dark" href="#">26</a></li>
                 <li class="page-item">
                     <a class="page-link border-dark text-dark" href="#">Next</a>
                 </li>

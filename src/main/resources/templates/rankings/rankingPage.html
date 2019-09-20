@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+<header th:replace="fragments/header :: header"></header>
+<body>
+<main role="main" class="container">
+
+    <div class="jumbotron">
+        <h1 class="text-center">Top 100 highest rated movies</h1>
+    </div>
+
+    <div class="jumbotron pb-3 pt-4">
+
+        <div class="card mb-3 border-dark">
+            <div class="card-header border-dark font-weight-bold text-center">TOP 1</div>
+            <div class="row no-gutters">
+                <div class="col-md-2">
+                    <img src="../images/the_shawshank_redemtion.jpg" class="card-img" alt="...">
+                </div>
+                <div class="col-md-10">
+                    <div class="card-body">
+                        <h3 class="card-title">The Shawshank Redemption</h3>
+                        <h7 class="text-muted">
+                            <a href="#" class="badge badge-pill badge-dark">#drama</a>
+                        </h7>
+                        <p class="card-text">Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.</p>
+                        <h3><span class="text-warning">★</span><span class="text-dark">9,3</span></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-muted text-center">
+                Average users rating: 9,3129
+            </div>
+        </div>
+
+        <div class="card mb-3 border-dark">
+            <div class="card-header border-dark font-weight-bold text-center">TOP 2</div>
+            <div class="row no-gutters">
+                <div class="col-md-2">
+                    <img src="../images/the_godfather.jpg" class="card-img" alt="...">
+                </div>
+                <div class="col-md-10">
+                    <div class="card-body">
+                        <h3 class="card-title"><a class="text-dark" href="/movie">The Godfather</a></h3>
+                        <h7>
+                            <a href="#" class="badge badge-pill badge-dark">#drama</a>
+                            <a href="#" class="badge badge-pill badge-dark">#gangster</a>
+                        </h7>
+                        <p class="card-text">The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.</p>
+                        <h3><span class="text-warning">★</span><span class="text-dark">9,2</span></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-muted text-center">
+                Average users rating: 9,2385
+            </div>
+        </div>
+
+        <div class="card mb-3 border-dark">
+            <div class="card-header border-dark font-weight-bold text-center">TOP 3</div>
+            <div class="row no-gutters">
+                <div class="col-md-2">
+                    <img src="../images/the_lord_of_the_rings_the_fellowship_of_the_ring.jpg" class="card-img" alt="...">
+                </div>
+                <div class="col-md-10">
+                    <div class="card-body">
+                        <h3 class="card-title">The Lord of the Rings: The Fellowship of the Ring</h3>
+                        <h7 class="text-muted">
+                            <a href="#" class="badge badge-pill badge-dark">#drama</a>
+                        </h7>
+                        <p class="card-text">A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.</p>
+                        <h3><span class="text-warning">★</span><span class="text-dark">8,8</span></h3>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer text-muted text-center">
+                Average users rating: 8,8415
+            </div>
+        </div>
+
+        <div class="text-center">
+            <button type="button" class="btn btn-dark btn-lg">Show more</button>
+        </div>
+
+    </div>
+
+</main>
+</body>
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>
