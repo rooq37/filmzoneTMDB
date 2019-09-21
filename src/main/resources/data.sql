@@ -48,28 +48,71 @@ INSERT INTO USER VALUES (1, 'rooq37');
 INSERT INTO RATING VALUES ('2019-09-17 18:59:15', 10, 1, 1);
 
 INSERT INTO COMMENT VALUES (1, 'Great movie!', '2019-09-17 20:59:10', 4, 1, 1);
---INSERT INTO COMMENT VALUES (2, 'moviemaniac', 'comment1', '2019-09-14 12:15:10', 3);
---INSERT INTO COMMENT VALUES (3, 'destroyer69', 'comment1', '2019-09-14 12:15:10', -5);
---INSERT INTO COMMENT VALUES (4, 'ilovebradpitt', 'comment1', '2019-09-14 12:15:10', 45);
---INSERT INTO COMMENT VALUES (5, 'monica1', 'comment1', '2019-09-14 12:15:10', 13);
---INSERT INTO COMMENT VALUES (6, 'phil100', 'comment1', '2019-09-14 12:15:10', -8);
---INSERT INTO COMMENT VALUES (7, 'wolfie', 'comment1', '2019-09-14 12:15:10', 0);
---INSERT INTO COMMENT VALUES (8, 'doggy', 'comment1', '2019-09-14 12:15:10', 1);
---INSERT INTO COMMENT VALUES (9, 'horsie', 'comment1', '2019-09-14 12:15:10', 7);
---INSERT INTO COMMENT VALUES (10, 'dag', 'comment1', '2019-09-14 12:15:10', 5);
---INSERT INTO COMMENT VALUES (11, '503126', 'comment1', '2019-09-14 12:15:10', 9);
---INSERT INTO COMMENT VALUES (12, 'filmaker', 'comment1', '2019-09-14 12:15:10', 91);
---INSERT INTO COMMENT VALUES (13, 'footballerpro15', 'comment1', '2019-09-14 12:15:10', 45);
---INSERT INTO COMMENT VALUES (14, 'anonymouse', 'comment1', '2019-09-14 12:15:10', 76);
---INSERT INTO COMMENT VALUES (15, 'mrnobody', 'comment1', '2019-09-14 12:15:10', 81);
---INSERT INTO COMMENT VALUES (16, 'paul123', 'comment1', '2019-09-14 12:15:10', 89);
---INSERT INTO COMMENT VALUES (17, 'vin99', 'comment1', '2019-09-14 12:15:10', -56);
---INSERT INTO COMMENT VALUES (18, 'maestro', 'comment1', '2019-09-14 12:15:10', -1);
---INSERT INTO COMMENT VALUES (19, 'viki56', 'comment1', '2019-09-14 12:15:10', 1);
---INSERT INTO COMMENT VALUES (20, 'kalioente', 'comment1', '2019-09-14 12:15:10', 7);
---INSERT INTO COMMENT VALUES (21, 'mafiaboy', 'comment1', '2019-09-14 12:15:10', 34);
---INSERT INTO COMMENT VALUES (22, 'bug31', 'comment1', '2019-09-14 12:15:10', 12);
---INSERT INTO COMMENT VALUES (23, 'pl-contact', 'comment1', '2019-09-14 12:15:10', 76);
---INSERT INTO COMMENT VALUES (24, 'wolfgang39', 'comment1', '2019-09-14 12:15:10', 87);
---INSERT INTO COMMENT VALUES (25, 'qwerty123', 'comment1', '2019-09-14 12:15:10', 6);
---INSERT INTO COMMENT VALUES (26, 'lopez', 'comment1', '2019-09-14 12:15:10', 5);
+INSERT INTO COMMENT VALUES (2, 'Great movie!', '2019-09-17 20:59:10', 4, 1, 1);
+INSERT INTO COMMENT VALUES (3, 'Great movie!', '2019-09-17 20:59:10', 4, 1, 1);
+INSERT INTO COMMENT VALUES (4, 'Great movie!', '2019-09-17 20:59:10', 4, 1, 1);
+INSERT INTO COMMENT VALUES (5, 'Great movie!', '2019-09-17 20:59:10', 4, 1, 1);
+INSERT INTO COMMENT VALUES (6, 'Great movie!', '2019-09-17 20:59:10', 4, 1, 1);
+INSERT INTO COMMENT VALUES (7, 'Great movie!', '2019-09-17 20:59:10', 4, 1, 1);
+INSERT INTO COMMENT VALUES (8, 'Great movie!', '2019-09-17 20:59:10', 4, 1, 1);
+INSERT INTO COMMENT VALUES (9, 'Great movie!', '2019-09-17 20:59:10', 4, 1, 1);
+INSERT INTO COMMENT VALUES (10, 'Great movie!', '2019-09-17 20:59:10', 4, 1, 1);
+INSERT INTO COMMENT VALUES (11, 'Great movie!', '2019-09-17 20:59:10', 4, 1, 1);
+
+------------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO MOVIE VALUES (2, 'Podróż hobbita z Shire i jego ośmiu towarzyszy, której celem jest zniszczenie potężnego pierścienia pożądanego przez Czarnego Władcę - Saurona.', 178, 'Władca Pierścieni: Drużyna Pierścienia', 2001);
+
+INSERT INTO MEDIA VALUES (8, 'New Line Cinema', now(), 'COVER', 'tlotr_1/tlotr_1_cover.jpg');
+INSERT INTO MEDIA VALUES (9, 'New Line Cinema', now(), 'PICTURE', 'tlotr_1/tlotr_1_1.jpg');
+INSERT INTO MEDIA VALUES (10, 'New Line Cinema', now(), 'PICTURE', 'tlotr_1/tlotr_1_2.jpg');
+INSERT INTO MEDIA VALUES (11, 'New Line Cinema', now(), 'PICTURE', 'tlotr_1/tlotr_1_3.jpg');
+INSERT INTO MEDIA VALUES (12, 'New Line Cinema', now(), 'PICTURE', 'tlotr_1/tlotr_1_4.jpg');
+INSERT INTO MEDIA VALUES (13, 'YouTube', now(), 'TRAILER', 'https://www.youtube.com/embed/K_QJkYUrKn0');
+
+INSERT INTO MOVIE_MEDIA VALUES (8, 2);
+INSERT INTO MOVIE_MEDIA VALUES (9, 2);
+INSERT INTO MOVIE_MEDIA VALUES (10, 2);
+INSERT INTO MOVIE_MEDIA VALUES (11, 2);
+INSERT INTO MOVIE_MEDIA VALUES (12, 2);
+INSERT INTO MOVIE_MEDIA VALUES (13, 2);
+
+INSERT INTO CATEGORY VALUES (3, 'fantasy');
+INSERT INTO CATEGORY VALUES (4, 'przygodowy');
+
+INSERT INTO MOVIE_CATEGORY VALUES (3, 2);
+INSERT INTO MOVIE_CATEGORY VALUES (4, 2);
+
+INSERT INTO MOVIE_COUNTRY VALUES (2, 1);
+
+INSERT INTO PERSON VALUES (8, 'Peter', 'Jackson');
+INSERT INTO PERSON VALUES (9, 'Fran', 'Walsh');
+INSERT INTO PERSON VALUES (10, 'Elijah', 'Wood');
+INSERT INTO PERSON VALUES (11, 'Sean', 'Astin');
+INSERT INTO PERSON VALUES (12, 'Billy', 'Boyd');
+INSERT INTO PERSON VALUES (13, 'Dominic', 'Monaghan');
+INSERT INTO PERSON VALUES (14, 'Ian', 'Holm');
+
+INSERT INTO MOVIE_PERSON VALUES (9, NULL, 'DIRECTOR', 2, 8);
+INSERT INTO MOVIE_PERSON VALUES (10, NULL, 'SCENARIO', 2, 8);
+INSERT INTO MOVIE_PERSON VALUES (11, NULL, 'SCENARIO', 2, 9);
+INSERT INTO MOVIE_PERSON VALUES (12, 'Frodo Baggins', 'ACTOR', 2, 10);
+INSERT INTO MOVIE_PERSON VALUES (13, 'Samwise "Sam" Gamgee', 'ACTOR', 2, 11);
+INSERT INTO MOVIE_PERSON VALUES (14, 'Peregrin "Pippin" Took', 'ACTOR', 2, 12);
+INSERT INTO MOVIE_PERSON VALUES (15, 'Meriadok "Merry" Brandybuck', 'ACTOR', 2, 13);
+INSERT INTO MOVIE_PERSON VALUES (16, 'Bilbo Baggins', 'ACTOR', 2, 14);
+
+INSERT INTO RATING VALUES ('2019-09-19 17:59:15', 9, 1, 2);
+
+INSERT INTO COMMENT VALUES (12, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
+INSERT INTO COMMENT VALUES (13, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
+INSERT INTO COMMENT VALUES (14, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
+INSERT INTO COMMENT VALUES (15, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
+INSERT INTO COMMENT VALUES (16, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
+INSERT INTO COMMENT VALUES (17, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
+INSERT INTO COMMENT VALUES (18, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
+INSERT INTO COMMENT VALUES (19, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
+INSERT INTO COMMENT VALUES (20, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
+INSERT INTO COMMENT VALUES (21, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
+INSERT INTO COMMENT VALUES (22, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
+

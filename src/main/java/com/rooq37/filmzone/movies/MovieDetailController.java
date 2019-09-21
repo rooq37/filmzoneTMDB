@@ -39,6 +39,7 @@ public class MovieDetailController {
             break;
         }
 
+        model.addAttribute("movieId", id);
         model.addAttribute("commentPage", commentPage);
         model.addAttribute("movieSummary", movieService.getMovieSummary(id));
         model.addAttribute("movieRating", movieService.getMovieRating(id));

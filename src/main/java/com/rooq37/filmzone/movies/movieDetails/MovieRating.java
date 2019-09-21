@@ -1,4 +1,4 @@
-package com.rooq37.filmzone.movies.movieDetail;
+package com.rooq37.filmzone.movies.movieDetails;
 
 public class MovieRating {
 
