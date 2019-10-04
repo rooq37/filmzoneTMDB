@@ -1,11 +1,9 @@
-package com.rooq37.filmzone.movies.movies;
-
-import com.rooq37.filmzone.commons.Image;
+package com.rooq37.filmzone.commons;
 
 import java.util.Comparator;
 import java.util.List;
 
-public class MovieShortSummary {
+public class MovieListElement {
 
     private Long id;
     private String title;
@@ -18,6 +16,7 @@ public class MovieShortSummary {
     private double avgUsersRating;
     private int numberOfPeopleWhoWatched;
     private int numberOfPeopleWhoWantToWatch;
+    private int numberOfSearches;
 
     public Long getId() {
         return id;
@@ -103,17 +102,39 @@ public class MovieShortSummary {
         this.numberOfPeopleWhoWantToWatch = numberOfPeopleWhoWantToWatch;
     }
 
-    public static Comparator<MovieShortSummary> avgUsersRatingComparator = new Comparator<MovieShortSummary>() {
+    public int getNumberOfSearches() {
+        return numberOfSearches;
+    }
+
+    public void setNumberOfSearches(int numberOfSearches) {
+        this.numberOfSearches = numberOfSearches;
+    }
+
+    public static Comparator<MovieListElement> avgUsersRatingComparator = new Comparator<MovieListElement>() {
         @Override
-        public int compare(MovieShortSummary o1, MovieShortSummary o2) {
+        public int compare(MovieListElement o1, MovieListElement o2) {
             return Double.compare(o1.getAvgUsersRating(), o2.getAvgUsersRating());
         }
     };
 
-    public static Comparator<MovieShortSummary> numberOfPeopleWhoWatchedComparator = new Comparator<MovieShortSummary>() {
+    public static Comparator<MovieListElement> numberOfPeopleWhoWatchedComparator = new Comparator<MovieListElement>() {
         @Override
-        public int compare(MovieShortSummary o1, MovieShortSummary o2) {
+        public int compare(MovieListElement o1, MovieListElement o2) {
             return Integer.compare(o1.getNumberOfPeopleWhoWatched(), o2.getNumberOfPeopleWhoWatched());
+        }
+    };
+
+    public static Comparator<MovieListElement> numberOfPeopleWhoWantToWatchComparator = new Comparator<MovieListElement>() {
+        @Override
+        public int compare(MovieListElement o1, MovieListElement o2) {
+            return Integer.compare(o1.getNumberOfPeopleWhoWantToWatch(), o2.getNumberOfPeopleWhoWantToWatch());
+        }
+    };
+
+    public static Comparator<MovieListElement> numberOfSearchesComparator = new Comparator<MovieListElement>() {
+        @Override
+        public int compare(MovieListElement o1, MovieListElement o2) {
+            return Integer.compare(o1.getNumberOfSearches(), o2.getNumberOfSearches());
         }
     };
 

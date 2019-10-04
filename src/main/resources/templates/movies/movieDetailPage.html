@@ -105,7 +105,7 @@
     <form th:action="@{/movie/__${movieId}__#comments}" method="get" class="jumbotron pb-3 pt-4" id="comments">
         <h4>Komentarze</h4>
         <div class="row pb-4">
-            <div class="col">
+            <div class="col" th:if="${commentPage.getTotalElements() > 0}">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <button class="btn btn-outline-dark bg-dark text-white px-4" type="submit">Sortuj</button>
@@ -123,7 +123,7 @@
                     <span class="badge bg-dark text-white py-2">Liczba komentarzy <span class="badge badge-light" th:text="${commentPage.getTotalElements()}">number of comments</span></span>
                 </h4>
             </div>
-            <div class="col">
+            <div class="col" th:if="${commentPage.getTotalElements() > 0}">
                 <div class="input-group">
                     <select class="custom-select border-dark" th:name="size" th:field="*{commentPage.size}">
                         <option value="10">10 komentarzy na strone</option>
@@ -137,7 +137,7 @@
             </div>
         </div>
 
-        <div class="card border-dark mb-2" th:each="comment : ${commentPage.getContent()}">
+        <div class="card border-dark mb-2" th:each="comment : ${commentPage.getContent()}" th:if="${commentPage.getTotalElements() > 0}">
             <div class="card-header">
                 <div class="row">
                     <div class="col text-left font-weight-bold text-dark" th:text="${comment.getUser().getName()}">author</div>
@@ -162,7 +162,7 @@
             </div>
         </div>
 
-        <nav class="pt-3">
+        <nav class="pt-3" th:if="${commentPage.getTotalElements() > 0}">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${commentPage.first}? disabled">
                     <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=${movieId}, size=${commentPage.size}, page=1, sort=${#httpServletRequest.getParameter('sort')})}">|<</a>

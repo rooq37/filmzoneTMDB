@@ -1,13 +1,12 @@
 package com.rooq37.filmzone.services;
 
 import com.rooq37.filmzone.commons.CastPair;
-import com.rooq37.filmzone.commons.Image;
+import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.entities.*;
 import com.rooq37.filmzone.movies.movieDetails.MovieCast;
 import com.rooq37.filmzone.movies.movieDetails.MovieMedia;
 import com.rooq37.filmzone.movies.movieDetails.MovieRating;
 import com.rooq37.filmzone.movies.movieDetails.MovieSummary;
-import com.rooq37.filmzone.movies.movies.MovieShortSummary;
 import com.rooq37.filmzone.movies.movies.MoviesFilterForm;
 import com.rooq37.filmzone.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,48 +20,28 @@ import java.util.stream.Collectors;
 @Service
 public class MovieService {
 
-    private static final String PICTURES_PATH = "../images/";
-
     @Autowired
-    CategoryRepository categoryRepository;
+    private HelperService helperService;
     @Autowired
-    CommentRepository commentRepository;
+    private CommentRepository commentRepository;
     @Autowired
-    CountryRepository countryRepository;
+    private MovieCountryRepository movieCountryRepository;
     @Autowired
-    MediaRepository mediaRepository;
+    private MovieMediaRepository movieMediaRepository;
     @Autowired
-    MovieCategoryRepository movieCategoryRepository;
+    private MoviePersonRepository moviePersonRepository;
     @Autowired
-    MovieCountryRepository movieCountryRepository;
+    private MovieRepository movieRepository;
     @Autowired
-    MovieMediaRepository movieMediaRepository;
-    @Autowired
-    MoviePersonRepository moviePersonRepository;
-    @Autowired
-    MovieRepository movieRepository;
-    @Autowired
-    PersonRepository personRepository;
-    @Autowired
-    RatingRepository ratingRepository;
-    @Autowired
-    UserRepository userRepository;
-
-    public List<String> getAllCategories(){
-        return categoryRepository.findAll().stream().map(CategoryEntity::getName).collect(Collectors.toList());
-    }
-
-    public List<String> getAllCountries(){
-        return countryRepository.findAll().stream().map(CountryEntity::getName).collect(Collectors.toList());
-    }
+    private RatingRepository ratingRepository;
 
     public MovieSummary getMovieSummary(Long id){
         MovieSummary movieSummary = new MovieSummary();
 
         MovieEntity movie = movieRepository.findById(id).get();
         movieSummary.setTitle(movie.getTitle());
-        movieSummary.setCover(getCover(movie));
-        movieSummary.setCategories(getCategories(movie));
+        movieSummary.setCover(helperService.getCover(movie));
+        movieSummary.setCategories(helperService.getCategories(movie));
 
         movieSummary.setDescription(movie.getDescription());
         movieSummary.setDuration(movie.getDuration());
@@ -80,7 +59,7 @@ public class MovieService {
                 map(movieCountry -> movieCountry.getCountry().getName()).collect(Collectors.joining(", "));
         movieSummary.setCountry(countries);
 
-        movieSummary.setAvgUsersRating(String.format("%.1f", countAverageRating(movie)));
+        movieSummary.setAvgUsersRating(String.format("%.1f", helperService.countAverageRating(movie)));
 
         return movieSummary;
     }
@@ -89,7 +68,7 @@ public class MovieService {
         MovieRating movieRating = new MovieRating();
         MovieEntity movie = movieRepository.findById(id).get();
 
-        movieRating.setAvg(String.format("%.2f", countAverageRating(movie)));
+        movieRating.setAvg(String.format("%.2f", helperService.countAverageRating(movie)));
         movieRating.setNumberOfPeopleWhoWatched(String.valueOf(ratingRepository.countByMovieAndValueGreaterThan(movie, 0)));
         movieRating.setNumberOfPeopleWhoWantToWatch(String.valueOf(ratingRepository.countByMovieAndValueIs(movie, 0)));
 
@@ -100,11 +79,7 @@ public class MovieService {
         MovieMedia movieMedia = new MovieMedia();
         MovieEntity movie = movieRepository.findById(id).get();
 
-        List<Image> photos = new ArrayList<>();
-        for(MovieMediaEntity mm : movieMediaRepository.findAllByMovieAndMedia_Type(movie, "PICTURE"))
-            photos.add(new Image(movie.getTitle(), PICTURES_PATH + mm.getMedia().getValue(), mm.getMedia().getAuthor()));
-
-        movieMedia.setPhotos(photos);
+        movieMedia.setPhotos(helperService.getPictures(movie));
         movieMedia.setTrailerLink(movieMediaRepository.findAllByMovieAndMedia_Type(movie, "TRAILER").get(0).getMedia().getValue());
 
         return movieMedia;
@@ -130,78 +105,50 @@ public class MovieService {
         return commentRepository.findAllByMovie(movie, paging);
     }
 
-    public Page<MovieShortSummary> getMoviesShortSummary(Pageable pageable, Integer sort, MoviesFilterForm moviesFilter){
-        List<MovieShortSummary> moviesShort = new ArrayList<>();
-        List<MovieEntity> movieList = (sort >= 3 && sort <= 6)
-                ? movieRepository.findMovieEntitiesByYearBetween(moviesFilter.getMinYear(), moviesFilter.getMaxYear(), pageable.getSort())
-                : movieRepository.findMovieEntitiesByYearBetween(moviesFilter.getMinYear(), moviesFilter.getMaxYear());
+    public Page<MovieListElement> getMovieListElements(Pageable pageable, Integer sort, MoviesFilterForm moviesFilter){
+        List<MovieListElement> movieElements = new ArrayList<>();
+        if(sort >= 3 && sort <= 6) pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), setSortByDatabase(sort));
+        List<MovieEntity> movieList = movieRepository.findMovieEntitiesByYearBetween(moviesFilter.getMinYear(), moviesFilter.getMaxYear(), pageable.getSort());
 
         for(MovieEntity movie : movieList)
-            moviesShort.add(getMovieShortSummary(movie));
+            movieElements.add(helperService.getMovieListElement(movie));
 
-        moviesShort = moviesShort.stream().filter(movie ->
+        movieElements = movieElements.stream().filter(movie ->
                 moviesFilter.checkIfCategoriesMatchFilter(movie.getCategories())
                         && moviesFilter.checkIfCountriesMatchFilter(movie.getCountries())
                         && movie.getAvgUsersRating() >= moviesFilter.getMinRate()
                         && movie.getAvgUsersRating() <= moviesFilter.getMaxRate()).collect(Collectors.toList());
 
         if(moviesFilter.getName() != null && !moviesFilter.getName().isEmpty())
-            moviesShort = moviesShort.stream().filter(movie ->
+            movieElements = movieElements.stream().filter(movie ->
                     movie.getTitle().toLowerCase().contains(moviesFilter.getName().toLowerCase())).collect(Collectors.toList());
 
-        if(sort <= 2 || sort >= 7) sortMovieShortSummaryList(moviesShort, sort);
+        if(sort <= 2 || sort >= 7) sortMovieElementList(movieElements, sort);
 
-        return new PageImpl<>(moviesShort, pageable, moviesShort.size());
+        return new PageImpl<>(movieElements, pageable, movieElements.size());
     }
 
-    private void sortMovieShortSummaryList (List<MovieShortSummary> movieShortSummaryList, Integer sort){
+    private Sort setSortByDatabase(int sort){
         switch (sort){
-            case 1: movieShortSummaryList.sort(MovieShortSummary.avgUsersRatingComparator.reversed());
+            case 3: return Sort.by("title").descending();
+            case 4: return Sort.by("title").ascending();
+            case 5: return Sort.by("year").descending();
+            case 6: return Sort.by("year").ascending();
+        }
+        return Sort.by(Sort.DEFAULT_DIRECTION);
+    }
+
+    private void sortMovieElementList (List<MovieListElement> movieElementList, Integer sort){
+        switch (sort){
+            case 1: movieElementList.sort(MovieListElement.avgUsersRatingComparator.reversed());
                 break;
-            case 2: movieShortSummaryList.sort(MovieShortSummary.avgUsersRatingComparator);
+            case 2: movieElementList.sort(MovieListElement.avgUsersRatingComparator);
                 break;
-            case 7: movieShortSummaryList.sort(MovieShortSummary.numberOfPeopleWhoWatchedComparator.reversed());
+            case 7: movieElementList.sort(MovieListElement.numberOfPeopleWhoWatchedComparator.reversed());
                 break;
-            case 8: movieShortSummaryList.sort(MovieShortSummary.numberOfPeopleWhoWatchedComparator);
+            case 8: movieElementList.sort(MovieListElement.numberOfPeopleWhoWatchedComparator);
                 break;
         }
-    }
-
-    private MovieShortSummary getMovieShortSummary(MovieEntity movie){
-        MovieShortSummary mss = new MovieShortSummary();
-
-        mss.setId(movie.getId());
-        mss.setTitle(movie.getTitle());
-        mss.setCover(getCover(movie));
-        mss.setCategories(getCategories(movie));
-        mss.setCountries(getCountries(movie));
-        mss.setDescription(movie.getDescription());
-        mss.setYear(movie.getYear());
-        mss.setAvgUsersRating(countAverageRating(movie));
-        mss.setNumberOfPeopleWhoWatched(ratingRepository.countByMovieAndValueGreaterThan(movie, 0));
-        mss.setNumberOfPeopleWhoWantToWatch(ratingRepository.countByMovieAndValueIs(movie, 0));
-
-        return mss;
-    }
-
-    private double countAverageRating(MovieEntity movieEntity){
-        List<Integer> ratings = ratingRepository.findAllByMovie(movieEntity).stream().map(RatingEntity::getValue).collect(Collectors.toList());
-        return ratings.stream().mapToInt(Integer::intValue).average().getAsDouble();
-    }
-
-    private Image getCover(MovieEntity movieEntity){
-        MediaEntity cover = movieMediaRepository.findAllByMovieAndMedia_Type(movieEntity, "COVER").get(0).getMedia();
-        return new Image(movieEntity.getTitle(), PICTURES_PATH + cover.getValue(), cover.getAuthor());
-    }
-
-    private List<String> getCategories(MovieEntity movieEntity){
-        return movieCategoryRepository.findAllByMovie(movieEntity).stream().
-                map(movieCategory -> movieCategory.getCategory().getName()).collect(Collectors.toList());
-    }
-
-    private List<String> getCountries(MovieEntity movieEntity){
-        return movieCountryRepository.findAllByMovie(movieEntity).stream().
-                map(movieCountry -> movieCountry.getCountry().getName()).collect(Collectors.toList());
     }
 
 }

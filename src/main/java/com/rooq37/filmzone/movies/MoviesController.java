@@ -1,7 +1,8 @@
 package com.rooq37.filmzone.movies;
 
-import com.rooq37.filmzone.movies.movies.MovieShortSummary;
+import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.movies.movies.MoviesFilterForm;
+import com.rooq37.filmzone.services.HelperService;
 import com.rooq37.filmzone.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,7 +22,9 @@ import java.util.ArrayList;
 public class MoviesController {
 
     @Autowired
-    MovieService movieService;
+    private HelperService helperService;
+    @Autowired
+    private MovieService movieService;
 
     @RequestMapping(value = "/movies", method = RequestMethod.GET)
     public String displayMovies(Model model,
@@ -32,24 +35,24 @@ public class MoviesController {
                                 @RequestParam(value = "sort", defaultValue = "1") Integer sort) {
 
         if(!searchedMovieName.isEmpty()) moviesFilterForm.setName(searchedMovieName);
-        moviesFilterForm.setPossibleCategories(movieService.getAllCategories());
-        moviesFilterForm.setPossibleCountries(movieService.getAllCountries());
+        moviesFilterForm.setPossibleCategories(helperService.getAllCategories());
+        moviesFilterForm.setPossibleCountries(helperService.getAllCountries());
 
-        Page<MovieShortSummary> moviesPage = new PageImpl<>(new ArrayList<>());
+        Page<MovieListElement> moviesPage = new PageImpl<>(new ArrayList<>());
 
         if(sort >= 3 && sort <= 6){
             switch (sort){
-                case 3: moviesPage = movieService.getMoviesShortSummary(PageRequest.of(page - 1, size, Sort.by("title").descending()), sort, moviesFilterForm);
+                case 3: moviesPage = movieService.getMovieListElements(PageRequest.of(page - 1, size, Sort.by("title").descending()), sort, moviesFilterForm);
                     break;
-                case 4: moviesPage = movieService.getMoviesShortSummary(PageRequest.of(page - 1, size, Sort.by("title").ascending()), sort, moviesFilterForm);
+                case 4: moviesPage = movieService.getMovieListElements(PageRequest.of(page - 1, size, Sort.by("title").ascending()), sort, moviesFilterForm);
                     break;
-                case 5: moviesPage = movieService.getMoviesShortSummary(PageRequest.of(page - 1, size, Sort.by("year").descending()), sort, moviesFilterForm);
+                case 5: moviesPage = movieService.getMovieListElements(PageRequest.of(page - 1, size, Sort.by("year").descending()), sort, moviesFilterForm);
                     break;
-                case 6: moviesPage = movieService.getMoviesShortSummary(PageRequest.of(page - 1, size, Sort.by("year").ascending()), sort, moviesFilterForm);
+                case 6: moviesPage = movieService.getMovieListElements(PageRequest.of(page - 1, size, Sort.by("year").ascending()), sort, moviesFilterForm);
                     break;
             }
         }else{
-            moviesPage = movieService.getMoviesShortSummary(PageRequest.of(page - 1, size), sort, moviesFilterForm);
+            moviesPage = movieService.getMovieListElements(PageRequest.of(page - 1, size), sort, moviesFilterForm);
         }
 
         model.addAttribute("moviesPage", moviesPage);

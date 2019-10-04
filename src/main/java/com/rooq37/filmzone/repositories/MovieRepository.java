@@ -15,5 +15,6 @@ public interface MovieRepository
     List<MovieEntity> findAll(Sort sort);
     List<MovieEntity> findMovieEntitiesByYearBetween(int start, int end, Sort sort);
     List<MovieEntity> findMovieEntitiesByYearBetween(int start, int end);
+    MovieEntity findMovieEntityById(Long id);
 
 }

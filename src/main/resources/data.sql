@@ -116,3 +116,44 @@ INSERT INTO COMMENT VALUES (20, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
 INSERT INTO COMMENT VALUES (21, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
 INSERT INTO COMMENT VALUES (22, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
 
+------------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO MOVIE VALUES (3, 'Poruszająca historia jednego z największych bokserów wszech czasów - Muhammada Ali''ego.', 157, 'Ali', 2001);
+
+INSERT INTO MEDIA VALUES (14, 'Columbia Pictures Corporation', now(), 'COVER', 'ali/ali_cover.jpg');
+INSERT INTO MEDIA VALUES (15, 'Columbia Pictures Corporation', now(), 'PICTURE', 'ali/ali_1.jpg');
+INSERT INTO MEDIA VALUES (16, 'Columbia Pictures Corporation', now(), 'PICTURE', 'ali/ali_2.jpg');
+INSERT INTO MEDIA VALUES (17, 'YouTube', now(), 'TRAILER', 'https://www.youtube.com/embed/STuHQ5HpmEE');
+
+INSERT INTO MOVIE_MEDIA VALUES (14, 3);
+INSERT INTO MOVIE_MEDIA VALUES (15, 3);
+INSERT INTO MOVIE_MEDIA VALUES (16, 3);
+INSERT INTO MOVIE_MEDIA VALUES (17, 3);
+
+INSERT INTO CATEGORY VALUES (5, 'biograficzny');
+INSERT INTO CATEGORY VALUES (6, 'sportowy');
+
+INSERT INTO MOVIE_CATEGORY VALUES (5, 3);
+INSERT INTO MOVIE_CATEGORY VALUES (6, 3);
+
+INSERT INTO MOVIE_COUNTRY VALUES (3, 1);
+
+INSERT INTO PERSON VALUES (15, '	Michael', 'Mann');
+INSERT INTO PERSON VALUES (16, 'Stephen J.', 'Rivele');
+INSERT INTO PERSON VALUES (17, 'Will', 'Smith');
+INSERT INTO PERSON VALUES (18, 'Jamie', 'Foxx');
+INSERT INTO PERSON VALUES (19, 'Jon', 'Voight');
+INSERT INTO PERSON VALUES (20, 'Mario', 'Van Peebles');
+INSERT INTO PERSON VALUES (21, 'Ron', 'Silver');
+
+INSERT INTO MOVIE_PERSON VALUES (17, NULL, 'DIRECTOR', 3, 15);
+INSERT INTO MOVIE_PERSON VALUES (18, NULL, 'SCENARIO', 3, 15);
+INSERT INTO MOVIE_PERSON VALUES (19, NULL, 'SCENARIO', 3, 16);
+INSERT INTO MOVIE_PERSON VALUES (20, 'Muhammad Ali', 'ACTOR', 3, 17);
+INSERT INTO MOVIE_PERSON VALUES (21, 'Drew "Bundini" Brown', 'ACTOR', 3, 18);
+INSERT INTO MOVIE_PERSON VALUES (22, 'Howard Cosell', 'ACTOR', 3, 19);
+INSERT INTO MOVIE_PERSON VALUES (23, 'Malcolm X', 'ACTOR', 3, 20);
+INSERT INTO MOVIE_PERSON VALUES (24, 'Angelo Dundee', 'ACTOR', 3, 21);
+
+INSERT INTO RATING VALUES ('2019-09-30 16:01:15', 8, 1, 3);
+

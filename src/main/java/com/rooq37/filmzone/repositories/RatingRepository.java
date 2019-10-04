@@ -5,6 +5,7 @@ import com.rooq37.filmzone.entities.RatingEntity;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -14,5 +15,6 @@ public interface RatingRepository
     List<RatingEntity> findAllByMovie(MovieEntity movieEntity);
     int countByMovieAndValueGreaterThan(MovieEntity movieEntity, int value);
     int countByMovieAndValueIs(MovieEntity movieEntity, int value);
+    int countByDateAfter(Date date);
 
 }
