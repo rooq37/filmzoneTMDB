@@ -13,17 +13,17 @@
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <h1 class="text-dark" th:text="${movieSummary.getTitle()}">Title</h1>
+                        <h1 id="moviePage:movieTitle" class="text-dark" th:text="${movieSummary.getTitle()}">Title</h1>
                     </div>
                     <div class="col">
-                        <h1 class="text-right"><span class="text-warning">★</span><span class="text-dark" th:text="${movieSummary.getAvgUsersRating()}">Rating</span></h1>
+                        <h1 class="text-right"><span class="text-warning">★</span><span id="moviePage:movieRating" class="text-dark" th:text="${movieSummary.getAvgUsersRating()}">Rating</span></h1>
                     </div>
                 </div>
                 <h5 class="text-muted">
                     <a href="#" class="badge badge-pill badge-dark" th:each="category : ${movieSummary.getCategories()}" th:text="'#' + ${category}">#category</a>
                 </h5>
                 <br>
-                <span th:text="${movieSummary.getDescription()}">Description</span>
+                <span id="moviePage:movieDescription" th:text="${movieSummary.getDescription()}">Description</span>
                 <hr class="my-4">
                 <ul>
                     <li>
@@ -50,10 +50,10 @@
         <h4 th:text="'Średnia ocena: ' + ${movieRating.getAvg()}">Average users rating</h4>
         <ul>
             <li>
-                <span th:text="${movieRating.getNumberOfPeopleWhoWatched()} + ' użytkowników oceniło ten film'">watched</span>
+                <span id="moviePage:numberOfRatings" th:text="${movieRating.getNumberOfPeopleWhoWatched()} + ' użytkowników oceniło ten film'">watched</span>
             </li>
             <li>
-                <span th:text="${movieRating.getNumberOfPeopleWhoWantToWatch()} + ' chce go zobaczyć'">want to see</span>
+                <span id="moviePage:numberOfPeopleWhoWantToWatch" th:text="${movieRating.getNumberOfPeopleWhoWantToWatch()} + ' chce go zobaczyć'">want to see</span>
             </li>
         </ul>
     </div>

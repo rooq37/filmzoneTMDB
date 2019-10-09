@@ -1,6 +1,6 @@
 package com.rooq37.filmzone.rankings;
 
-import com.rooq37.filmzone.services.RankingService;
+import com.rooq37.filmzone.junit.services.RankingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;

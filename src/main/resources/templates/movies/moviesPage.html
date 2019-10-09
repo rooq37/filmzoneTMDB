@@ -95,7 +95,7 @@
                 </div>
                 <div class="col text-center">
                     <h4>
-                        <span class="badge bg-dark text-white py-2">Liczba wyników <span class="badge badge-light" th:text="${moviesPage.getTotalElements()}">num</span></span>
+                        <span class="badge bg-dark text-white py-2">Liczba wyników <span class="badge badge-light" id="movies:numberOfElements" th:text="${moviesPage.getTotalElements()}">num</span></span>
                     </h4>
                 </div>
                 <div class="col" th:if="${moviesPage.getTotalElements()} > 0">

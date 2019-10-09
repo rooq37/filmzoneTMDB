@@ -138,7 +138,7 @@ INSERT INTO MOVIE_CATEGORY VALUES (6, 3);
 
 INSERT INTO MOVIE_COUNTRY VALUES (3, 1);
 
-INSERT INTO PERSON VALUES (15, '	Michael', 'Mann');
+INSERT INTO PERSON VALUES (15, 'Michael', 'Mann');
 INSERT INTO PERSON VALUES (16, 'Stephen J.', 'Rivele');
 INSERT INTO PERSON VALUES (17, 'Will', 'Smith');
 INSERT INTO PERSON VALUES (18, 'Jamie', 'Foxx');
@@ -157,3 +157,79 @@ INSERT INTO MOVIE_PERSON VALUES (24, 'Angelo Dundee', 'ACTOR', 3, 21);
 
 INSERT INTO RATING VALUES ('2019-09-30 16:01:15', 8, 1, 3);
 
+------------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO MOVIE VALUES (4, 'Historia tego, jak George Jung wraz z kartelem Medellín kierowanym przez Pablo Escobara założył amerykański rynek kokainy w latach 70. XX wieku w Stanach Zjednoczonych.', 124, 'Blow', 2001);
+
+INSERT INTO MEDIA VALUES (18, 'New Line Cinema', now(), 'COVER', 'blow/blow_cover.jpg');
+INSERT INTO MEDIA VALUES (19, 'New Line Cinema', now(), 'PICTURE', 'blow/blow_1.jpg');
+INSERT INTO MEDIA VALUES (20, 'New Line Cinema', now(), 'PICTURE', 'blow/blow_2.jpg');
+INSERT INTO MEDIA VALUES (21, 'New Line Cinema', now(), 'PICTURE', 'blow/blow_3.jpg');
+INSERT INTO MEDIA VALUES (22, 'New Line Cinema', now(), 'PICTURE', 'blow/blow_4.jpg');
+INSERT INTO MEDIA VALUES (23, 'YouTube', now(), 'TRAILER', 'https://www.youtube.com/embed/scWkP1GdnuU');
+
+INSERT INTO MOVIE_MEDIA VALUES (18, 4);
+INSERT INTO MOVIE_MEDIA VALUES (19, 4);
+INSERT INTO MOVIE_MEDIA VALUES (20, 4);
+INSERT INTO MOVIE_MEDIA VALUES (21, 4);
+INSERT INTO MOVIE_MEDIA VALUES (22, 4);
+INSERT INTO MOVIE_MEDIA VALUES (23, 4);
+
+INSERT INTO MOVIE_CATEGORY VALUES (1, 4);
+INSERT INTO MOVIE_CATEGORY VALUES (2, 4);
+INSERT INTO MOVIE_CATEGORY VALUES (5, 4);
+
+INSERT INTO MOVIE_COUNTRY VALUES (4, 1);
+
+INSERT INTO PERSON VALUES (22, 'Ted', 'Demme');
+INSERT INTO PERSON VALUES (23, 'David', 'McKenna');
+INSERT INTO PERSON VALUES (24, 'Johnny', 'Depp');
+INSERT INTO PERSON VALUES (25, 'Penélope', 'Cruz');
+INSERT INTO PERSON VALUES (26, 'Franka', 'Potente');
+INSERT INTO PERSON VALUES (27, 'Rachel', 'Griffiths');
+
+INSERT INTO MOVIE_PERSON VALUES (25, NULL, 'DIRECTOR', 4, 22);
+INSERT INTO MOVIE_PERSON VALUES (26, NULL, 'SCENARIO', 4, 23);
+INSERT INTO MOVIE_PERSON VALUES (27, 'George Jung', 'ACTOR', 4, 24);
+INSERT INTO MOVIE_PERSON VALUES (28, 'Mirtha Jung', 'ACTOR', 4, 25);
+INSERT INTO MOVIE_PERSON VALUES (29, 'Barbara Buckley', 'ACTOR', 4, 26);
+INSERT INTO MOVIE_PERSON VALUES (30, 'Ermine Jung', 'ACTOR', 4, 27);
+
+INSERT INTO RATING VALUES ('2019-10-04 18:46:15', 8, 1, 4);
+
+------------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO MOVIE VALUES (5, 'Osierocony chłopiec zapisuje się do szkoły magii, gdzie poznaje prawdę o sobie, swojej rodzinie i straszliwym złu, które nawiedzają magiczny świat.', 152, 'Harry Potter i Kamień Filozoficzny', 2001);
+
+INSERT INTO MEDIA VALUES (24, 'Warner Bros', now(), 'COVER', 'harry_potter_sorcerers_stone/hp1_cover.jpg');
+INSERT INTO MEDIA VALUES (25, 'Warner Bros', now(), 'PICTURE', 'harry_potter_sorcerers_stone/hp1_1.jpg');
+INSERT INTO MEDIA VALUES (26, 'Warner Bros', now(), 'PICTURE', 'harry_potter_sorcerers_stone/hp1_2.jpg');
+INSERT INTO MEDIA VALUES (27, 'Warner Bros', now(), 'PICTURE', 'harry_potter_sorcerers_stone/hp1_3.jpg');
+INSERT INTO MEDIA VALUES (28, 'YouTube', now(), 'TRAILER', 'https://www.youtube.com/embed/VyHV0BRtdxo');
+
+INSERT INTO MOVIE_MEDIA VALUES (24, 5);
+INSERT INTO MOVIE_MEDIA VALUES (25, 5);
+INSERT INTO MOVIE_MEDIA VALUES (26, 5);
+INSERT INTO MOVIE_MEDIA VALUES (27, 5);
+INSERT INTO MOVIE_MEDIA VALUES (28, 5);
+
+INSERT INTO MOVIE_CATEGORY VALUES (3, 5);
+INSERT INTO MOVIE_CATEGORY VALUES (4, 5);
+
+INSERT INTO MOVIE_COUNTRY VALUES (5, 1);
+
+INSERT INTO PERSON VALUES (28, 'Chris', 'Columbus');
+INSERT INTO PERSON VALUES (29, 'J.K.', 'Rowling');
+INSERT INTO PERSON VALUES (30, 'Daniel', 'Radcliffe');
+INSERT INTO PERSON VALUES (31, 'Robbie', 'Coltrane');
+INSERT INTO PERSON VALUES (32, 'Richard', 'Harris');
+INSERT INTO PERSON VALUES (33, 'Maggie', 'Smith');
+
+INSERT INTO MOVIE_PERSON VALUES (31, NULL, 'DIRECTOR', 5, 28);
+INSERT INTO MOVIE_PERSON VALUES (32, NULL, 'SCENARIO', 5, 29);
+INSERT INTO MOVIE_PERSON VALUES (33, 'Harry Potter', 'ACTOR', 5, 30);
+INSERT INTO MOVIE_PERSON VALUES (34, 'Hagrid', 'ACTOR', 5, 31);
+INSERT INTO MOVIE_PERSON VALUES (35, 'Albus Dumbledore', 'ACTOR', 5, 32);
+INSERT INTO MOVIE_PERSON VALUES (36, 'Professor McGonagall', 'ACTOR', 5, 33);
+
+INSERT INTO RATING VALUES ('2019-10-06 16:46:15', 8, 1, 5);

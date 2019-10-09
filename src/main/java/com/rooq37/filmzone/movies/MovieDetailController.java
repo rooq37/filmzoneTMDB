@@ -1,8 +1,8 @@
 package com.rooq37.filmzone.movies;
 
 import com.rooq37.filmzone.entities.CommentEntity;
-import com.rooq37.filmzone.services.MovieService;
-import com.rooq37.filmzone.services.ViewService;
+import com.rooq37.filmzone.junit.services.MovieService;
+import com.rooq37.filmzone.junit.services.ViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
