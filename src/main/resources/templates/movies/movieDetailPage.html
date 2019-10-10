@@ -140,7 +140,7 @@
         <div class="card border-dark mb-2" th:each="comment : ${commentPage.getContent()}" th:if="${commentPage.getTotalElements() > 0}">
             <div class="card-header">
                 <div class="row">
-                    <div class="col text-left font-weight-bold text-dark" th:text="${comment.getUser().getName()}">author</div>
+                    <div class="col text-left font-weight-bold text-dark" th:text="${comment.getUser().getNickname()}">author</div>
                     <div class="col text-right font-weight-light text-dark" th:text="${#dates.format(comment.getDate(), 'dd.MM.yyyy HH:mm')}">dd.MM.yyyy HH:mm</div>
                 </div>
             </div>

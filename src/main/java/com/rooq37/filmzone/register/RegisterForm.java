@@ -1,31 +1,11 @@
-package com.rooq37.filmzone.entities;
+package com.rooq37.filmzone.register;
 
-import javax.persistence.*;
+public class RegisterForm {
 
-@Entity
-@Table(name = "USER")
-public class UserEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "nickname")
     private String nickname;
-
-    @Column(name = "email")
     private String email;
-
-    @Column(name = "password")
     private String password;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private String confirmPassword;
 
     public String getNickname() {
         return nickname;
@@ -49,6 +29,14 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
     }
 
 }

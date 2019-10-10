@@ -8,7 +8,7 @@ import java.util.Date;
 public class ViewEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

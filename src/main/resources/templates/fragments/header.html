@@ -43,11 +43,31 @@
                 <button class="btn btn-outline-warning ml-2 my-2 my-sm-0" type="submit">Login</button>
             </form>
             <form action="/register">
-                <button class="btn btn-outline-warning ml-2 my-2 my-sm-0" type="submit">Register</button>
+                <button class="btn btn-outline-warning ml-2 my-2 my-sm-0" type="submit">Rejestracja</button>
             </form>
         </div>
     </nav>
     <br>
+    <div class="mt-5" th:with="infoMessages=${session[T(com.rooq37.filmzone.notifications.NotificationService).MESSAGES_INFO_SESSION_KEY]}">
+        <div class="alert alert-success alert-dismissible fade show mt-1" role="alert" th:each="message : ${infoMessages}">
+            <span th:text="${message}">Message</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <span th:if="${infoMessages}" th:remove="all"
+              th:text="${#session.removeAttribute(T(com.rooq37.filmzone.notifications.NotificationService).MESSAGES_INFO_SESSION_KEY)}"></span>
+    </div>
+    <div class="mt-5" th:with="errorMessages=${session[T(com.rooq37.filmzone.notifications.NotificationService).MESSAGES_ERROR_SESSION_KEY]}">
+        <div class="alert alert-danger alert-dismissible fade show mt-1" role="alert" th:each="message : ${errorMessages}">
+            <span th:text="${message}">Message</span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <span th:if="${errorMessages}" th:remove="all"
+              th:text="${#session.removeAttribute(T(com.rooq37.filmzone.notifications.NotificationService).MESSAGES_ERROR_SESSION_KEY)}"></span>
+    </div>
 </header>
 </body>
 </html>
