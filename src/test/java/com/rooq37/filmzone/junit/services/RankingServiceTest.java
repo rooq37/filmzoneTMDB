@@ -2,6 +2,7 @@ package com.rooq37.filmzone.junit.services;
 
 import com.rooq37.filmzone.FilmzoneApplication;
 import com.rooq37.filmzone.commons.MovieListElement;
+import com.rooq37.filmzone.services.RankingService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.rooq37.filmzone.junit.services;
+package com.rooq37.filmzone.services;
 
 import com.rooq37.filmzone.commons.Image;
 import com.rooq37.filmzone.commons.MovieListElement;

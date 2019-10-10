@@ -2,8 +2,8 @@ package com.rooq37.filmzone.home;
 
 import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.entities.MovieEntity;
-import com.rooq37.filmzone.junit.services.HelperService;
-import com.rooq37.filmzone.junit.services.ViewService;
+import com.rooq37.filmzone.services.HelperService;
+import com.rooq37.filmzone.services.ViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

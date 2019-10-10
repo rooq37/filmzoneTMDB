@@ -1,6 +1,7 @@
-package com.rooq37.filmzone.junit.services;
+package com.rooq37.filmzone.services;
 
 import com.rooq37.filmzone.commons.MovieListElement;
+import com.rooq37.filmzone.services.HelperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

@@ -1,9 +1,9 @@
 package com.rooq37.filmzone.movies;
 
 import com.rooq37.filmzone.commons.MovieListElement;
-import com.rooq37.filmzone.junit.movies.MoviesFilterForm;
-import com.rooq37.filmzone.junit.services.HelperService;
-import com.rooq37.filmzone.junit.services.MovieService;
+import com.rooq37.filmzone.movies.movies.MoviesFilterForm;
+import com.rooq37.filmzone.services.HelperService;
+import com.rooq37.filmzone.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

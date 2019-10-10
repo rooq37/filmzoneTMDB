@@ -3,6 +3,7 @@ package com.rooq37.filmzone.junit.services;
 import com.rooq37.filmzone.FilmzoneApplication;
 import com.rooq37.filmzone.entities.MovieEntity;
 import com.rooq37.filmzone.home.HomeForm;
+import com.rooq37.filmzone.services.ViewService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,7 @@ public class ViewServiceTest {
         assertThat(homeForm.getNumberOfMoviesInDatabase()).isEqualTo(5L);
         assertThat(homeForm.getNumberOfNewAccountsLastWeek()).isEqualTo(1L);
         assertThat(homeForm.getNumberOfRatings()).isEqualTo(5L);
-        assertThat(homeForm.getNumberOfRatingsLastWeek()).isEqualTo(3L);
+        assertThat(homeForm.getNumberOfRatingsLastWeek()).isEqualTo(2L);
         assertThat(homeForm.getNumberOfRegisteredAccounts()).isEqualTo(1L);
         assertThat(homeForm.getNumberOfSearches()).isEqualTo(0L);
         assertThat(homeForm.getNumberOfSearchesLastWeek()).isEqualTo(0L);

@@ -1,4 +1,4 @@
-package com.rooq37.filmzone.junit.services;
+package com.rooq37.filmzone.services;
 
 import com.rooq37.filmzone.entities.MovieEntity;
 import com.rooq37.filmzone.entities.ViewEntity;

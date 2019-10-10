@@ -1,4 +1,4 @@
-package com.rooq37.filmzone.junit.services;
+package com.rooq37.filmzone.services;
 
 import com.rooq37.filmzone.commons.CastPair;
 import com.rooq37.filmzone.commons.MovieListElement;
@@ -7,8 +7,9 @@ import com.rooq37.filmzone.movies.movieDetails.MovieCast;
 import com.rooq37.filmzone.movies.movieDetails.MovieMedia;
 import com.rooq37.filmzone.movies.movieDetails.MovieRating;
 import com.rooq37.filmzone.movies.movieDetails.MovieSummary;
-import com.rooq37.filmzone.junit.movies.MoviesFilterForm;
+import com.rooq37.filmzone.movies.movies.MoviesFilterForm;
 import com.rooq37.filmzone.repositories.*;
+import com.rooq37.filmzone.services.HelperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;

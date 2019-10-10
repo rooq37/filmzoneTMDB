@@ -5,6 +5,7 @@ import com.rooq37.filmzone.commons.Image;
 import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.entities.MovieEntity;
 import com.rooq37.filmzone.repositories.MovieRepository;
+import com.rooq37.filmzone.services.HelperService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package com.rooq37.filmzone.junit.movies;
+package com.rooq37.filmzone.movies.movies;
 
 import java.util.ArrayList;
 import java.util.Arrays;

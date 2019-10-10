@@ -1,5 +1,6 @@
 package com.rooq37.filmzone.junit.movies;
 
+import com.rooq37.filmzone.movies.movies.MoviesFilterForm;
 import org.junit.Test;
 
 import java.util.ArrayList;
