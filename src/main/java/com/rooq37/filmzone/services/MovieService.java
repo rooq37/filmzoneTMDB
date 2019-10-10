@@ -1,17 +1,17 @@
 package com.rooq37.filmzone.services;
 
 import com.rooq37.filmzone.commons.CastPair;
-import com.rooq37.filmzone.commons.Image;
+import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.entities.*;
-import com.rooq37.filmzone.movies.movieDetail.MovieCast;
-import com.rooq37.filmzone.movies.movieDetail.MovieMedia;
-import com.rooq37.filmzone.movies.movieDetail.MovieRating;
-import com.rooq37.filmzone.movies.movieDetail.MovieSummary;
+import com.rooq37.filmzone.movies.movieDetails.MovieCast;
+import com.rooq37.filmzone.movies.movieDetails.MovieMedia;
+import com.rooq37.filmzone.movies.movieDetails.MovieRating;
+import com.rooq37.filmzone.movies.movieDetails.MovieSummary;
+import com.rooq37.filmzone.movies.movies.MoviesFilterForm;
 import com.rooq37.filmzone.repositories.*;
+import com.rooq37.filmzone.services.HelperService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -21,46 +21,28 @@ import java.util.stream.Collectors;
 @Service
 public class MovieService {
 
-    private static final String PICTURES_PATH = "../images/";
-
     @Autowired
-    CategoryRepository categoryRepository;
+    private HelperService helperService;
     @Autowired
-    CommentRepository commentRepository;
+    private CommentRepository commentRepository;
     @Autowired
-    CountryRepository countryRepository;
+    private MovieCountryRepository movieCountryRepository;
     @Autowired
-    MediaRepository mediaRepository;
+    private MovieMediaRepository movieMediaRepository;
     @Autowired
-    MovieCategoryRepository movieCategoryRepository;
+    private MoviePersonRepository moviePersonRepository;
     @Autowired
-    MovieCountryRepository movieCountryRepository;
+    private MovieRepository movieRepository;
     @Autowired
-    MovieMediaRepository movieMediaRepository;
-    @Autowired
-    MoviePersonRepository moviePersonRepository;
-    @Autowired
-    MovieRepository movieRepository;
-    @Autowired
-    PersonRepository personRepository;
-    @Autowired
-    RatingRepository ratingRepository;
-    @Autowired
-    UserRepository userRepository;
+    private RatingRepository ratingRepository;
 
     public MovieSummary getMovieSummary(Long id){
         MovieSummary movieSummary = new MovieSummary();
 
         MovieEntity movie = movieRepository.findById(id).get();
         movieSummary.setTitle(movie.getTitle());
-
-        MediaEntity cover = movieMediaRepository.findAllByMovieAndMedia_Type(movie, "COVER").get(0).getMedia();
-        Image coverImage = new Image(movie.getTitle(), PICTURES_PATH + cover.getValue(), cover.getAuthor());
-        movieSummary.setCover(coverImage);
-
-        List<String> categories = movieCategoryRepository.findAllByMovie(movie).stream().
-                map(movieCategory -> movieCategory.getCategory().getName()).collect(Collectors.toList());
-        movieSummary.setCategories(categories);
+        movieSummary.setCover(helperService.getCover(movie));
+        movieSummary.setCategories(helperService.getCategories(movie));
 
         movieSummary.setDescription(movie.getDescription());
         movieSummary.setDuration(movie.getDuration());
@@ -78,7 +60,7 @@ public class MovieService {
                 map(movieCountry -> movieCountry.getCountry().getName()).collect(Collectors.joining(", "));
         movieSummary.setCountry(countries);
 
-        movieSummary.setAvgUsersRating(String.format("%.1f", countAverageRating(movie)));
+        movieSummary.setAvgUsersRating(String.format("%.1f", helperService.countAverageRating(movie)));
 
         return movieSummary;
     }
@@ -87,7 +69,7 @@ public class MovieService {
         MovieRating movieRating = new MovieRating();
         MovieEntity movie = movieRepository.findById(id).get();
 
-        movieRating.setAvg(String.format("%.2f", countAverageRating(movie)));
+        movieRating.setAvg(String.format("%.2f", helperService.countAverageRating(movie)));
         movieRating.setNumberOfPeopleWhoWatched(String.valueOf(ratingRepository.countByMovieAndValueGreaterThan(movie, 0)));
         movieRating.setNumberOfPeopleWhoWantToWatch(String.valueOf(ratingRepository.countByMovieAndValueIs(movie, 0)));
 
@@ -98,11 +80,7 @@ public class MovieService {
         MovieMedia movieMedia = new MovieMedia();
         MovieEntity movie = movieRepository.findById(id).get();
 
-        List<Image> photos = new ArrayList<>();
-        for(MovieMediaEntity mm : movieMediaRepository.findAllByMovieAndMedia_Type(movie, "PICTURE"))
-            photos.add(new Image(movie.getTitle(), PICTURES_PATH + mm.getMedia().getValue(), mm.getMedia().getAuthor()));
-
-        movieMedia.setPhotos(photos);
+        movieMedia.setPhotos(helperService.getPictures(movie));
         movieMedia.setTrailerLink(movieMediaRepository.findAllByMovieAndMedia_Type(movie, "TRAILER").get(0).getMedia().getValue());
 
         return movieMedia;
@@ -125,12 +103,53 @@ public class MovieService {
         MovieEntity movie = movieRepository.findById(id).get();
         Pageable paging = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
 
-        return commentRepository.findAllByMovie(movie, pageable);
+        return commentRepository.findAllByMovie(movie, paging);
     }
 
-    private double countAverageRating(MovieEntity movieEntity){
-        List<Integer> ratings = ratingRepository.findAllByMovie(movieEntity).stream().map(RatingEntity::getValue).collect(Collectors.toList());
-        return ratings.stream().mapToInt(Integer::intValue).average().getAsDouble();
+    public Page<MovieListElement> getMovieListElements(Pageable pageable, Integer sort, MoviesFilterForm moviesFilter){
+        List<MovieListElement> movieElements = new ArrayList<>();
+        if(sort >= 3 && sort <= 6) pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), setSortByDatabase(sort));
+        List<MovieEntity> movieList = movieRepository.findMovieEntitiesByYearBetween(moviesFilter.getMinYear(), moviesFilter.getMaxYear(), pageable.getSort());
+
+        for(MovieEntity movie : movieList)
+            movieElements.add(helperService.getMovieListElement(movie));
+
+        movieElements = movieElements.stream().filter(movie ->
+                moviesFilter.checkIfCategoriesMatchFilter(movie.getCategories())
+                        && moviesFilter.checkIfCountriesMatchFilter(movie.getCountries())
+                        && movie.getAvgUsersRating() >= moviesFilter.getMinRate()
+                        && movie.getAvgUsersRating() <= moviesFilter.getMaxRate()).collect(Collectors.toList());
+
+        if(moviesFilter.getName() != null && !moviesFilter.getName().isEmpty())
+            movieElements = movieElements.stream().filter(movie ->
+                    movie.getTitle().toLowerCase().contains(moviesFilter.getName().toLowerCase())).collect(Collectors.toList());
+
+        if(sort <= 2 || sort >= 7) sortMovieElementList(movieElements, sort);
+
+        return new PageImpl<>(movieElements, pageable, movieElements.size());
+    }
+
+    private Sort setSortByDatabase(int sort){
+        switch (sort){
+            case 3: return Sort.by("title").descending();
+            case 4: return Sort.by("title").ascending();
+            case 5: return Sort.by("year").descending();
+            case 6: return Sort.by("year").ascending();
+        }
+        return Sort.by(Sort.DEFAULT_DIRECTION);
+    }
+
+    private void sortMovieElementList (List<MovieListElement> movieElementList, Integer sort){
+        switch (sort){
+            case 1: movieElementList.sort(MovieListElement.avgUsersRatingComparator.reversed());
+                break;
+            case 2: movieElementList.sort(MovieListElement.avgUsersRatingComparator);
+                break;
+            case 7: movieElementList.sort(MovieListElement.numberOfPeopleWhoWatchedComparator.reversed());
+                break;
+            case 8: movieElementList.sort(MovieListElement.numberOfPeopleWhoWatchedComparator);
+                break;
+        }
     }
 
 }

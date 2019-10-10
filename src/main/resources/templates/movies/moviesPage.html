@@ -5,208 +5,158 @@
 <body>
 <main role="main" class="container">
 
-    <div class="jumbotron">
-        <div class="row">
-            <div class="col-sm">
-                <div class="form-group">
-                    <label for="years_filter">Production years</label>
-                    <div class="input-group" id="years_filter">
-                        <input type="text" class="form-control border-dark" placeholder="From">
-                        <div class="input-group-append">
-                            <span class="input-group-text bg-dark text-white border-dark"> - </span>
-                        </div>
-                        <input type="text" class="form-control border-dark" placeholder="To">
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm">
-                <div class="form-group">
-                    <label for="categories_filter">Categories</label>
-                    <div class="input-group" id="categories_filter">
-                        <input type="text" id="categories_input" class="form-control border-dark bg-white" readonly>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-dark dropdown-toggle bg-dark text-white" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                            <div class="dropdown-menu dropdown-menu-right px-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" value="Comedy" name="category" type="checkbox" id="defaultCheck1" onclick="getCategories()">
-                                    <label class="form-check-label" for="defaultCheck1">Comedy</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" value="Thriller" name="category" type="checkbox" id="defaultCheck2" onclick="getCategories()">
-                                    <label class="form-check-label" for="defaultCheck2">Thriller</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" value="Horror" name="category" type="checkbox" id="defaultCheck3" onclick="getCategories()">
-                                    <label class="form-check-label" for="defaultCheck3">Horror</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" value="Porn" name="category" type="checkbox" id="defaultCheck4" onclick="getCategories()">
-                                    <label class="form-check-label" for="defaultCheck4">Porn</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm">
-                <div class="form-group">
-                    <label for="country_filter">Countries</label>
-                    <div class="input-group" id="country_filter">
-                        <input type="text" id="countries_input" class="form-control border-dark bg-white" readonly>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-dark dropdown-toggle bg-dark text-white" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                            <div class="dropdown-menu dropdown-menu-right px-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" value="USA" name="country" type="checkbox" id="defaultCheck5" onclick="getCountries()">
-                                    <label class="form-check-label" for="defaultCheck5">USA</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" value="Germany" name="country" type="checkbox" id="defaultCheck6" onclick="getCountries()">
-                                    <label class="form-check-label" for="defaultCheck6">Germany</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" value="Poland" name="country" type="checkbox" id="defaultCheck7" onclick="getCountries()">
-                                    <label class="form-check-label" for="defaultCheck7">Poland</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" value="Russia" name="country" type="checkbox" id="defaultCheck8" onclick="getCountries()">
-                                    <label class="form-check-label" for="defaultCheck8">Russia</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm">
+    <form th:action="@{/movies}" method="get" th:object="${moviesFilter}">
+        <input th:field="${moviesFilter.name}" hidden>
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-sm">
                     <div class="form-group">
-                        <label for="rate_filter">Rate</label>
-                        <div class="input-group" id="rate_filter">
-                            <input type="text" class="form-control border-dark" placeholder="From">
+                        <label for="years_filter">Lata produkcji</label>
+                        <div class="input-group" id="years_filter">
+                            <input type="number" class="form-control border-dark" placeholder="Od" th:field="${moviesFilter.minYear}">
                             <div class="input-group-append">
                                 <span class="input-group-text bg-dark text-white border-dark"> - </span>
                             </div>
-                            <input type="text" class="form-control border-dark" placeholder="To">
+                            <input type="number" class="form-control border-dark" placeholder="Do" th:field="${moviesFilter.maxYear}">
                         </div>
                     </div>
-            </div>
-        </div>
-        <div class="row mt-3">
-            <button type="button" class="btn btn-dark btn-lg btn-block">Search</button>
-        </div>
-    </div>
-
-    <div class="jumbotron pb-3 pt-4">
-
-        <div class="row pb-4">
-            <div class="col">
-                <div class="input-group">
-                    <div class="input-group-prepend">
-                        <button class="btn btn-outline-dark bg-dark text-white px-4" type="button">Sort</button>
-                    </div>
-                    <select class="custom-select border-dark">
-                        <option selected>Sort by...</option>
-                        <option value="1">Name ascending</option>
-                        <option value="2">Name descending</option>
-                        <option value="3">Year ascending</option>
-                        <option value="4">Year descending</option>
-                        <option value="5">Rate ascending</option>
-                        <option value="6">Rate descending</option>
-                    </select>
                 </div>
-            </div>
-            <div class="col text-center">
-                <h4>
-                    <span class="badge bg-dark text-white py-2">Number of results <span class="badge badge-light">386</span></span>
-                </h4>
-            </div>
-            <div class="col">
-                <div class="input-group">
-                    <select class="custom-select border-dark">
-                        <option selected>10 results per page</option>
-                        <option value="1">20 results per page</option>
-                        <option value="2">50 results per page</option>
-                    </select>
-                    <div class="input-group-append">
-                        <button class="btn btn-outline-dark bg-dark text-white px-4" type="button">Show</button>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="categories_filter">Kategorie</label>
+                        <div class="input-group" id="categories_filter">
+                            <input type="text" id="categories_input" class="form-control border-dark bg-white" th:field="${moviesFilter.selectedCategories}" readonly>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-dark dropdown-toggle bg-dark text-white" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                <div class="dropdown-menu dropdown-menu-right px-3">
+                                    <div class="form-check" th:each="category : ${moviesFilter.possibleCategories}">
+                                        <input class="form-check-input" th:value="${category}" name="category" type="checkbox" th:id="'cat_' + ${categoryStat.index}" onclick="getCategories()">
+                                        <label class="form-check-label" th:for="'cat_' + ${categoryStat.index}" th:text="${category}">Category name</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <div class="card mb-3 border-dark">
-            <div class="row no-gutters">
-                <div class="col-md-2">
-                    <img src="../images/the_godfather.jpg" class="card-img" alt="...">
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="country_filter">Kraje produkcji</label>
+                        <div class="input-group" id="country_filter">
+                            <input type="text" id="countries_input" class="form-control border-dark bg-white" th:field="${moviesFilter.selectedCountries}" readonly>
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-dark dropdown-toggle bg-dark text-white" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                                <div class="dropdown-menu dropdown-menu-right px-3">
+                                    <div class="form-check" th:each="country : ${moviesFilter.possibleCountries}">
+                                        <input class="form-check-input" th:value="${country}" name="country" type="checkbox" th:id="'country_' + ${countryStat.index}" onclick="getCountries()">
+                                        <label class="form-check-label" th:for="'country_' + ${countryStat.index}" th:text="${country}">Country name</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-10">
-                    <div class="card-body">
-                        <h3 class="card-title"><a class="text-dark" href="/movie/1">The Godfather</a></h3>
-                        <h7>
-                            <a href="#" class="badge badge-pill badge-dark">#drama</a>
-                            <a href="#" class="badge badge-pill badge-dark">#gangster</a>
-                        </h7>
-                        <p class="card-text">The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.</p>
-                        <h3><span class="text-warning">★</span><span class="text-dark">9,2</span></h3>
+                <div class="col-sm">
+                    <div class="form-group">
+                        <label for="rate_filter">Ocena</label>
+                        <div class="input-group" id="rate_filter">
+                            <input type="number" max="10" min="1" class="form-control border-dark" placeholder="Od" th:field="${moviesFilter.minRate}">
+                            <div class="input-group-append">
+                                <span class="input-group-text bg-dark text-white border-dark"> - </span>
+                            </div>
+                            <input type="number" max="10" min="1" class="form-control border-dark" placeholder="Do" th:field="${moviesFilter.maxRate}">
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="card mb-3 border-dark">
-            <div class="row no-gutters">
-                <div class="col-md-2">
-                    <img src="../images/the_shawshank_redemtion.jpg" class="card-img" alt="...">
-                </div>
-                <div class="col-md-10">
-                    <div class="card-body">
-                        <h3 class="card-title">The Shawshank Redemption</h3>
-                        <h7 class="text-muted">
-                            <a href="#" class="badge badge-pill badge-dark">#drama</a>
-                        </h7>
-                        <p class="card-text">Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.</p>
-                        <h3><span class="text-warning">★</span><span class="text-dark">9,3</span></h3>
-                    </div>
-                </div>
+            <div class="row mt-3">
+                <button type="submit" class="btn btn-dark btn-lg btn-block">Szukaj</button>
             </div>
         </div>
 
-        <div class="card mb-3 border-dark">
-            <div class="row no-gutters">
-                <div class="col-md-2">
-                    <img src="../images/the_lord_of_the_rings_the_fellowship_of_the_ring.jpg" class="card-img" alt="...">
+        <div class="jumbotron pb-3 pt-4" id="results">
+
+            <div class="row pb-4">
+                <div class="col" th:if="${moviesPage.getTotalElements()} > 0">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-dark bg-dark text-white px-4" type="submit">Sortuj</button>
+                        </div>
+                        <select class="custom-select border-dark" th:name="sort">
+                            <option value="1" th:selected="${#httpServletRequest.getParameter('sort') == '1'}">Wg. oceny malejąco</option>
+                            <option value="2" th:selected="${#httpServletRequest.getParameter('sort') == '2'}">Wg. oceny rosnąco</option>
+                            <option value="3" th:selected="${#httpServletRequest.getParameter('sort') == '3'}">Wg. nazwy malejąco</option>
+                            <option value="4" th:selected="${#httpServletRequest.getParameter('sort') == '4'}">Wg. nazwy rosnąco</option>
+                            <option value="5" th:selected="${#httpServletRequest.getParameter('sort') == '5'}">Wg. roku malejąco</option>
+                            <option value="6" th:selected="${#httpServletRequest.getParameter('sort') == '6'}">Wg. roku rosnąco</option>
+                            <option value="7" th:selected="${#httpServletRequest.getParameter('sort') == '7'}">Wg. liczby ocen malejąco</option>
+                            <option value="8" th:selected="${#httpServletRequest.getParameter('sort') == '8'}">Wg. liczby ocen rosnąco</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="col-md-10">
-                    <div class="card-body">
-                        <h3 class="card-title">The Lord of the Rings: The Fellowship of the Ring</h3>
-                        <h7 class="text-muted">
-                            <a href="#" class="badge badge-pill badge-dark">#drama</a>
-                        </h7>
-                        <p class="card-text">A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.</p>
-                        <h3><span class="text-warning">★</span><span class="text-dark">8,8</span></h3>
+                <div class="col text-center">
+                    <h4>
+                        <span class="badge bg-dark text-white py-2">Liczba wyników <span class="badge badge-light" id="movies:numberOfElements" th:text="${moviesPage.getTotalElements()}">num</span></span>
+                    </h4>
+                </div>
+                <div class="col" th:if="${moviesPage.getTotalElements()} > 0">
+                    <div class="input-group">
+                        <select class="custom-select border-dark" th:name="size" th:field="${moviesPage.size}">
+                            <option value="10">10 wyników na strone</option>
+                            <option value="20">20 wyników na strone</option>
+                            <option value="50">50 wyników na strone</option>
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-dark bg-dark text-white px-4" type="submit">Pokaż</button>
+                        </div>
                     </div>
                 </div>
             </div>
+
+            <div class="card mb-3 border-dark" th:each="movie : ${moviesPage.getContent()}">
+                <div class="row no-gutters">
+                    <div class="col-md-2">
+                        <img th:src="${movie.getCover().getSource()}" class="card-img" th:alt="${movie.getTitle()}" th:title="'@Author: ' + ${movie.getCover().getAuthor()}">
+                    </div>
+                    <div class="col-md-10">
+                        <div class="card-body">
+                            <h3 class="card-title"><a class="text-dark" th:href="@{/movie/{id} (id=${movie.getId()})}" th:text="${movie.getTitle()} + ' (' + ${movie.getYear()} + ')'">Title</a></h3>
+                            <h7>
+                                <a href="#" class="badge badge-pill badge-dark" th:each="category : ${movie.getCategories()}" th:text="'#' + ${category}">category</a>
+                            </h7>
+                            <p></p>
+                            <p class="card-text" th:text="${movie.getDescription()}">description</p>
+                            <ul class="list-inline">
+                                <li class="list-inline-item font-weight-bold" th:text="'⦿ Średnia ocena: ' + ${movie.getAvgUsersRatingAsString()}">Average★</li>
+                                <li class="list-inline-item font-weight-bold" th:text="'⦿ ' + ${movie.getNumberOfPeopleWhoWatched()} + ' użytkowników oceniło ten film'">Number of people who watched</li>
+                                <li class="list-inline-item font-weight-bold" th:text="'⦿ ' + ${movie.getNumberOfPeopleWhoWantToWatch()} + ' chce go zobaczyć'">Number of people who want to watch</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="pt-3" th:if="${moviesPage.getTotalElements()} > 0">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${moviesPage.first}? disabled">
+                        <a class="page-link border-dark text-dark" th:href="@{/movies#results (size=${moviesPage.size}, page=1, sort=${#httpServletRequest.getParameter('sort')})}">|<</a>
+                    </li>
+                    <li class="page-item" th:classappend="${!moviesPage.hasPrevious()}? disabled">
+                        <a class="page-link border-dark text-dark" th:href="@{/movies#results (size=${moviesPage.size}, page=${moviesPage.getNumber()}, sort=${#httpServletRequest.getParameter('sort')})}"><</a>
+                    </li>
+                    <li class="page-item disabled">
+                        <a class="page-link border-dark bg-dark text-white" th:text="${moviesPage.getNumber()+1} + ' z ' + ${moviesPage.getTotalPages()}">current page</a>
+                    </li>
+                    <li class="page-item" th:classappend="${!moviesPage.hasNext()}? disabled">
+                        <a class="page-link border-dark text-dark" th:href="@{/movies#results (size=${moviesPage.size}, page=${moviesPage.getNumber()+2}, sort=${#httpServletRequest.getParameter('sort')})}">></a>
+                    </li>
+                    <li class="page-item" th:classappend="${moviesPage.last}? disabled">
+                        <a class="page-link border-dark text-dark" th:href="@{/movies#results (size=${moviesPage.size}, page=${moviesPage.getTotalPages()}, sort=${#httpServletRequest.getParameter('sort')})}">>|</a>
+                    </li>
+                </ul>
+            </nav>
+
         </div>
-
-        <nav class="pt-3">
-            <ul class="pagination justify-content-center">
-                <li class="page-item disabled">
-                    <a class="page-link border-dark" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-                </li>
-                <li class="page-item active"><a class="page-link border-dark bg-dark" href="#">1</a></li>
-                <li class="page-item"><a class="page-link border-dark text-dark" href="#">2</a></li>
-                <li class="page-item"><a class="page-link border-dark text-dark" href="#">3</a></li>
-                <li class="page-item disabled">
-                    <a class="page-link border-dark" href="#" tabindex="-1" aria-disabled="true">...</a>
-                </li>
-                <li class="page-item"><a class="page-link border-dark text-dark" href="#">26</a></li>
-                <li class="page-item">
-                    <a class="page-link border-dark text-dark" href="#">Next</a>
-                </li>
-            </ul>
-        </nav>
-
-    </div>
+    </form>
 
 </main>
 </body>

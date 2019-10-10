@@ -2,6 +2,7 @@ package com.rooq37.filmzone.movies;
 
 import com.rooq37.filmzone.entities.CommentEntity;
 import com.rooq37.filmzone.services.MovieService;
+import com.rooq37.filmzone.services.ViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,7 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class MovieDetailController {
 
     @Autowired
-    MovieService movieService;
+    private MovieService movieService;
+    @Autowired
+    private ViewService viewService;
 
     @RequestMapping(value = "/movie/{id}", method = RequestMethod.GET)
     public String displayMovie(Model model,
@@ -25,6 +28,8 @@ public class MovieDetailController {
                                @RequestParam(value = "page", defaultValue = "1") Integer page,
                                @RequestParam(value = "size", defaultValue = "10") Integer size,
                                @RequestParam(value = "sort", defaultValue = "1") Integer sort) {
+
+        viewService.saveViewLog(id);
 
         Page<CommentEntity> commentPage;
         switch(sort){
@@ -39,6 +44,7 @@ public class MovieDetailController {
             break;
         }
 
+        model.addAttribute("movieId", id);
         model.addAttribute("commentPage", commentPage);
         model.addAttribute("movieSummary", movieService.getMovieSummary(id));
         model.addAttribute("movieRating", movieService.getMovieRating(id));

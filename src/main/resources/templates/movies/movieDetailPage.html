@@ -13,21 +13,21 @@
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <h1 class="text-dark" th:text="${movieSummary.getTitle()}">Title</h1>
+                        <h1 id="moviePage:movieTitle" class="text-dark" th:text="${movieSummary.getTitle()}">Title</h1>
                     </div>
                     <div class="col">
-                        <h1 class="text-right"><span class="text-warning">★</span><span class="text-dark" th:text="${movieSummary.getAvgUsersRating()}">Rating</span></h1>
+                        <h1 class="text-right"><span class="text-warning">★</span><span id="moviePage:movieRating" class="text-dark" th:text="${movieSummary.getAvgUsersRating()}">Rating</span></h1>
                     </div>
                 </div>
                 <h5 class="text-muted">
                     <a href="#" class="badge badge-pill badge-dark" th:each="category : ${movieSummary.getCategories()}" th:text="'#' + ${category}">#category</a>
                 </h5>
                 <br>
-                <span th:text="${movieSummary.getDescription()}">Description</span>
+                <span id="moviePage:movieDescription" th:text="${movieSummary.getDescription()}">Description</span>
                 <hr class="my-4">
                 <ul>
                     <li>
-                        <span th:text="'Rok produkcji: ' + ${movieSummary.getYear()}">Duration</span>
+                        <span th:text="'Rok produkcji: ' + ${movieSummary.getYear()}">Year</span>
                     </li>
                     <li>
                         <span th:text="'Czas trwania: ' + ${movieSummary.getDuration() + ' min'}">Duration</span>
@@ -50,10 +50,10 @@
         <h4 th:text="'Średnia ocena: ' + ${movieRating.getAvg()}">Average users rating</h4>
         <ul>
             <li>
-                <span th:text="${movieRating.getNumberOfPeopleWhoWatched()} + ' użytkowników oceniło ten film'">watched</span>
+                <span id="moviePage:numberOfRatings" th:text="${movieRating.getNumberOfPeopleWhoWatched()} + ' użytkowników oceniło ten film'">watched</span>
             </li>
             <li>
-                <span th:text="${movieRating.getNumberOfPeopleWhoWantToWatch()} + ' chce go zobaczyć'">want to see</span>
+                <span id="moviePage:numberOfPeopleWhoWantToWatch" th:text="${movieRating.getNumberOfPeopleWhoWantToWatch()} + ' chce go zobaczyć'">want to see</span>
             </li>
         </ul>
     </div>
@@ -102,10 +102,10 @@
         </div>
     </div>
 
-    <form th:action="@{/movie/1#comments}" method="get" class="jumbotron pb-3 pt-4" id="comments">
+    <form th:action="@{/movie/__${movieId}__#comments}" method="get" class="jumbotron pb-3 pt-4" id="comments">
         <h4>Komentarze</h4>
         <div class="row pb-4">
-            <div class="col">
+            <div class="col" th:if="${commentPage.getTotalElements() > 0}">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <button class="btn btn-outline-dark bg-dark text-white px-4" type="submit">Sortuj</button>
@@ -123,7 +123,7 @@
                     <span class="badge bg-dark text-white py-2">Liczba komentarzy <span class="badge badge-light" th:text="${commentPage.getTotalElements()}">number of comments</span></span>
                 </h4>
             </div>
-            <div class="col">
+            <div class="col" th:if="${commentPage.getTotalElements() > 0}">
                 <div class="input-group">
                     <select class="custom-select border-dark" th:name="size" th:field="*{commentPage.size}">
                         <option value="10">10 komentarzy na strone</option>
@@ -137,7 +137,7 @@
             </div>
         </div>
 
-        <div class="card border-dark mb-2" th:each="comment : ${commentPage.getContent()}">
+        <div class="card border-dark mb-2" th:each="comment : ${commentPage.getContent()}" th:if="${commentPage.getTotalElements() > 0}">
             <div class="card-header">
                 <div class="row">
                     <div class="col text-left font-weight-bold text-dark" th:text="${comment.getUser().getName()}">author</div>
@@ -162,22 +162,22 @@
             </div>
         </div>
 
-        <nav class="pt-3">
+        <nav class="pt-3" th:if="${commentPage.getTotalElements() > 0}">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${commentPage.first}? disabled">
-                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=1, size=${commentPage.size}, page=1, sort=${#httpServletRequest.getParameter('sort')})}">|<</a>
+                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=${movieId}, size=${commentPage.size}, page=1, sort=${#httpServletRequest.getParameter('sort')})}">|<</a>
                 </li>
                 <li class="page-item" th:classappend="${!commentPage.hasPrevious()}? disabled">
-                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=1, size=${commentPage.size}, page=${commentPage.getNumber()}, sort=${#httpServletRequest.getParameter('sort')})}"><</a>
+                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=${movieId}, size=${commentPage.size}, page=${commentPage.getNumber()}, sort=${#httpServletRequest.getParameter('sort')})}"><</a>
                 </li>
                 <li class="page-item disabled">
                     <a class="page-link border-dark bg-dark text-white" th:text="${commentPage.getNumber()+1} + ' z ' + ${commentPage.getTotalPages()}">current page</a>
                 </li>
                 <li class="page-item" th:classappend="${!commentPage.hasNext()}? disabled">
-                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=1, size=${commentPage.size}, page=${commentPage.getNumber()+2}, sort=${#httpServletRequest.getParameter('sort')})}">></a>
+                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=${movieId}, size=${commentPage.size}, page=${commentPage.getNumber()+2}, sort=${#httpServletRequest.getParameter('sort')})}">></a>
                 </li>
                 <li class="page-item" th:classappend="${commentPage.last}? disabled">
-                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=1, size=${commentPage.size}, page=${commentPage.getTotalPages()}, sort=${#httpServletRequest.getParameter('sort')})}">>|</a>
+                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=${movieId}, size=${commentPage.size}, page=${commentPage.getTotalPages()}, sort=${#httpServletRequest.getParameter('sort')})}">>|</a>
                 </li>
             </ul>
         </nav>

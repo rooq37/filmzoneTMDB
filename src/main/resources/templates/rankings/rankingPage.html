@@ -6,80 +6,43 @@
 <main role="main" class="container">
 
     <div class="jumbotron">
-        <h1 class="text-center">Top 100 highest rated movies</h1>
+        <h1 class="text-center" th:text="${rankingTitle}">Top 100</h1>
     </div>
 
     <div class="jumbotron pb-3 pt-4">
 
-        <div class="card mb-3 border-dark">
-            <div class="card-header border-dark font-weight-bold text-center">TOP 1</div>
+        <div class="card mb-3 border-dark" th:each="rankElement : ${rankingPage.getContent()}">
+            <div class="card-header border-dark font-weight-bold text-center" th:text="${rankElementStat.index + 1}">TOP</div>
             <div class="row no-gutters">
                 <div class="col-md-2">
-                    <img src="../images/the_shawshank_redemtion.jpg" class="card-img" alt="...">
+                    <img th:src="${rankElement.getCover().getSource()}" class="card-img" th:alt="${rankElement.getCover().getName()}">
                 </div>
                 <div class="col-md-10">
                     <div class="card-body">
-                        <h3 class="card-title">The Shawshank Redemption</h3>
+                        <h3 class="card-title"><a class="text-dark" th:href="@{/movie/{id} (id=${rankElement.getId()})}" th:text="${rankElement.getTitle()}">Title</a></h3>
                         <h7 class="text-muted">
-                            <a href="#" class="badge badge-pill badge-dark">#drama</a>
+                            <a href="#" class="badge badge-pill badge-dark" th:each="category : ${rankElement.getCategories()}" th:text="'#' + ${category}">#category</a>
                         </h7>
-                        <p class="card-text">Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.</p>
-                        <h3><span class="text-warning">★</span><span class="text-dark">9,3</span></h3>
+                        <p class="card-text" th:text="${rankElement.getDescription()}">Description</p>
+                        <ul class="list-inline">
+                            <li th:if="${rankingType != 'HIGHEST_RATED'}" class="font-weight-bold list-inline-item" th:text="'⦿ Średnia ocena: ' + ${rankElement.getAvgUsersRatingAsString()}">Average★</li>
+                            <li th:if="${rankingType != 'MOST_RATED'}" class="font-weight-bold list-inline-item" th:text="'⦿ ' + ${rankElement.getNumberOfPeopleWhoWatched()} + ' użytkowników oceniło ten film'">Number of people who watched</li>
+                            <li th:if="${rankingType != 'MOST_EXPECTED'}" class="font-weight-bold list-inline-item" th:text="'⦿ ' + ${rankElement.getNumberOfPeopleWhoWantToWatch()} + ' chce go zobaczyć'">Number of people who want to watch</li>
+                            <li th:if="${rankingType != 'MOST_SEARCHED'}" class="font-weight-bold list-inline-item" th:text="'⦿ Liczba wyszukiwań: ' + ${rankElement.getNumberOfSearches()}">Number of searches</li>
+                        </ul>
                     </div>
                 </div>
             </div>
-            <div class="card-footer text-muted text-center">
-                Average users rating: 9,3129
-            </div>
-        </div>
-
-        <div class="card mb-3 border-dark">
-            <div class="card-header border-dark font-weight-bold text-center">TOP 2</div>
-            <div class="row no-gutters">
-                <div class="col-md-2">
-                    <img src="../images/the_godfather.jpg" class="card-img" alt="...">
-                </div>
-                <div class="col-md-10">
-                    <div class="card-body">
-                        <h3 class="card-title"><a class="text-dark" href="/movie">The Godfather</a></h3>
-                        <h7>
-                            <a href="#" class="badge badge-pill badge-dark">#drama</a>
-                            <a href="#" class="badge badge-pill badge-dark">#gangster</a>
-                        </h7>
-                        <p class="card-text">The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.</p>
-                        <h3><span class="text-warning">★</span><span class="text-dark">9,2</span></h3>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer text-muted text-center">
-                Average users rating: 9,2385
-            </div>
-        </div>
-
-        <div class="card mb-3 border-dark">
-            <div class="card-header border-dark font-weight-bold text-center">TOP 3</div>
-            <div class="row no-gutters">
-                <div class="col-md-2">
-                    <img src="../images/the_lord_of_the_rings_the_fellowship_of_the_ring.jpg" class="card-img" alt="...">
-                </div>
-                <div class="col-md-10">
-                    <div class="card-body">
-                        <h3 class="card-title">The Lord of the Rings: The Fellowship of the Ring</h3>
-                        <h7 class="text-muted">
-                            <a href="#" class="badge badge-pill badge-dark">#drama</a>
-                        </h7>
-                        <p class="card-text">A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.</p>
-                        <h3><span class="text-warning">★</span><span class="text-dark">8,8</span></h3>
-                    </div>
-                </div>
-            </div>
-            <div class="card-footer text-muted text-center">
-                Average users rating: 8,8415
-            </div>
+            <th:block th:switch="${rankingType}">
+                <div th:case="MOST_SEARCHED" class="card-footer text-muted text-center" th:text="${'Liczba wyszukiwań: ' + rankElement.getNumberOfSearches()}"></div>
+                <div th:case="HIGHEST_RATED" class="card-footer text-muted text-center" th:text="${'Średnia ocen: ' + rankElement.getAvgUsersRating()}"></div>
+                <div th:case="MOST_RATED" class="card-footer text-muted text-center" th:text="${'Liczba ocen: ' + rankElement.getNumberOfPeopleWhoWatched()}"></div>
+                <div th:case="MOST_EXPECTED" class="card-footer text-muted text-center" th:text="${'Liczba chcących zobaczyć: ' + rankElement.getNumberOfPeopleWhoWantToWatch()}"></div>
+            </th:block>
         </div>
 
         <div class="text-center">
-            <button type="button" class="btn btn-dark btn-lg">Show more</button>
+            <a class="btn btn-dark btn-lg text-white" th:href="@{/ranking/most_searched (size=${rankingPage.size + 10 > 100 ? 100 : rankingPage.size + 10})}">Show more</a>
         </div>
 
     </div>

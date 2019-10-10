@@ -3,70 +3,34 @@
 <head th:replace="fragments/head :: head"></head>
 <header th:replace="fragments/header :: header"></header>
 <body>
-<main role="main" class="container">
+<main role="main" class="container" th:object="${homeView}">
     <div class="jumbotron">
-        <h1 class="display-4">Most popular last week</h1>
+        <h1 class="display-4">Najpopularniejsze w ostatnim tygodniu</h1>
         <hr class="my-4">
-        <div id="carouselExampleCaptions" class="carousel slide rounded" data-ride="carousel">
+        <div id="carouselMostPopularMovies" class="carousel slide rounded" data-ride="carousel">
             <ol class="carousel-indicators" style="position: absolute; bottom: -50px;">
-                <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active bg-dark pb-1"></li>
-                <li data-target="#carouselExampleCaptions" data-slide-to="1" class="bg-dark pb-1"></li>
-                <li data-target="#carouselExampleCaptions" data-slide-to="2" class="bg-dark pb-1"></li>
+                <li th:each="movie : ${homeView.getMostPopularMovies()}" data-target="#carouselMostPopularMovies" class="bg-dark pb-1" th:data-slide-to="${movieStat.index}" th:classappend="${movieStat.first}? active"></li>
             </ol>
             <div class="carousel-inner">
-                <div class="carousel-item active">
+                <div class="carousel-item" th:each="movie : ${homeView.getMostPopularMovies()}" th:classappend="${movieStat.first}? active">
                     <div class="card mb-3 border-dark">
                         <div class="row no-gutters">
                             <div class="col-md-auto">
-                                <img style="max-height: 400px" src="../images/the_godfather.jpg" class="d-block mx-auto" alt="...">
+                                <img style="max-height: 400px" th:src="${movie.getKey().getCover().getSource()}" class="d-block mx-auto" th:alt="${movie.getKey().getCover().getName()}">
                             </div>
                             <div class="col">
                                 <div class="card-body">
-                                    <h3 class="card-title"><a class="text-dark" href="/movie">The Godfather</a></h3>
+                                    <h3 class="card-title"><a class="text-dark" th:href="@{/movie/{id} (id=${movie.getKey().getId()})}" th:text="${movie.getKey().getTitle()}">Title</a></h3>
                                     <h7>
-                                        <a href="#" class="badge badge-pill badge-dark">#drama</a>
-                                        <a href="#" class="badge badge-pill badge-dark">#gangster</a>
+                                        <a href="#" class="badge badge-pill badge-dark" th:each="category : ${movie.getKey().getCategories()}" th:text="'#' + ${category}">#category</a>
                                     </h7>
-                                    <p class="card-text">The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.</p>
-                                    <h3><span class="text-warning">★</span><span class="text-dark">9,2</span></h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="card mb-3 border-dark">
-                        <div class="row no-gutters">
-                            <div class="col-md-auto">
-                                <img style="max-height: 400px" src="../images/the_shawshank_redemtion.jpg" class="d-block mx-auto" alt="...">
-                            </div>
-                            <div class="col">
-                                <div class="card-body">
-                                    <h3 class="card-title">The Shawshank Redemption</h3>
-                                    <h7 class="text-muted">
-                                        <a href="#" class="badge badge-pill badge-dark">#drama</a>
-                                    </h7>
-                                    <p class="card-text">Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.</p>
-                                    <h3><span class="text-warning">★</span><span class="text-dark">9,3</span></h3>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="carousel-item">
-                    <div class="card mb-3 border-dark">
-                        <div class="row no-gutters">
-                            <div class="col-md-auto">
-                                <img style="max-height: 400px" src="../images/the_lord_of_the_rings_the_fellowship_of_the_ring.jpg" class="d-block mx-auto" alt="...">
-                            </div>
-                            <div class="col">
-                                <div class="card-body">
-                                    <h3 class="card-title">The Lord of the Rings: The Fellowship of the Ring</h3>
-                                    <h7 class="text-muted">
-                                        <a href="#" class="badge badge-pill badge-dark">#drama</a>
-                                    </h7>
-                                    <p class="card-text">A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.</p>
-                                    <h3><span class="text-warning">★</span><span class="text-dark">8,8</span></h3>
+                                    <p class="card-text" th:text="${movie.getKey().getDescription()}">Description</p>
+                                    <ul>
+                                        <li class="font-weight-bold" th:text="'Liczba wyszukiwań: ' + ${movie.getValue()}">Number of searches</li>
+                                        <li class="font-weight-bold" th:text="'Średnia ocena: ' + ${movie.getKey().getAvgUsersRatingAsString()}">Average★</li>
+                                        <li class="font-weight-bold" th:text="'' + ${movie.getKey().getNumberOfPeopleWhoWatched()} + ' użytkowników oceniło ten film'">Number of people who watched</li>
+                                        <li class="font-weight-bold" th:text="'' + ${movie.getKey().getNumberOfPeopleWhoWantToWatch()} + ' chce go zobaczyć'">Number of people who want to watch</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -76,49 +40,49 @@
         </div>
     </div>
     <div class="jumbotron">
-        <h1 class="display-4">General statistics</h1>
+        <h1 class="display-4">Statystyki ogólne</h1>
         <hr class="my-4">
         <table class="table">
             <tbody>
             <tr>
-                <th scope="row">Movies in database</th>
-                <td class="text-right">3</td>
+                <th scope="row">Filmy w bazie danych</th>
+                <td class="text-right" th:text="${homeView.getNumberOfMoviesInDatabase()}">number</td>
             </tr>
             <tr>
-                <th scope="row">Registered accounts</th>
-                <td class="text-right">1</td>
+                <th scope="row">Utworzone konta</th>
+                <td class="text-right" th:text="${homeView.getNumberOfRegisteredAccounts()}">number</td>
             </tr>
             <tr>
-                <th scope="row">Active users (login at least once a week)</th>
-                <td class="text-right">1</td>
+                <th scope="row">Aktywni użytkownicy (zalogowani w ciągu ostatniego tygodnia)</th>
+                <td class="text-right" th:text="${homeView.getNumberOfActiveUsers()}">number</td>
             </tr>
             <tr>
-                <th scope="row">Number of ratings</th>
-                <td class="text-right">26</td>
+                <th scope="row">Liczba ocen filmów</th>
+                <td class="text-right" th:text="${homeView.getNumberOfRatings()}">number</td>
             </tr>
             <tr>
-                <th scope="row">Number of searches</th>
-                <td class="text-right">503</td>
+                <th scope="row">Liczba wyszukiwań filmów</th>
+                <td class="text-right" th:text="${homeView.getNumberOfSearches()}">number</td>
             </tr>
             </tbody>
         </table>
     </div>
     <div class="jumbotron">
-        <h1 class="display-4">Last week statistics</h1>
+        <h1 class="display-4">Statystyki ostatniego tygodnia</h1>
         <hr class="my-4">
         <table class="table">
             <tbody>
             <tr>
-                <th scope="row">New accounts</th>
-                <td class="text-right">0</td>
+                <th scope="row">Nowe konta</th>
+                <td class="text-right" th:text="${homeView.getNumberOfNewAccountsLastWeek()}">number</td>
             </tr>
             <tr>
-                <th scope="row">Number of ratings</th>
-                <td class="text-right">3</td>
+                <th scope="row">Liczba ocen filmów</th>
+                <td class="text-right" th:text="${homeView.getNumberOfRatingsLastWeek()}">number</td>
             </tr>
             <tr>
-                <th scope="row">Number of searches</th>
-                <td class="text-right">86</td>
+                <th scope="row">Liczba wyszukiwań filmów</th>
+                <td class="text-right" th:text="${homeView.getNumberOfSearchesLastWeek()}">number</td>
             </tr>
             </tbody>
         </table>
