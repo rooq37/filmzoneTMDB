@@ -28,4 +28,8 @@ public class UserService {
         return "Konto zostało pomyślnie utworzone!";
     }
 
+    public UserEntity getUserByEmail(String email){
+        return userRepository.findByEmail(email);
+    }
+
 }

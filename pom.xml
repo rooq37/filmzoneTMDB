@@ -11,7 +11,7 @@
     <groupId>com.rooq37</groupId>
     <artifactId>filmzone</artifactId>
     <version>1.0.0-SNAPSHOT</version>
-    <nickname>filmzone</nickname>
+    <name>filmzone</name>
     <description>Engineering Thesis</description>
 
     <properties>
@@ -33,6 +33,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity5</artifactId>
+            <version>3.0.4.RELEASE</version>
         </dependency>
 
         <dependency>

@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <body>
 <header class="mb-5" th:fragment="header">
     <nav class="navbar fixed-top static-top navbar-expand-lg navbar-dark bg-dark">
@@ -39,12 +39,21 @@
                     </div>
                 </div>
             </form>
-            <form action="/login">
+            <form sec:authorize="!isAuthenticated()" action="/login">
                 <button class="btn btn-outline-warning ml-2 my-2 my-sm-0" type="submit">Login</button>
             </form>
-            <form action="/register">
+            <form sec:authorize="!isAuthenticated()" action="/register">
                 <button class="btn btn-outline-warning ml-2 my-2 my-sm-0" type="submit">Rejestracja</button>
             </form>
+
+            <div sec:authorize="isAuthenticated()" class="dropdown">
+                <button class="btn btn-outline-warning ml-2 my-2 my-sm-0 dropdown-toggle" type="button" id="userOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="${#authentication.getPrincipal().getUsername()}">
+                    Dropdown button
+                </button>
+                <div class="dropdown-menu" aria-labelledby="userOptions">
+                    <a class="dropdown-item" th:href="@{/perform_logout}">Wyloguj</a>
+                </div>
+            </div>
         </div>
     </nav>
     <br>
