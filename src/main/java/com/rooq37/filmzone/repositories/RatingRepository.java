@@ -16,5 +16,6 @@ public interface RatingRepository
     int countByMovieAndValueGreaterThan(MovieEntity movieEntity, int value);
     int countByMovieAndValueIs(MovieEntity movieEntity, int value);
     int countByDateAfter(Date date);
+    RatingEntity findByUser_EmailAndMovie_Id(String userEmail, Long movieId);
 
 }

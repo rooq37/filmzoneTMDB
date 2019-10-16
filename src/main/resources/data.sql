@@ -45,7 +45,7 @@ INSERT INTO MOVIE_PERSON VALUES (8, 'Tom Hagen', 'ACTOR', 1, 7);
 
 INSERT INTO USER VALUES (1, 'rooq37@email.pl', 'rooq37', '$2a$11$BPLSz.GDgMxAaEzp2kynNePS3UV2BVQtdN4yIrq3uRdz7PwGN5qm2');
 
-INSERT INTO RATING VALUES ('2019-09-17 18:59:15', 10, 1, 1);
+INSERT INTO RATING VALUES (1, 1, '2019-09-17 18:59:15', 10);
 
 INSERT INTO COMMENT VALUES (1, 'Great movie!', '2019-09-17 20:59:10', 4, 1, 1);
 INSERT INTO COMMENT VALUES (2, 'Great movie!', '2019-09-17 20:59:10', 4, 1, 1);
@@ -102,7 +102,7 @@ INSERT INTO MOVIE_PERSON VALUES (14, 'Peregrin "Pippin" Took', 'ACTOR', 2, 12);
 INSERT INTO MOVIE_PERSON VALUES (15, 'Meriadok "Merry" Brandybuck', 'ACTOR', 2, 13);
 INSERT INTO MOVIE_PERSON VALUES (16, 'Bilbo Baggins', 'ACTOR', 2, 14);
 
-INSERT INTO RATING VALUES ('2019-09-19 17:59:15', 9, 1, 2);
+INSERT INTO RATING VALUES (2, 1, '2019-09-19 17:59:15', 9);
 
 INSERT INTO COMMENT VALUES (12, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
 INSERT INTO COMMENT VALUES (13, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
@@ -155,7 +155,7 @@ INSERT INTO MOVIE_PERSON VALUES (22, 'Howard Cosell', 'ACTOR', 3, 19);
 INSERT INTO MOVIE_PERSON VALUES (23, 'Malcolm X', 'ACTOR', 3, 20);
 INSERT INTO MOVIE_PERSON VALUES (24, 'Angelo Dundee', 'ACTOR', 3, 21);
 
-INSERT INTO RATING VALUES ('2019-09-30 16:01:15', 8, 1, 3);
+INSERT INTO RATING VALUES (3, 1, '2019-09-30 16:01:15', 8);
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -195,7 +195,7 @@ INSERT INTO MOVIE_PERSON VALUES (28, 'Mirtha Jung', 'ACTOR', 4, 25);
 INSERT INTO MOVIE_PERSON VALUES (29, 'Barbara Buckley', 'ACTOR', 4, 26);
 INSERT INTO MOVIE_PERSON VALUES (30, 'Ermine Jung', 'ACTOR', 4, 27);
 
-INSERT INTO RATING VALUES ('2019-10-04 18:46:15', 8, 1, 4);
+INSERT INTO RATING VALUES (4, 1, '2019-10-04 18:46:15', 8);
 
 ------------------------------------------------------------------------------------------------------------------------
 
@@ -232,4 +232,4 @@ INSERT INTO MOVIE_PERSON VALUES (34, 'Hagrid', 'ACTOR', 5, 31);
 INSERT INTO MOVIE_PERSON VALUES (35, 'Albus Dumbledore', 'ACTOR', 5, 32);
 INSERT INTO MOVIE_PERSON VALUES (36, 'Professor McGonagall', 'ACTOR', 5, 33);
 
-INSERT INTO RATING VALUES ('2019-10-06 16:46:15', 8, 1, 5);
+INSERT INTO RATING VALUES (5, 1, '2019-10-06 16:46:15', 8);

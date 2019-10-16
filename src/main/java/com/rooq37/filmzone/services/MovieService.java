@@ -3,18 +3,15 @@ package com.rooq37.filmzone.services;
 import com.rooq37.filmzone.commons.CastPair;
 import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.entities.*;
-import com.rooq37.filmzone.movies.movieDetails.MovieCast;
-import com.rooq37.filmzone.movies.movieDetails.MovieMedia;
-import com.rooq37.filmzone.movies.movieDetails.MovieRating;
-import com.rooq37.filmzone.movies.movieDetails.MovieSummary;
+import com.rooq37.filmzone.movies.movieDetails.*;
 import com.rooq37.filmzone.movies.movies.MoviesFilterForm;
 import com.rooq37.filmzone.repositories.*;
-import com.rooq37.filmzone.services.HelperService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,6 +32,8 @@ public class MovieService {
     private MovieRepository movieRepository;
     @Autowired
     private RatingRepository ratingRepository;
+    @Autowired
+    private UserService userService;
 
     public MovieSummary getMovieSummary(Long id){
         MovieSummary movieSummary = new MovieSummary();
@@ -150,6 +149,24 @@ public class MovieService {
             case 8: movieElementList.sort(MovieListElement.numberOfPeopleWhoWatchedComparator);
                 break;
         }
+    }
+
+    public SingleUserRating getMovieRatingByUser(Long movieId, String userEmail){
+        RatingEntity userRating = ratingRepository.findByUser_EmailAndMovie_Id(userEmail, movieId);
+        return (userRating != null) ?
+                new SingleUserRating(true, userRating.getValue()) : new SingleUserRating(false);
+    }
+
+    public void rateMovie(Long movieId, String userEmail, int newRating){
+        RatingEntity userRating = ratingRepository.findByUser_EmailAndMovie_Id(userEmail, movieId);
+        if(userRating == null){
+            userRating = new RatingEntity();
+            userRating.setMovie(movieRepository.findMovieEntityById(movieId));
+            userRating.setUser(userService.getUserByEmail(userEmail));
+        }
+        userRating.setDate(new Date());
+        userRating.setValue(newRating);
+        ratingRepository.save(userRating);
     }
 
 }

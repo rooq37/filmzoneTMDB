@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="fragments/head :: head"></head>
 <header th:replace="fragments/header :: header"></header>
 <body>
@@ -56,6 +56,17 @@
                 <span id="moviePage:numberOfPeopleWhoWantToWatch" th:text="${movieRating.getNumberOfPeopleWhoWantToWatch()} + ' chce go zobaczyć'">want to see</span>
             </li>
         </ul>
+        <div sec:authorize="isAuthenticated()">
+            <hr class="my-4">
+            <div class="btn-toolbar" style="justify-content: center; display: flex;" role="toolbar">
+                <div class="btn-group mr-2" data-toggle="tooltip" data-placement="bottom" th:with="intList=${ {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} }"
+                     th:title="${userRating.getTooltip()}" role="group" aria-label="Rating group">
+                    <div class="btn btn-outline-dark bg-dark text-white" th:text="${userRating.getHeader()}">Movie rating</div>
+                    <a th:each="i : ${intList}" th:classappend="${userRating.getRate() == i}? text-warning : text-white" class="btn btn-outline-dark bg-dark"
+                       th:href="@{/rateMovie/{id} (id=${movieId}, rating=${i})}" th:text="|${i}|">1</a>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="jumbotron pb-3 pt-4" th:object="${movieMedia}">

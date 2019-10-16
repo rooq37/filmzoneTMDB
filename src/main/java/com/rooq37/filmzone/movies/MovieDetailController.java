@@ -7,12 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.security.Principal;
 
 @Controller
 public class MovieDetailController {
@@ -23,7 +26,8 @@ public class MovieDetailController {
     private ViewService viewService;
 
     @RequestMapping(value = "/movie/{id}", method = RequestMethod.GET)
-    public String displayMovie(Model model,
+    public String displayMovie(Principal principal,
+                               Model model,
                                @PathVariable Long id,
                                @RequestParam(value = "page", defaultValue = "1") Integer page,
                                @RequestParam(value = "size", defaultValue = "10") Integer size,
@@ -44,6 +48,8 @@ public class MovieDetailController {
             break;
         }
 
+        if (!SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser"))
+            model.addAttribute("userRating", movieService.getMovieRatingByUser(id, principal.getName()));
         model.addAttribute("movieId", id);
         model.addAttribute("commentPage", commentPage);
         model.addAttribute("movieSummary", movieService.getMovieSummary(id));
@@ -52,6 +58,13 @@ public class MovieDetailController {
         model.addAttribute("movieCast", movieService.getMovieCast(id));
 
         return "movies/movieDetailPage";
+    }
+
+    @RequestMapping(value = "/rateMovie/{id}", method = RequestMethod.GET)
+    public String displayMovie(Principal principal, @PathVariable Long id, @RequestParam(value = "rating") int rating){
+
+        movieService.rateMovie(id, principal.getName(), rating);
+        return "redirect:/movie/" + id;
     }
 
 }

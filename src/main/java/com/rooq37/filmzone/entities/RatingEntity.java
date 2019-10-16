@@ -6,19 +6,17 @@ import java.util.Date;
 
 @Entity
 @Table(name = "RATING")
-@IdClass(RatingEntity.class)
-public class RatingEntity implements Serializable {
+public class RatingEntity{
 
-    @Id
-    @MapsId
+    @EmbeddedId
+    private RatingPk ratingPk;
+
     @ManyToOne
-    @JoinColumn(name = "id_movie")
+    @JoinColumn(name = "id_movie", insertable = false, updatable = false)
     private MovieEntity movie;
 
-    @Id
-    @MapsId
     @ManyToOne
-    @JoinColumn(name = "id_user")
+    @JoinColumn(name = "id_user", insertable = false, updatable = false)
     private UserEntity user;
 
     @Column(name = "value")
@@ -26,6 +24,24 @@ public class RatingEntity implements Serializable {
 
     @Column(name = "date")
     private Date date;
+
+    @PrePersist
+    private void prePersist() {
+        if (getRatingPk() == null) {
+            RatingPk pk = new RatingPk();
+            pk.setUserId(getUser().getId());
+            pk.setMovieId(getMovie().getId());
+            setRatingPk(pk);
+        }
+    }
+
+    public RatingPk getRatingPk() {
+        return ratingPk;
+    }
+
+    public void setRatingPk(RatingPk ratingPk) {
+        this.ratingPk = ratingPk;
+    }
 
     public MovieEntity getMovie() {
         return movie;
