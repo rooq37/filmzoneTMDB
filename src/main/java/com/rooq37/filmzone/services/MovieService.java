@@ -169,4 +169,14 @@ public class MovieService {
         ratingRepository.save(userRating);
     }
 
+    public void addCommentToMovie(Long movieId, String userEmail, String content){
+        CommentEntity commentEntity = new CommentEntity();
+        commentEntity.setMovie(movieRepository.findMovieEntityById(movieId));
+        commentEntity.setUser(userService.getUserByEmail(userEmail));
+        commentEntity.setRating(0);
+        commentEntity.setContent(content);
+        commentEntity.setDate(new Date());
+        commentRepository.save(commentEntity);
+    }
+
 }

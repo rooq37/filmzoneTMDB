@@ -10,10 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
@@ -60,11 +57,18 @@ public class MovieDetailController {
         return "movies/movieDetailPage";
     }
 
-    @RequestMapping(value = "/rateMovie/{id}", method = RequestMethod.GET)
-    public String displayMovie(Principal principal, @PathVariable Long id, @RequestParam(value = "rating") int rating){
+    @RequestMapping(value = "/rateMovie", method = RequestMethod.POST)
+    public String displayMovie(Principal principal, @RequestParam(value = "rating") String rating, @RequestParam(value = "rating_movieId") String movieId){
 
-        movieService.rateMovie(id, principal.getName(), rating);
-        return "redirect:/movie/" + id;
+        movieService.rateMovie(Long.valueOf(movieId), principal.getName(), Integer.valueOf(rating));
+        return "redirect:/movie/" + movieId;
+    }
+
+    @RequestMapping(value = "/addCommentToMovie", method = RequestMethod.POST)
+    public String addCommentToMovie(Principal principal, @RequestParam(value = "comment_content") String content, @RequestParam(value = "comment_movieId") String movieId){
+
+        movieService.addCommentToMovie(Long.valueOf(movieId), principal.getName(), content);
+        return "redirect:/movie/" + movieId + "#comments";
     }
 
 }
