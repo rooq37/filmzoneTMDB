@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+<header th:replace="fragments/header :: header"></header>
+<body>
+<main role="main" class="container">
+
+    <div class="jumbotron">
+        <h2>Moje filmy</h2>
+        <hr class="my-4">
+        <form th:action="@{/createNewList}" method="post" class="row mb-2">
+            <div class="input-group">
+                <input th:name="newListName" type="text" class="form-control border-dark" placeholder="Wpisz nazwę listy, którą chcesz utworzyć">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-dark bg-dark text-white px-4" type="submit" style="width: 100px;">Utwórz</button>
+                </div>
+            </div>
+        </form>
+        <form class="row" th:action="@{/myMovies}" method="get">
+            <div class="input-group">
+                <select class="custom-select border-dark" th:name="listName">
+                    <option class="disabled" th:value="-1">Wybierz listę, którą chcesz wyświetlić</option>
+                    <option th:each="name : ${userAllLists}" th:value="${name}" th:text="${name}">List name</option>
+                </select>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-dark bg-dark text-white px-4" type="submit" style="width: 100px;">Pokaż</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="jumbotron" th:if="${!selectedList.equals('-1')}">
+        <div class="row">
+            <div class="col">
+                <h2 class="mt-2" th:text="${selectedList}">List name</h2>
+            </div>
+            <div class="col">
+                <form th:if="${moviesListPage.getPageList().size() > 0}" th:action="@{/myMovies}" method="get">
+                    <input type="hidden" th:name="listName" th:value="${selectedList}" />
+                    <input type="hidden" th:name="currentPage" th:value="${moviesListPage.getPage()}" />
+                    <nav class="pt-3">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" th:classappend="${moviesListPage.isFirstPage()}? disabled">
+                                <button type="submit" value="first" name="action" class="page-link border-dark text-dark">|<</button>
+                            </li>
+                            <li class="page-item" th:classappend="${moviesListPage.isFirstPage()}? disabled">
+                                <button type="submit" value="previous" name="action"  class="page-link border-dark text-dark"><</button>
+                            </li>
+                            <li class="page-item disabled">
+                                <a class="page-link border-dark bg-dark text-white" th:text="${moviesListPage.getPage()+1} + ' z ' + ${moviesListPage.getPageCount()}">current page</a>
+                            </li>
+                            <li class="page-item" th:classappend="${moviesListPage.isLastPage()}? disabled">
+                                <button type="submit" value="next" name="action"  class="page-link border-dark text-dark">></button>
+                            </li>
+                            <li class="page-item" th:classappend="${moviesListPage.isLastPage()}? disabled">
+                                <button type="submit" value="last" name="action"  class="page-link border-dark text-dark">>|</button>
+                            </li>
+                        </ul>
+                    </nav>
+                </form>
+            </div>
+            <div class="col text-right mt-2">
+                <h2>
+                    <button th:attr="onclick='confirmListRemoval(\'' + ${selectedList} + '\');'" type="button" class="btn btn-outline-dark bg-danger text-white">Usuń listę</button>
+                </h2>
+            </div>
+        </div>
+
+        <hr class="my-4">
+        <p class="text-center" th:if="${moviesListPage.getPageList().size() == 0}">Lista jest pusta</p>
+        <div th:if="${moviesListPage.getPageList().size() > 0}">
+
+            <form >
+                <div class="card-deck">
+                    <div class="w-25 d-flex align-items-stretch" th:each="movie : ${moviesListPage.getPageList()}">
+                        <div class="card text-white bg-dark">
+                            <div>
+                                <img th:src="${movie.getCover().getSource()}" data-toggle="tooltip" data-placement="bottom" class="img-fluid" th:alt="${movie.getTitle()}"
+                                     th:title="'@Author: ' + ${movie.getCover().getAuthor()}" style="height:250px; width:100%;">
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h7>
+                                    <a class="text-white" th:href="@{movie/{id} (id=${movie.getId()})}" th:text="${movie.getTitle()}">Title</a>
+                                    <button th:attr="onclick='confirmMovieFromListRemoval(\'' + ${movie.getTitle()} +'\',\''+ ${movie.getId()} + '\',\''+ ${selectedList} + '\');'"
+                                            type="button" class="close text-danger mt-auto text-right" aria-label="Remove" data-toggle="tooltip" data-placement="bottom" title="Usuń z listy">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </h7>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="movieFromListRemovalModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <form th:action="@{/removeFromList}" method="post">
+            <input type="hidden" id="movieRemovalModal_movieId" name="movieId"/>
+            <input type="hidden" id="movieRemovalModal_hiddenListName" name="listName"/>
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ostrzeżenie</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <span>Czy na pewno chcesz usunąć z listy </span>
+                        <label class="font-weight-bold" id="movieRemovalModal_listName">list name</label>
+                        <span> film o nazwie </span>
+                        <span class="font-weight-bold" id="movieRemovalModal_movieName"> movie name</span>
+                        <span>?</span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                        <button type="submit" class="btn btn-primary">Potwierdź</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal fade" id="listRemovalModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <form th:action="@{/removeList}" method="post">
+            <input type="hidden" id="listRemovalModal_hiddenListName" name="listName"/>
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ostrzeżenie</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <span>Czy na pewno chcesz usunąć listę o nazwie </span>
+                        <label class="font-weight-bold" id="listRemovalModal_listName">list name</label>
+                        <span>?</span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                        <button type="submit" class="btn btn-primary">Potwierdź</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</main>
+</body>
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>

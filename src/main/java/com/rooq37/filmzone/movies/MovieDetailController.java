@@ -1,6 +1,8 @@
 package com.rooq37.filmzone.movies;
 
 import com.rooq37.filmzone.entities.CommentEntity;
+import com.rooq37.filmzone.notifications.NotificationService;
+import com.rooq37.filmzone.services.FavouriteListService;
 import com.rooq37.filmzone.services.MovieService;
 import com.rooq37.filmzone.services.ViewService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,10 @@ public class MovieDetailController {
     private MovieService movieService;
     @Autowired
     private ViewService viewService;
+    @Autowired
+    private FavouriteListService favouriteListService;
+    @Autowired
+    private NotificationService notificationService;
 
     @RequestMapping(value = "/movie/{id}", method = RequestMethod.GET)
     public String displayMovie(Principal principal,
@@ -45,8 +51,10 @@ public class MovieDetailController {
             break;
         }
 
-        if (!SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser"))
+        if (!SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")){
             model.addAttribute("userRating", movieService.getMovieRatingByUser(id, principal.getName()));
+            model.addAttribute("myMovies", favouriteListService.getMyMovies(id, principal.getName()));
+        }
         model.addAttribute("movieId", id);
         model.addAttribute("commentPage", commentPage);
         model.addAttribute("movieSummary", movieService.getMovieSummary(id));
@@ -69,6 +77,28 @@ public class MovieDetailController {
 
         movieService.addCommentToMovie(Long.valueOf(movieId), principal.getName(), content);
         return "redirect:/movie/" + movieId + "#comments";
+    }
+
+    @RequestMapping(value = "/addMovieToList", method = RequestMethod.POST)
+    public String addMovieToList(Principal principal,
+                                 @RequestParam(value = "selectedList") String selectedList,
+                                 @RequestParam(value = "action") String action,
+                                 @RequestParam(value = "newListName") String newListName,
+                                 @RequestParam(value = "mymovies_movieId") String movieId){
+
+        if(action.equals("create")){
+            String message = favouriteListService.createFavouriteMovieList(principal.getName(), newListName);
+            if(message != null){
+                notificationService.addErrorMessage(message);
+                return "redirect:/movie/" + movieId;
+            }else{
+                favouriteListService.addMovieToFavouriteList(Long.valueOf(movieId), principal.getName(), newListName);
+            }
+        }else if(action.equals("add")){
+            favouriteListService.addMovieToFavouriteList(Long.valueOf(movieId), principal.getName(), selectedList);
+        }
+
+        return "redirect:/movie/" + movieId + "#mymovies";
     }
 
 }

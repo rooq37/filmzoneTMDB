@@ -14,3 +14,21 @@ function getCountries() {
     var input = $('#countries_input');
     input.val(countries.join(", "));
 }
+function confirmMovieFromListRemoval(movieTitle, movieId, listName) {
+    var mod_movieName = $('#movieRemovalModal_movieName');
+    var mod_movieId = $('#movieRemovalModal_movieId');
+    var mod_listName = $('#movieRemovalModal_listName');
+    var mod_hiddenListName = $('#movieRemovalModal_hiddenListName');
+    mod_movieName.text(movieTitle);
+    mod_movieId.val(movieId);
+    mod_listName.text(listName);
+    mod_hiddenListName.val(listName)
+    $('#movieFromListRemovalModal').modal('show');
+}
+function confirmListRemoval(listName){
+    var mod_listName = $('#listRemovalModal_listName');
+    var mod_hiddenListName = $('#listRemovalModal_hiddenListName');
+    mod_listName.text(listName);
+    mod_hiddenListName.val(listName);
+    $('#listRemovalModal').modal('show');
+}

@@ -110,6 +110,13 @@ public class MovieListElement {
         this.numberOfSearches = numberOfSearches;
     }
 
+    public static Comparator<MovieListElement> idComparator = new Comparator<MovieListElement>() {
+        @Override
+        public int compare(MovieListElement o1, MovieListElement o2) {
+            return Long.compare(o1.getId(), o2.getId());
+        }
+    };
+
     public static Comparator<MovieListElement> avgUsersRatingComparator = new Comparator<MovieListElement>() {
         @Override
         public int compare(MovieListElement o1, MovieListElement o2) {

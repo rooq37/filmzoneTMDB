@@ -58,13 +58,46 @@
         </ul>
         <div sec:authorize="isAuthenticated()">
             <hr class="my-4">
-            <form th:action="@{/rateMovie}" method="post" class="btn-toolbar" style="justify-content: center; display: flex;" role="toolbar">
-                <div class="btn-group mr-2" data-toggle="tooltip" data-placement="bottom" th:with="intList=${ {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} }"
-                     th:title="${userRating.getTooltip()}" role="group" aria-label="Rating group">
-                    <input type="hidden" th:name="rating_movieId" th:value="${movieId}" />
-                    <div class="btn btn-outline-dark bg-dark text-white" th:text="${userRating.getHeader()}">Movie rating</div>
-                    <button type="submit" th:each="i : ${intList}" th:classappend="${userRating.getRate() == i}? text-warning : text-white" class="btn btn-outline-dark bg-dark"
-                       th:name="rating" th:text="|${i}|" th:value="|${i}|">1</button>
+            <form th:action="@{/rateMovie}" method="post">
+                <input type="hidden" th:name="rating_movieId" th:value="${movieId}" />
+                <div class="btn-toolbar" style="justify-content: center; display: flex;" role="toolbar">
+                    <div class="btn-group mr-2" data-toggle="tooltip" data-placement="bottom" th:with="intList=${ {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} }"
+                         th:title="${userRating.getTooltip()}" role="group" aria-label="Rating group">
+                        <div class="btn btn-outline-dark bg-dark text-white" th:text="${userRating.getHeader()}">Movie rating</div>
+                        <button type="submit" th:each="i : ${intList}" th:classappend="${userRating.getRate() == i}? text-warning : text-white" class="btn btn-outline-dark bg-dark"
+                                th:name="rating" th:text="|${i}|" th:value="|${i}|">1</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="mymovies" class="jumbotron pb-3 pt-4" sec:authorize="isAuthenticated()" th:object="${myMovies}">
+        <h4>Twoje filmy</h4>
+        <hr class="my-4">
+        <div th:if="${!myMovies.getListsContainMovie().isEmpty()}">
+            <h5>Twoje listy, na których znajduje się ten film:</h5>
+            <ul>
+                <li th:each="listName : ${myMovies.getListsContainMovie()}">
+                    <a class="text-dark" th:href="@{'/myMovies'(listName=${listName})}" th:text="${listName}">List name</a>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <form th:action="@{/addMovieToList}" method="post">
+                <input type="hidden" th:name="mymovies_movieId" th:value="${movieId}" />
+                <div class="input-group">
+                    <select th:name="selectedList" class="custom-select border-dark">
+                        <option class="disabled" value="-1">Wybierz listę, do której chcesz dodać film...</option>
+                        <option th:each="listName : ${myMovies.getAvailableLists()}" th:value="${listName}", th:text="${listName}">name</option>
+                    </select>
+                    <div class="input-group-append">
+                        <button th:name="action" th:value="add" class="btn btn-outline-dark bg-dark text-white px-4" type="submit">Dodaj</button>
+                    </div>
+                    <input th:name="newListName" type="text" data-toggle="tooltip" title="Podaj nazwę nowej listy" class="form-control border-dark" placeholder="...lub utwórz nową">
+                    <div class="input-group-append">
+                        <button th:name="action" th:value="create" class="btn btn-outline-dark bg-dark text-white px-4" type="submit">Utwórz</button>
+                    </div>
                 </div>
             </form>
         </div>

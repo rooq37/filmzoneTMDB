@@ -1,5 +1,6 @@
 package com.rooq37.filmzone.repositories;
 
+import com.rooq37.filmzone.entities.FavouriteListEntity;
 import com.rooq37.filmzone.entities.MovieEntity;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.PagingAndSortingRepository;

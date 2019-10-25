@@ -1,6 +1,7 @@
 package com.rooq37.filmzone.entities;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "MOVIE")
@@ -21,6 +22,9 @@ public class MovieEntity {
 
     @Column(name = "duration")
     private int duration;
+
+    @ManyToMany(mappedBy = "movies")
+    private Set<FavouriteListEntity> favouriteLists;
 
     public Long getId() {
         return id;
@@ -60,6 +64,14 @@ public class MovieEntity {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public Set<FavouriteListEntity> getFavouriteLists() {
+        return favouriteLists;
+    }
+
+    public void setFavouriteLists(Set<FavouriteListEntity> favouriteLists) {
+        this.favouriteLists = favouriteLists;
     }
 
 }
