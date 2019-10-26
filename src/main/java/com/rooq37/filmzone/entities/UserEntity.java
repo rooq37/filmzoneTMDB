@@ -1,6 +1,7 @@
 package com.rooq37.filmzone.entities;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "USER")
@@ -18,6 +19,15 @@ public class UserEntity {
 
     @Column(name = "password")
     private String password;
+
+    @OneToMany(mappedBy = "user")
+    private Set<CommentEntity> comments;
+
+    @OneToMany(mappedBy = "user")
+    private Set<FavouriteListEntity> favouriteLists;
+
+    @OneToMany(mappedBy = "user")
+    private Set<RatingEntity> ratings;
 
     public Long getId() {
         return id;
@@ -49,6 +59,30 @@ public class UserEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Set<CommentEntity> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<CommentEntity> comments) {
+        this.comments = comments;
+    }
+
+    public Set<FavouriteListEntity> getFavouriteLists() {
+        return favouriteLists;
+    }
+
+    public void setFavouriteLists(Set<FavouriteListEntity> favouriteLists) {
+        this.favouriteLists = favouriteLists;
+    }
+
+    public Set<RatingEntity> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(Set<RatingEntity> ratings) {
+        this.ratings = ratings;
     }
 
 }

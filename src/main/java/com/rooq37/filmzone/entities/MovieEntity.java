@@ -35,6 +35,18 @@ public class MovieEntity {
     @ManyToMany(mappedBy = "movies")
     private Set<FavouriteListEntity> favouriteLists;
 
+    @OneToMany(mappedBy = "movie")
+    private Set<CommentEntity> comments;
+
+    @OneToMany(mappedBy = "movie")
+    private Set<MoviePersonEntity> people;
+
+    @OneToMany(mappedBy = "movie")
+    private Set<RatingEntity> ratings;
+
+    @OneToMany(mappedBy = "movie")
+    private Set<ViewEntity> views;
+
     public Long getId() {
         return id;
     }
@@ -75,20 +87,20 @@ public class MovieEntity {
         this.duration = duration;
     }
 
-    public Set<CountryEntity> getCountries() {
-        return countries;
-    }
-
-    public void setCountries(Set<CountryEntity> countries) {
-        this.countries = countries;
-    }
-
     public Set<CategoryEntity> getCategories() {
         return categories;
     }
 
     public void setCategories(Set<CategoryEntity> categories) {
         this.categories = categories;
+    }
+
+    public Set<CountryEntity> getCountries() {
+        return countries;
+    }
+
+    public void setCountries(Set<CountryEntity> countries) {
+        this.countries = countries;
     }
 
     public Set<MediaEntity> getMedia() {
@@ -105,6 +117,38 @@ public class MovieEntity {
 
     public void setFavouriteLists(Set<FavouriteListEntity> favouriteLists) {
         this.favouriteLists = favouriteLists;
+    }
+
+    public Set<CommentEntity> getComments() {
+        return comments;
+    }
+
+    public void setComments(Set<CommentEntity> comments) {
+        this.comments = comments;
+    }
+
+    public Set<MoviePersonEntity> getPeople() {
+        return people;
+    }
+
+    public void setPeople(Set<MoviePersonEntity> people) {
+        this.people = people;
+    }
+
+    public Set<RatingEntity> getRatings() {
+        return ratings;
+    }
+
+    public void setRatings(Set<RatingEntity> ratings) {
+        this.ratings = ratings;
+    }
+
+    public Set<ViewEntity> getViews() {
+        return views;
+    }
+
+    public void setViews(Set<ViewEntity> views) {
+        this.views = views;
     }
 
 }

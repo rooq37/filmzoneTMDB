@@ -1,6 +1,7 @@
 package com.rooq37.filmzone.entities;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "PERSON")
@@ -15,6 +16,9 @@ public class PersonEntity {
 
     @Column(name = "surname")
     private String surname;
+
+    @OneToMany(mappedBy = "person")
+    private Set<MoviePersonEntity> movies;
 
     public Long getId() {
         return id;
@@ -42,6 +46,14 @@ public class PersonEntity {
 
     public String getFullName(){
         return name + " " + surname;
+    }
+
+    public Set<MoviePersonEntity> getMovies() {
+        return movies;
+    }
+
+    public void setMovies(Set<MoviePersonEntity> movies) {
+        this.movies = movies;
     }
 
 }
