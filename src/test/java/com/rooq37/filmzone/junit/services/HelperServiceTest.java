@@ -4,8 +4,11 @@ import com.rooq37.filmzone.FilmzoneApplication;
 import com.rooq37.filmzone.commons.Image;
 import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.entities.MovieEntity;
+import com.rooq37.filmzone.repositories.CategoryRepository;
 import com.rooq37.filmzone.repositories.MovieRepository;
 import com.rooq37.filmzone.services.HelperService;
+import org.hibernate.Hibernate;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,9 @@ public class HelperServiceTest {
 
     @Autowired
     private MovieRepository movieRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Test
     public void getAllMovieListElements() {
@@ -83,6 +89,7 @@ public class HelperServiceTest {
     @Test
     public void getCategories() {
         MovieEntity movieEntity = movieRepository.findMovieEntityById((long) 1);
+        Hibernate.initialize(movieEntity.getCategories());
         List<String> categories = helperService.getCategories(movieEntity);
         assertThat(categories.size()).isEqualTo(2);
         assertThat(categories).contains("dramat");

@@ -21,8 +21,6 @@ public class HelperService {
     @Autowired
     private ViewRepository viewRepository;
     @Autowired
-    private MovieCategoryRepository movieCategoryRepository;
-    @Autowired
     private RatingRepository ratingRepository;
     @Autowired
     private MovieMediaRepository movieMediaRepository;
@@ -80,8 +78,8 @@ public class HelperService {
     }
 
     public List<String> getCategories(MovieEntity movieEntity){
-        return movieCategoryRepository.findAllByMovie(movieEntity).stream().
-                map(movieCategory -> movieCategory.getCategory().getName()).collect(Collectors.toList());
+        return movieEntity.getCategories().stream().
+                map(CategoryEntity::getName).collect(Collectors.toList());
     }
 
     public List<String> getCountries(MovieEntity movieEntity){

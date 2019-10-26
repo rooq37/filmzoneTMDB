@@ -56,7 +56,7 @@ public class ViewServiceTest {
         assertThat(homeForm.getNumberOfMoviesInDatabase()).isEqualTo(5L);
         assertThat(homeForm.getNumberOfNewAccountsLastWeek()).isEqualTo(1L);
         assertThat(homeForm.getNumberOfRatings()).isEqualTo(5L);
-        assertThat(homeForm.getNumberOfRatingsLastWeek()).isEqualTo(2L);
+        assertThat(homeForm.getNumberOfRatingsLastWeek()).isEqualTo(0L);
         assertThat(homeForm.getNumberOfRegisteredAccounts()).isEqualTo(1L);
         assertThat(homeForm.getNumberOfSearches()).isEqualTo(0L);
         assertThat(homeForm.getNumberOfSearchesLastWeek()).isEqualTo(0L);
