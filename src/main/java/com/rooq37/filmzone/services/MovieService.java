@@ -23,8 +23,6 @@ public class MovieService {
     @Autowired
     private CommentRepository commentRepository;
     @Autowired
-    private MovieCountryRepository movieCountryRepository;
-    @Autowired
     private MovieMediaRepository movieMediaRepository;
     @Autowired
     private MoviePersonRepository moviePersonRepository;
@@ -55,8 +53,8 @@ public class MovieService {
                 map(moviePerson -> moviePerson.getPerson().getFullName()).collect(Collectors.joining(", "));
         movieSummary.setScenario(scenario);
 
-        String countries = movieCountryRepository.findAllByMovie(movie).stream().
-                map(movieCountry -> movieCountry.getCountry().getName()).collect(Collectors.joining(", "));
+        String countries = movie.getCountries().stream().
+                map(CountryEntity::getName).collect(Collectors.joining(", "));
         movieSummary.setCountry(countries);
 
         movieSummary.setAvgUsersRating(String.format("%.1f", helperService.countAverageRating(movie)));

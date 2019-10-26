@@ -26,6 +26,9 @@ public class MovieEntity {
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "movies")
     private Set<CategoryEntity> categories;
 
+    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "movies")
+    private Set<CountryEntity> countries;
+
     @ManyToMany(mappedBy = "movies")
     private Set<FavouriteListEntity> favouriteLists;
 
@@ -67,6 +70,14 @@ public class MovieEntity {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    public Set<CountryEntity> getCountries() {
+        return countries;
+    }
+
+    public void setCountries(Set<CountryEntity> countries) {
+        this.countries = countries;
     }
 
     public Set<CategoryEntity> getCategories() {
