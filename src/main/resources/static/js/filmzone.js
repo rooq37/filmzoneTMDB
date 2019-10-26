@@ -32,3 +32,17 @@ function confirmListRemoval(listName){
     mod_hiddenListName.val(listName);
     $('#listRemovalModal').modal('show');
 }
+function showAllMoviesInProfile(){
+    $.each($("div[name='prof_optional']"), function(){
+        this.style.display = 'block';
+    });
+    $('#showAllButton').hide();
+    $('#hideAllButton').show();
+}
+function hideAllMoviesInProfile() {
+    $.each($("div[name='prof_optional']"), function(){
+        this.style.setProperty('display', 'none', 'important');
+    });
+    $('#showAllButton').show();
+    $('#hideAllButton').hide();
+}

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.rooq37</groupId>
     <artifactId>filmzone</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>filmzone</name>
     <description>Engineering Thesis</description>
 

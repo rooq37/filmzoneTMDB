@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
+
 @Service
 public class UserService {
 
@@ -24,6 +26,7 @@ public class UserService {
         userEntity.setNickname(registerForm.getNickname());
         userEntity.setEmail(registerForm.getEmail());
         userEntity.setPassword(new BCryptPasswordEncoder(11).encode(registerForm.getPassword()));
+        userEntity.setRegisterDate(new Date());
         userRepository.save(userEntity);
         return "Konto zostało pomyślnie utworzone!";
     }

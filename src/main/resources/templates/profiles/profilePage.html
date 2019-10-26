@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+<header th:replace="fragments/header :: header"></header>
+<body>
+<main role="main" class="container">
+
+    <div class="jumbotron">
+        <h2><span>Profil użytkownika </span><span class="text-warning" th:text="${profile.getNickname()}"></span></h2>
+        <hr class="my-4">
+        <ul>
+            <li>
+                <span th:text="'Data rejestracji: ' + ${#dates.format(profile.getRegisterDate(), 'dd MMM yyyy')}">Register date</span>
+            </li>
+            <li>
+                <span th:text="'Liczba ocenionych filmów: ' + ${profile.getNumberOfRatedMovies()}">Number of rated movies</span>
+            </li>
+            <li>
+                <span th:text="'Liczba komentarzy: ' + ${profile.getNumberOfComments()}">Number of comments</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col">
+                <h2 class="mt-2">Ocenione filmy</h2>
+            </div>
+            <div class="col"></div>
+            <div class="col text-right mt-2">
+                <h2 th:if="${profile.getRatedMovies().size() != 0}">
+                    <button onclick="showAllMoviesInProfile()" id="showAllButton" type="button" class="btn btn-outline-dark bg-dark text-white">Pokaż wszystkie</button>
+                </h2>
+            </div>
+        </div>
+
+        <hr class="my-4">
+        <p class="text-center" th:if="${profile.getRatedMovies().size() == 0}">Ten użytkownik nie ocenił jeszcze żadnego filmu</p>
+        <div th:if="${profile.getRatedMovies().size() != 0}">
+
+            <form >
+                <div class="card-deck">
+                    <div th:name="${movieStat.index > 3}? 'prof_optional' : 'prof'" th:style="'display:'+@{${movieStat.index > 3}? 'none!important' : 'block'}+';'" class="w-25 d-flex align-items-stretch mb-2" th:each="movie : ${profile.getRatedMovies()}">
+                        <div class="card text-white bg-dark">
+                            <div>
+                                <img th:src="${movie.getKey().getCover().getSource()}" data-toggle="tooltip" data-placement="bottom" class="img-fluid" th:alt="${movie.getKey().getTitle()}"
+                                     th:title="'@Author: ' + ${movie.getKey().getCover().getAuthor()}" style="height:250px; width:100%;">
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h7>
+                                    <a class="text-white" th:href="@{movie/{id} (id=${movie.getKey().getId()})}" th:text="${movie.getKey().getTitle()}">Title</a>
+                                    <a data-toggle="tooltip" data-placement="bottom" th:title="'Ocena użytkownika ' + ${profile.getNickname()}" class="text-right"><span class="text-warning">★</span><span class="text-white" th:text="${movie.getValue()}">Rating</span></a>
+                                </h7>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <div class="row mt-3">
+                <div class="col-sm-12">
+                    <div class="text-center">
+                        <button style="display: none!important" onclick="hideAllMoviesInProfile()" id="hideAllButton" type="button" class="btn btn-outline-dark bg-dark text-white">Ukryj</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</main>
+</body>
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>
