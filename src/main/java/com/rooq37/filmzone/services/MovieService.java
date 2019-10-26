@@ -23,8 +23,6 @@ public class MovieService {
     @Autowired
     private CommentRepository commentRepository;
     @Autowired
-    private MovieMediaRepository movieMediaRepository;
-    @Autowired
     private MoviePersonRepository moviePersonRepository;
     @Autowired
     private MovieRepository movieRepository;
@@ -32,6 +30,8 @@ public class MovieService {
     private RatingRepository ratingRepository;
     @Autowired
     private UserService userService;
+    @Autowired
+    private MediaRepository mediaRepository;
 
     public MovieSummary getMovieSummary(Long id){
         MovieSummary movieSummary = new MovieSummary();
@@ -78,7 +78,7 @@ public class MovieService {
         MovieEntity movie = movieRepository.findById(id).get();
 
         movieMedia.setPhotos(helperService.getPictures(movie));
-        movieMedia.setTrailerLink(movieMediaRepository.findAllByMovieAndMedia_Type(movie, "TRAILER").get(0).getMedia().getValue());
+        movieMedia.setTrailerLink(mediaRepository.findAllByMoviesEqualsAndType(movie, "TRAILER").get(0).getValue());
 
         return movieMedia;
     }

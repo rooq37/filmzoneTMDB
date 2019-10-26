@@ -23,11 +23,11 @@ public class HelperService {
     @Autowired
     private RatingRepository ratingRepository;
     @Autowired
-    private MovieMediaRepository movieMediaRepository;
-    @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
     private CountryRepository countryRepository;
+    @Autowired
+    private MediaRepository mediaRepository;
 
     public List<MovieListElement> getAllMovieListElements(){
         List<MovieListElement> movieList = new ArrayList<>();
@@ -63,14 +63,14 @@ public class HelperService {
     }
 
     public Image getCover(MovieEntity movieEntity){
-        MediaEntity cover = movieMediaRepository.findAllByMovieAndMedia_Type(movieEntity, "COVER").get(0).getMedia();
+        MediaEntity cover = mediaRepository.findAllByMoviesEqualsAndType(movieEntity, "COVER").get(0);
         return new Image(movieEntity.getTitle(), PICTURES_PATH + cover.getValue(), cover.getAuthor());
     }
 
     public List<Image> getPictures(MovieEntity movieEntity){
         List<Image> photos = new ArrayList<>();
-        for(MovieMediaEntity mm : movieMediaRepository.findAllByMovieAndMedia_Type(movieEntity, "PICTURE"))
-            photos.add(new Image(movieEntity.getTitle(), PICTURES_PATH + mm.getMedia().getValue(), mm.getMedia().getAuthor()));
+        for(MediaEntity mm : mediaRepository.findAllByMoviesEqualsAndType(movieEntity, "PICTURE"))
+            photos.add(new Image(movieEntity.getTitle(), PICTURES_PATH + mm.getValue(), mm.getAuthor()));
 
         return photos;
     }

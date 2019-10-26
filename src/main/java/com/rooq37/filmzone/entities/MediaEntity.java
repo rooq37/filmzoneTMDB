@@ -1,6 +1,7 @@
 package com.rooq37.filmzone.entities;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "MEDIA")
@@ -21,6 +22,13 @@ public class MediaEntity {
 
     @Column(name = "date")
     private String date;
+
+    @ManyToMany
+    @JoinTable(
+            name = "MOVIE_MEDIA",
+            joinColumns = @JoinColumn(name = "id_media"),
+            inverseJoinColumns = @JoinColumn(name = "id_movie"))
+    private Set<MovieEntity> movies;
 
     public Long getId() {
         return id;
@@ -60,6 +68,14 @@ public class MediaEntity {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public Set<MovieEntity> getMovies() {
+        return movies;
+    }
+
+    public void setMovies(Set<MovieEntity> movies) {
+        this.movies = movies;
     }
 
 }
