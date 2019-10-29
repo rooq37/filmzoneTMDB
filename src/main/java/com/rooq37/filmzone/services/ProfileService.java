@@ -3,20 +3,18 @@ package com.rooq37.filmzone.services;
 import com.rooq37.filmzone.activity.Activity;
 import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.entities.CommentEntity;
-import com.rooq37.filmzone.entities.FavouriteListEntity;
 import com.rooq37.filmzone.entities.RatingEntity;
 import com.rooq37.filmzone.entities.UserEntity;
 import com.rooq37.filmzone.profiles.ProfileForm;
 import com.rooq37.filmzone.repositories.RatingRepository;
+import com.rooq37.filmzone.repositories.UserRepository;
 import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class ProfileService {
@@ -27,6 +25,8 @@ public class ProfileService {
     private RatingRepository ratingRepository;
     @Autowired
     private HelperService helperService;
+    @Autowired
+    private UserRepository userRepository;
 
     public ProfileForm getProfile(String userEmail){
         ProfileForm profile = new ProfileForm();

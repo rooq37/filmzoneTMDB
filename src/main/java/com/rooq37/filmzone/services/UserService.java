@@ -8,6 +8,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class UserService {
@@ -33,6 +34,14 @@ public class UserService {
 
     public UserEntity getUserByEmail(String email){
         return userRepository.findByEmail(email);
+    }
+
+    public List<UserEntity> getUsers(String nickname){
+        return userRepository.findAllByNicknameContains(nickname);
+    }
+
+    public String getUserEmailById(Long id){
+        return userRepository.findById(id).get().getEmail();
     }
 
 }
