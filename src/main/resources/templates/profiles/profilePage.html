@@ -67,6 +67,36 @@
         </div>
     </div>
 
+    <div class="jumbotron">
+        <h2>Aktywność</h2>
+        <hr class="my-4">
+        <div th:id="'activity_' + ${activityStat.index}" class="card border-dark mb-2" th:each="activity : ${profile.getActivities().getPageList()}">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col text-left font-weight-light text-dark" th:text="${#dates.format(activity.getDate(), 'dd.MM.yyyy HH:mm')}">dd.MM.yyyy HH:mm</div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="media">
+                    <img th:src="${activity.getCover().getSource()}" class="mr-3 img-thumbnail img-fluid" th:alt="${activity.getMovieTitle()}" style="height:150px;">
+                    <div class="media-body">
+                        <h5 class="mt-0" ><a class="text-dark" th:text="${activity.getMovieTitle()}" th:href="@{movie/{id} (id=${activity.getMovieId()})}">Movie title</a></h5>
+                        <span th:text="${activity.getContent()}">User rated the movie with 5</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <div class="text-center">
+                    <a class="btn btn-outline-dark bg-dark text-white"
+                       th:href="@{/myProfile (desiredPageSize=${currentPageSize + 10})}">Pokaż więcej</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </main>
 </body>
 <footer th:replace="fragments/footer :: footer"></footer>
