@@ -2,6 +2,7 @@ package com.rooq37.filmzone.entities;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -32,6 +33,15 @@ public class UserEntity {
 
     @OneToMany(mappedBy = "user")
     private Set<RatingEntity> ratings;
+
+    @ManyToMany(cascade={CascadeType.ALL})
+    @JoinTable(name="USER_FOLLOWED",
+            joinColumns={@JoinColumn(name="USER_ENTITY_ID")},
+            inverseJoinColumns={@JoinColumn(name="FOLLOWED_ID")})
+    private Set<UserEntity> followed = new HashSet<>();
+
+    @ManyToMany(mappedBy="followed")
+    private Set<UserEntity> followers = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -95,6 +105,22 @@ public class UserEntity {
 
     public void setRatings(Set<RatingEntity> ratings) {
         this.ratings = ratings;
+    }
+
+    public Set<UserEntity> getFollowed() {
+        return followed;
+    }
+
+    public void setFollowed(Set<UserEntity> followed) {
+        this.followed = followed;
+    }
+
+    public Set<UserEntity> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Set<UserEntity> followers) {
+        this.followers = followers;
     }
 
 }

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfileService {
@@ -29,15 +30,55 @@ public class ProfileService {
     private UserRepository userRepository;
 
     public ProfileForm getProfile(String userEmail){
-        ProfileForm profile = new ProfileForm();
         UserEntity user = userService.getUserByEmail(userEmail);
+        ProfileForm profile = getBasicProfile(user);
 
+        profile.setRatedMovies(getRatedMovies(user));
+        profile.setFollowed(user.getFollowed().stream().map(this::getBasicProfile).collect(Collectors.toList()));
+        profile.setFollowers(user.getFollowers().stream().map(this::getBasicProfile).collect(Collectors.toList()));
+        return profile;
+    }
+
+    private ProfileForm getBasicProfile(UserEntity user){
+        ProfileForm profile = new ProfileForm();
+        profile.setId(user.getId());
         profile.setNickname(user.getNickname());
+        profile.setEmail(user.getEmail());
         profile.setRegisterDate(user.getRegisterDate());
         profile.setNumberOfRatedMovies(ratingRepository.countByUserAndValueGreaterThan(user, 0));
         profile.setNumberOfComments(user.getComments().size());
-        profile.setRatedMovies(getRatedMovies(user));
         return profile;
+    }
+
+    public boolean isUserAlreadyFollowed(String currentUserEmail, String anotherUserEmail){
+        UserEntity user = userService.getUserByEmail(currentUserEmail);
+        for(UserEntity followed : user.getFollowed())
+            if(followed.getEmail().equals(anotherUserEmail))
+                return true;
+
+        return false;
+    }
+
+    public boolean followUser(String currentUserEmail, String anotherUserEmail){
+        if(!isUserAlreadyFollowed(currentUserEmail, anotherUserEmail)){
+            UserEntity user = userService.getUserByEmail(currentUserEmail);
+            UserEntity anotherUser = userService.getUserByEmail(anotherUserEmail);
+            user.getFollowed().add(anotherUser);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean unfollowUser(String currentUserEmail, String anotherUserEmail){
+        if(isUserAlreadyFollowed(currentUserEmail, anotherUserEmail)){
+            UserEntity user = userService.getUserByEmail(currentUserEmail);
+            UserEntity anotherUser = userService.getUserByEmail(anotherUserEmail);
+            user.getFollowed().remove(anotherUser);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 
     private List<Pair<MovieListElement, Integer>> getRatedMovies(UserEntity user){

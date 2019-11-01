@@ -1,6 +1,8 @@
 package com.rooq37.filmzone.profiles;
 
 import com.rooq37.filmzone.activity.Activity;
+import com.rooq37.filmzone.entities.UserEntity;
+import com.rooq37.filmzone.notifications.NotificationService;
 import com.rooq37.filmzone.services.ProfileService;
 import com.rooq37.filmzone.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,8 @@ public class ProfileController {
     private ProfileService profileService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private NotificationService notificationService;
 
     @RequestMapping(value = "/myProfile", method = RequestMethod.GET)
     public String displayMyProfile(Principal principal,
@@ -35,13 +39,15 @@ public class ProfileController {
 
         model.addAttribute("profile", profile);
         model.addAttribute("currentPageSize", desiredPageSize);
+        model.addAttribute("isCurrentUserProfile", true);
         return "profiles/profilePage";
     }
 
     @RequestMapping(value = "/profile/{id}", method = RequestMethod.GET)
-    public String displayMyProfile(Model model,
-                                   @PathVariable Long id,
-                                   @RequestParam(value = "desiredPageSize", defaultValue = "10") int desiredPageSize) {
+    public String displayProfile(Model model,
+                                 Principal principal,
+                                 @PathVariable Long id,
+                                 @RequestParam(value = "desiredPageSize", defaultValue = "10") int desiredPageSize) {
 
         String userEmail = userService.getUserEmailById(id);
         ProfileForm profile = profileService.getProfile(userEmail);
@@ -52,7 +58,33 @@ public class ProfileController {
 
         model.addAttribute("profile", profile);
         model.addAttribute("currentPageSize", desiredPageSize);
+        model.addAttribute("isCurrentUserProfile", profile.getEmail().equals(principal.getName()));
+        model.addAttribute("isFollowedByCurrentUser", profileService.isUserAlreadyFollowed(principal.getName(), profile.getEmail()));
+
         return "profiles/profilePage";
+    }
+
+    @RequestMapping(value = "/followUser", method = RequestMethod.POST)
+    public String followUser(Principal principal,
+                             @RequestParam(value = "userEmail") String userEmail,
+                             @RequestParam(value = "action") String action) {
+
+        UserEntity anotherUser = userService.getUserByEmail(userEmail);
+        if(action.equals("follow")){
+            if(profileService.followUser(principal.getName(), userEmail)){
+                notificationService.addInfoMessage("Od teraz obserwujesz użytkownika " + anotherUser.getNickname() + ".");
+            }else{
+                notificationService.addErrorMessage("Już obserwujesz tego użytkownika.");
+            }
+        }else if(action.equals("unfollow")){
+            if(profileService.unfollowUser(principal.getName(), userEmail)){
+                notificationService.addInfoMessage("Już nie obserwujesz użytkownika " + anotherUser.getNickname() + ".");
+            }else {
+                notificationService.addErrorMessage("Nie obserwujesz tego użytkownika.");
+            }
+        }
+
+        return "redirect:/profile/" + anotherUser.getId();
     }
 
 }

@@ -233,3 +233,7 @@ INSERT INTO MOVIE_PERSON VALUES (35, 'Albus Dumbledore', 'ACTOR', 5, 32);
 INSERT INTO MOVIE_PERSON VALUES (36, 'Professor McGonagall', 'ACTOR', 5, 33);
 
 INSERT INTO RATING VALUES (5, 1, '2019-10-06 16:46:15', 8);
+
+------------------------------------------------------------------------------------------------------------------------
+
+INSERT INTO USER VALUES (2, 'test1@test.pl', 'test1', '$2a$11$BPLSz.GDgMxAaEzp2kynNePS3UV2BVQtdN4yIrq3uRdz7PwGN5qm2', '2019-10-31 18:47:15');

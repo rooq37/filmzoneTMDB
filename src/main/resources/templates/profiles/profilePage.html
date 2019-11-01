@@ -6,98 +6,202 @@
 <main role="main" class="container">
 
     <div class="jumbotron">
-        <h2><span>Profil użytkownika </span><span class="text-warning" th:text="${profile.getNickname()}"></span></h2>
+        <h2><span>Profil użytkownika </span><span class="badge badge-pill badge-dark text-warning" th:text="${profile.getNickname()}">username</span></h2>
         <hr class="my-4">
-        <ul>
-            <li>
-                <span th:text="'Data rejestracji: ' + ${#dates.format(profile.getRegisterDate(), 'dd MMM yyyy')}">Register date</span>
-            </li>
-            <li>
-                <span th:text="'Liczba ocenionych filmów: ' + ${profile.getNumberOfRatedMovies()}">Number of rated movies</span>
-            </li>
-            <li>
-                <span th:text="'Liczba komentarzy: ' + ${profile.getNumberOfComments()}">Number of comments</span>
-            </li>
-        </ul>
+        <div class="row">
+            <div class="col">
+                <ul>
+                    <li>
+                        <span th:text="'Data rejestracji: ' + ${#dates.format(profile.getRegisterDate(), 'dd MMM yyyy')}">Register date</span>
+                    </li>
+                    <li>
+                        <span th:text="'Liczba ocenionych filmów: ' + ${profile.getNumberOfRatedMovies()}">Number of rated movies</span>
+                    </li>
+                    <li>
+                        <span th:text="'Liczba komentarzy: ' + ${profile.getNumberOfComments()}">Number of comments</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-md-auto" th:if="${!isCurrentUserProfile}">
+                <form th:action="@{/followUser}" method="post">
+                    <input type="hidden" th:name="userEmail" th:value="${profile.getEmail()}" />
+                    <div class="input-group" th:if="${!isFollowedByCurrentUser}">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text text-warning border-dark bg-dark">☆</span>
+                        </div>
+                        <button title="Zacznij obserwować" type="submit" name="action" value="follow" class="form-control btn btn-outline-dark bg-dark text-white">Obserwuj</button>
+                    </div>
+                    <div class="input-group" th:if="${isFollowedByCurrentUser}">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text text-warning border-dark bg-dark">★</span>
+                        </div>
+                        <button title="Przestań obserwować" type="submit" name="action" value="unfollow" class="form-control btn btn-outline-dark bg-dark text-white">Obserwujesz</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 
     <div class="jumbotron">
-        <div class="row">
-            <div class="col">
-                <h2 class="mt-2">Ocenione filmy</h2>
-            </div>
-            <div class="col"></div>
-            <div class="col text-right mt-2">
-                <h2 th:if="${profile.getRatedMovies().size() != 0}">
-                    <button onclick="showAllMoviesInProfile()" id="showAllButton" type="button" class="btn btn-outline-dark bg-dark text-white">Pokaż wszystkie</button>
-                </h2>
-            </div>
-        </div>
+
+        <ul class="nav nav-pills mb-3 nav-justified" id="pills-tab" role="tablist">
+            <li class="nav-item mx-1">
+                <a class="nav-link active text-dark btn btn-outline-dark" id="rated-movies-tab" data-toggle="pill" href="#rated-movies" role="tab" aria-controls="rated-movies" aria-selected="true">Ocenione filmy</a>
+            </li>
+            <li class="nav-item mx-1">
+                <a class="nav-link text-dark btn btn-outline-dark" id="activities-tab" data-toggle="pill" href="#activities" role="tab" aria-controls="activities" aria-selected="false">Aktywność</a>
+            </li>
+            <li class="nav-item mx-1">
+                <a class="nav-link text-dark btn btn-outline-dark" id="followed-tab" data-toggle="pill" href="#followed" role="tab" aria-controls="followed" aria-selected="false">Obserwowani</a>
+            </li>
+            <li class="nav-item mx-1">
+                <a class="nav-link text-dark btn btn-outline-dark" id="followers-tab" data-toggle="pill" href="#followers" role="tab" aria-controls="followers" aria-selected="false">Obserwujący</a>
+            </li>
+        </ul>
 
         <hr class="my-4">
-        <p class="text-center" th:if="${profile.getRatedMovies().size() == 0}">Ten użytkownik nie ocenił jeszcze żadnego filmu</p>
-        <div th:if="${profile.getRatedMovies().size() != 0}">
 
-            <form >
-                <div class="card-deck">
-                    <div th:name="${movieStat.index > 3}? 'prof_optional' : 'prof'" th:style="'display:'+@{${movieStat.index > 3}? 'none!important' : 'block'}+';'" class="w-25 d-flex align-items-stretch mb-2" th:each="movie : ${profile.getRatedMovies()}">
-                        <div class="card text-white bg-dark">
-                            <div>
-                                <img th:src="${movie.getKey().getCover().getSource()}" data-toggle="tooltip" data-placement="bottom" class="img-fluid" th:alt="${movie.getKey().getTitle()}"
-                                     th:title="'@Author: ' + ${movie.getKey().getCover().getAuthor()}" style="height:250px; width:100%;">
+        <div class="tab-content" id="tabContent">
+            <div class="tab-pane fade show active" id="rated-movies" role="tabpanel" aria-labelledby="rated-movies-tab">
+
+                <p class="text-center" th:if="${profile.getRatedMovies().size() == 0}">Ten użytkownik nie ocenił jeszcze żadnego filmu</p>
+                <div th:if="${profile.getRatedMovies().size() != 0}">
+
+                    <form >
+                        <div class="card-deck">
+                            <div th:name="${movieStat.index > 3}? 'prof_optional' : 'prof'" th:style="'display:'+@{${movieStat.index > 3}? 'none!important' : 'block'}+';'" class="w-25 d-flex align-items-stretch mb-2" th:each="movie : ${profile.getRatedMovies()}">
+                                <div class="card text-white bg-dark">
+                                    <div>
+                                        <img th:src="${movie.getKey().getCover().getSource()}" data-toggle="tooltip" data-placement="bottom" class="img-fluid" th:alt="${movie.getKey().getTitle()}"
+                                             th:title="'@Author: ' + ${movie.getKey().getCover().getAuthor()}" style="height:250px; width:100%;">
+                                    </div>
+                                    <div class="card-body d-flex flex-column">
+                                        <h7>
+                                            <a class="text-white" th:href="@{movie/{id} (id=${movie.getKey().getId()})}" th:text="${movie.getKey().getTitle()}">Title</a>
+                                            <a data-toggle="tooltip" data-placement="bottom" th:title="'Ocena użytkownika ' + ${profile.getNickname()}" class="text-right"><span class="text-warning">★</span><span class="text-white" th:text="${movie.getValue()}">Rating</span></a>
+                                        </h7>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-body d-flex flex-column">
-                                <h7>
-                                    <a class="text-white" th:href="@{movie/{id} (id=${movie.getKey().getId()})}" th:text="${movie.getKey().getTitle()}">Title</a>
-                                    <a data-toggle="tooltip" data-placement="bottom" th:title="'Ocena użytkownika ' + ${profile.getNickname()}" class="text-right"><span class="text-warning">★</span><span class="text-white" th:text="${movie.getValue()}">Rating</span></a>
-                                </h7>
+                        </div>
+                    </form>
+
+                    <div class="row mt-3">
+                        <div class="col-sm-12">
+                            <div class="text-center">
+                                <button th:if="${profile.getRatedMovies().size() != 0}" onclick="showAllMoviesInProfile()" id="showAllButton" type="button" class="btn btn-outline-dark bg-dark text-white">Pokaż wszystkie</button>
+                                <button style="display: none!important" onclick="hideAllMoviesInProfile()" id="hideAllButton" type="button" class="btn btn-outline-dark bg-dark text-white">Ukryj</button>
                             </div>
                         </div>
                     </div>
                 </div>
-            </form>
 
-            <div class="row mt-3">
-                <div class="col-sm-12">
-                    <div class="text-center">
-                        <button style="display: none!important" onclick="hideAllMoviesInProfile()" id="hideAllButton" type="button" class="btn btn-outline-dark bg-dark text-white">Ukryj</button>
+            </div>
+
+            <div class="tab-pane fade" id="activities" role="tabpanel" aria-labelledby="activities-tab">
+
+                <div th:id="'activity_' + ${activityStat.index}" class="card border-dark mb-2" th:each="activity : ${profile.getActivities().getPageList()}">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col text-left font-weight-light text-dark" th:text="${#dates.format(activity.getDate(), 'dd.MM.yyyy HH:mm')}">dd.MM.yyyy HH:mm</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="media">
+                            <img th:src="${activity.getCover().getSource()}" class="mr-3 img-thumbnail img-fluid" th:alt="${activity.getMovieTitle()}" style="height:150px;">
+                            <div class="media-body">
+                                <h5 class="mt-0" ><a class="text-dark" th:text="${activity.getMovieTitle()}" th:href="@{movie/{id} (id=${activity.getMovieId()})}">Movie title</a></h5>
+                                <span th:text="${activity.getContent()}">User rated the movie with 5</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="jumbotron">
-        <h2>Aktywność</h2>
-        <hr class="my-4">
-        <div th:id="'activity_' + ${activityStat.index}" class="card border-dark mb-2" th:each="activity : ${profile.getActivities().getPageList()}">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col text-left font-weight-light text-dark" th:text="${#dates.format(activity.getDate(), 'dd.MM.yyyy HH:mm')}">dd.MM.yyyy HH:mm</div>
-                </div>
-            </div>
-            <div class="card-body">
-                <div class="media">
-                    <img th:src="${activity.getCover().getSource()}" class="mr-3 img-thumbnail img-fluid" th:alt="${activity.getMovieTitle()}" style="height:150px;">
-                    <div class="media-body">
-                        <h5 class="mt-0" ><a class="text-dark" th:text="${activity.getMovieTitle()}" th:href="@{movie/{id} (id=${activity.getMovieId()})}">Movie title</a></h5>
-                        <span th:text="${activity.getContent()}">User rated the movie with 5</span>
+                <div class="row mt-3">
+                    <div class="col-sm-12">
+                        <div class="text-center">
+                            <a class="btn btn-outline-dark bg-dark text-white"
+                               th:href="@{/myProfile (desiredPageSize=${currentPageSize + 10})}">Pokaż więcej</a>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
 
-        <div class="row mt-3">
-            <div class="col-sm-12">
-                <div class="text-center">
-                    <a class="btn btn-outline-dark bg-dark text-white"
-                       th:href="@{/myProfile (desiredPageSize=${currentPageSize + 10})}">Pokaż więcej</a>
+            </div>
+
+            <div class="tab-pane fade" id="followed" role="tabpanel" aria-labelledby="followed-tab">
+                <div class="card-deck">
+
+                    <div class="w-25 d-flex align-items-stretch mb-4" th:each="followed : ${profile.getFollowed()}">
+                        <div class="card text-white bg-dark">
+                            <div class="card-body">
+                                <h5 class="card-title text-warning" th:text="${followed.getNickname()}">Username</h5>
+                                <h6 title="Data rejestracji" class="card-subtitle mb-2 text-muted" th:text="${followed.getRegisterDate()}">15 lip 2019</h6>
+                                <small>
+                                    Liczba
+                                    <ul style="padding-inline-start: 20px !important;">
+                                        <li>
+                                            <span>ocen filmów: </span>
+                                            <span th:text="${followed.getNumberOfRatedMovies()}"></span>
+                                        </li>
+                                        <li>
+                                            <span>komentarzy: </span>
+                                            <span th:text="${followed.getNumberOfComments()}"></span>
+                                        </li>
+                                    </ul>
+                                </small>
+                                <small><a th:href="@{/profile/{id} (id=${followed.getId()})}" class="card-link">Przejdź do profilu</a></small>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="followers" role="tabpanel" aria-labelledby="followers-tab">
+                <div class="card-deck">
+
+                    <div class="w-25 d-flex align-items-stretch mb-4" th:each="follower : ${profile.getFollowers()}">
+                        <div class="card text-white bg-dark">
+                            <div class="card-body">
+                                <h5 class="card-title text-warning" th:text="${follower.getNickname()}">Username</h5>
+                                <h6 title="Data rejestracji" class="card-subtitle mb-2 text-muted" th:text="${follower.getRegisterDate()}">15 lip 2019</h6>
+                                <small>
+                                    Liczba
+                                    <ul style="padding-inline-start: 20px !important;">
+                                        <li>
+                                            <span>ocen filmów: </span>
+                                            <span th:text="${follower.getNumberOfRatedMovies()}"></span>
+                                        </li>
+                                        <li>
+                                            <span>komentarzy: </span>
+                                            <span th:text="${follower.getNumberOfComments()}"></span>
+                                        </li>
+                                    </ul>
+                                </small>
+                                <small><a th:href="@{/profile/{id} (id=${follower.getId()})}" class="card-link">Przejdź do profilu</a></small>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
+
+
     </div>
 
 </main>
+<style>
+    .nav-pills > li > a.active {
+        background-color: #1d2124 !important;
+        color: #ffffff !important;
+    }
+
+    .nav-pills > li > a:hover {
+        background-color: #1d2124 !important;
+        color: #ffffff !important;
+    }
+</style>
 </body>
 <footer th:replace="fragments/footer :: footer"></footer>
 </html>
