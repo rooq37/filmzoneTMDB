@@ -1,6 +1,6 @@
 package com.rooq37.filmzone.profiles;
 
-import com.rooq37.filmzone.activity.Activity;
+import com.rooq37.filmzone.activities.Activity;
 import com.rooq37.filmzone.commons.MovieListElement;
 import javafx.util.Pair;
 import org.springframework.beans.support.PagedListHolder;

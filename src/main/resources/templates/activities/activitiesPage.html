@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+<header th:replace="fragments/header :: header"></header>
+<body>
+<main role="main" class="container">
+    <div class="jumbotron">
+        <h2>Tablica aktywności</h2>
+        <hr class="my-4">
+
+        <div class="row">
+            <div class="col-3">
+                <form th:action="@{/activities}" method="get">
+                    <div class="input-group mb-2">
+                        <select th:name="year" class="custom-select border-dark">
+                                <option th:selected="${selectedYear == 2019}" value="2019">2019</option>
+                                <option th:selected="${selectedYear == 2018}" value="2018">2018</option>
+                                <option th:selected="${selectedYear == 2017}" value="2017">2017</option>
+                        </select>
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-dark bg-dark text-white px-4" type="submit" style="width: 100px;">Wybierz</button>
+                        </div>
+                    </div>
+                </form>
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical" th:with="currentMonth = ${#dates.format(#dates.createNow(), 'MM')}">
+                    <a class="nav-link text-dark btn btn-outline-dark my-1" th:classappend="${currentMonth.equals('1')} ? active" id="january-tab" data-toggle="pill" href="#january" role="tab" aria-controls="january" aria-selected="true">Styczeń</a>
+                    <a class="nav-link text-dark btn btn-outline-dark my-1" th:classappend="${currentMonth.equals('2')} ? active" id="february-tab" data-toggle="pill" href="#february" role="tab" aria-controls="february" aria-selected="false">Luty</a>
+                    <a class="nav-link text-dark btn btn-outline-dark my-1" th:classappend="${currentMonth.equals('3')} ? active" id="march-tab" data-toggle="pill" href="#march" role="tab" aria-controls="march" aria-selected="false">Marzec</a>
+                    <a class="nav-link text-dark btn btn-outline-dark my-1" th:classappend="${currentMonth.equals('4')} ? active" id="april-tab" data-toggle="pill" href="#april" role="tab" aria-controls="april" aria-selected="false">Kwiecień</a>
+                    <a class="nav-link text-dark btn btn-outline-dark my-1" th:classappend="${currentMonth.equals('5')} ? active" id="may-tab" data-toggle="pill" href="#may" role="tab" aria-controls="may" aria-selected="false">Maj</a>
+                    <a class="nav-link text-dark btn btn-outline-dark my-1" th:classappend="${currentMonth.equals('6')} ? active" id="june-tab" data-toggle="pill" href="#june" role="tab" aria-controls="june" aria-selected="false">Czerwiec</a>
+                    <a class="nav-link text-dark btn btn-outline-dark my-1" th:classappend="${currentMonth.equals('7')} ? active" id="july-tab" data-toggle="pill" href="#july" role="tab" aria-controls="july" aria-selected="false">Lipiec</a>
+                    <a class="nav-link text-dark btn btn-outline-dark my-1" th:classappend="${currentMonth.equals('8')} ? active" id="august-tab" data-toggle="pill" href="#august" role="tab" aria-controls="august" aria-selected="false">Sierpień</a>
+                    <a class="nav-link text-dark btn btn-outline-dark my-1" th:classappend="${currentMonth.equals('9')} ? active" id="september-tab" data-toggle="pill" href="#september" role="tab" aria-controls="september" aria-selected="false">Wrzesień</a>
+                    <a class="nav-link text-dark btn btn-outline-dark my-1" th:classappend="${currentMonth.equals('10')} ? active" id="october-tab" data-toggle="pill" href="#october" role="tab" aria-controls="october" aria-selected="false">Październik</a>
+                    <a class="nav-link text-dark btn btn-outline-dark my-1" th:classappend="${currentMonth.equals('11')} ? active" id="november-tab" data-toggle="pill" href="#november" role="tab" aria-controls="november" aria-selected="false">Listopad</a>
+                    <a class="nav-link text-dark btn btn-outline-dark my-1" th:classappend="${currentMonth.equals('12')} ? active" id="december-tab" data-toggle="pill" href="#december" role="tab" aria-controls="december" aria-selected="false">Grudzień</a>
+                </div>
+            </div>
+            <div class="col-9">
+                <div class="tab-content" id="v-pills-tabContent" th:with="currentMonth = ${#dates.format(#dates.createNow(), 'MM')}">
+                    <div class="tab-pane fade" th:classappend="${currentMonth.equals('1')} ? 'show active'" id="january" role="tabpanel" aria-labelledby="january-tab">
+                        <div class="overflow-auto" style="height: 600px;">
+                            <div class="card border-dark mb-2" th:each="act_jan : ${activitiesForm.getJanuary()}">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <img th:src="${act_jan.getCover().getSource()}" th:alt="${act_jan.getMovieTitle()}" class="mr-3 img-fluid" style="height:100px;">
+                                        <div class="media-body">
+                                            <h5 class="mt-0" ><a th:text="${act_jan.getMovieTitle()}" th:href="@{movie/{id} (id=${act_jan.getMovieId()})}" class="text-dark" >Movie title</a></h5>
+                                            <span th:text="${act_jan.getContent()}">User rated the movie with 5</span>
+                                            <br>
+                                            <span><small th:text="${#dates.format(act_jan.getDate(), 'dd.MM.yyyy HH:mm')}" class="text-left font-weight-light text-dark">dd.MM.yyyy HH:mm</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" th:classappend="${currentMonth.equals('2')} ? 'show active'" id="february" role="tabpanel" aria-labelledby="february-tab">
+                        <div class="overflow-auto" style="height: 600px;">
+                            <div class="card border-dark mb-2" th:each="act_feb : ${activitiesForm.getFebruary()}">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <img th:src="${act_feb.getCover().getSource()}" th:alt="${act_feb.getMovieTitle()}" class="mr-3 img-fluid" style="height:100px;">
+                                        <div class="media-body">
+                                            <h5 class="mt-0" ><a th:text="${act_feb.getMovieTitle()}" th:href="@{movie/{id} (id=${act_feb.getMovieId()})}" class="text-dark" >Movie title</a></h5>
+                                            <span th:text="${act_feb.getContent()}">User rated the movie with 5</span>
+                                            <br>
+                                            <span><small th:text="${#dates.format(act_feb.getDate(), 'dd.MM.yyyy HH:mm')}" class="text-left font-weight-light text-dark">dd.MM.yyyy HH:mm</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" th:classappend="${currentMonth.equals('3')} ? 'show active'" id="march" role="tabpanel" aria-labelledby="march-tab">
+                        <div class="overflow-auto" style="height: 600px;">
+                            <div class="card border-dark mb-2" th:each="act_mar : ${activitiesForm.getMarch()}">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <img th:src="${act_mar.getCover().getSource()}" th:alt="${act_mar.getMovieTitle()}" class="mr-3 img-fluid" style="height:100px;">
+                                        <div class="media-body">
+                                            <h5 class="mt-0" ><a th:text="${act_mar.getMovieTitle()}" th:href="@{movie/{id} (id=${act_mar.getMovieId()})}" class="text-dark" >Movie title</a></h5>
+                                            <span th:text="${act_mar.getContent()}">User rated the movie with 5</span>
+                                            <br>
+                                            <span><small th:text="${#dates.format(act_mar.getDate(), 'dd.MM.yyyy HH:mm')}" class="text-left font-weight-light text-dark">dd.MM.yyyy HH:mm</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" th:classappend="${currentMonth.equals('4')} ? 'show active'" id="april" role="tabpanel" aria-labelledby="april-tab">
+                        <div class="overflow-auto" style="height: 600px;">
+                            <div class="card border-dark mb-2" th:each="act_apr : ${activitiesForm.getApril()}">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <img th:src="${act_apr.getCover().getSource()}" th:alt="${act_apr.getMovieTitle()}" class="mr-3 img-fluid" style="height:100px;">
+                                        <div class="media-body">
+                                            <h5 class="mt-0" ><a th:text="${act_apr.getMovieTitle()}" th:href="@{movie/{id} (id=${act_apr.getMovieId()})}" class="text-dark" >Movie title</a></h5>
+                                            <span th:text="${act_apr.getContent()}">User rated the movie with 5</span>
+                                            <br>
+                                            <span><small th:text="${#dates.format(act_apr.getDate(), 'dd.MM.yyyy HH:mm')}" class="text-left font-weight-light text-dark">dd.MM.yyyy HH:mm</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" th:classappend="${currentMonth.equals('5')} ? 'show active'" id="may" role="tabpanel" aria-labelledby="may-tab">
+                        <div class="overflow-auto" style="height: 600px;">
+                            <div class="card border-dark mb-2" th:each="act_may : ${activitiesForm.getMay()}">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <img th:src="${act_may.getCover().getSource()}" th:alt="${act_may.getMovieTitle()}" class="mr-3 img-fluid" style="height:100px;">
+                                        <div class="media-body">
+                                            <h5 class="mt-0" ><a th:text="${act_may.getMovieTitle()}" th:href="@{movie/{id} (id=${act_may.getMovieId()})}" class="text-dark" >Movie title</a></h5>
+                                            <span th:text="${act_may.getContent()}">User rated the movie with 5</span>
+                                            <br>
+                                            <span><small th:text="${#dates.format(act_may.getDate(), 'dd.MM.yyyy HH:mm')}" class="text-left font-weight-light text-dark">dd.MM.yyyy HH:mm</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" th:classappend="${currentMonth.equals('6')} ? 'show active'" id="june" role="tabpanel" aria-labelledby="june-tab">
+                        <div class="overflow-auto" style="height: 600px;">
+                            <div class="card border-dark mb-2" th:each="act_jun : ${activitiesForm.getJune()}">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <img th:src="${act_jun.getCover().getSource()}" th:alt="${act_jun.getMovieTitle()}" class="mr-3 img-fluid" style="height:100px;">
+                                        <div class="media-body">
+                                            <h5 class="mt-0" ><a th:text="${act_jun.getMovieTitle()}" th:href="@{movie/{id} (id=${act_jun.getMovieId()})}" class="text-dark" >Movie title</a></h5>
+                                            <span th:text="${act_jun.getContent()}">User rated the movie with 5</span>
+                                            <br>
+                                            <span><small th:text="${#dates.format(act_jun.getDate(), 'dd.MM.yyyy HH:mm')}" class="text-left font-weight-light text-dark">dd.MM.yyyy HH:mm</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" th:classappend="${currentMonth.equals('7')} ? 'show active'" id="july" role="tabpanel" aria-labelledby="july-tab">
+                        <div class="overflow-auto" style="height: 600px;">
+                            <div class="card border-dark mb-2" th:each="act_jul : ${activitiesForm.getJuly()}">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <img th:src="${act_jul.getCover().getSource()}" th:alt="${act_jul.getMovieTitle()}" class="mr-3 img-fluid" style="height:100px;">
+                                        <div class="media-body">
+                                            <h5 class="mt-0" ><a th:text="${act_jul.getMovieTitle()}" th:href="@{movie/{id} (id=${act_jul.getMovieId()})}" class="text-dark" >Movie title</a></h5>
+                                            <span th:text="${act_jul.getContent()}">User rated the movie with 5</span>
+                                            <br>
+                                            <span><small th:text="${#dates.format(act_jul.getDate(), 'dd.MM.yyyy HH:mm')}" class="text-left font-weight-light text-dark">dd.MM.yyyy HH:mm</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" th:classappend="${currentMonth.equals('8')} ? 'show active'" id="august" role="tabpanel" aria-labelledby="august-tab">
+                        <div class="overflow-auto" style="height: 600px;">
+                            <div class="card border-dark mb-2" th:each="act_aug : ${activitiesForm.getAugust()}">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <img th:src="${act_aug.getCover().getSource()}" th:alt="${act_aug.getMovieTitle()}" class="mr-3 img-fluid" style="height:100px;">
+                                        <div class="media-body">
+                                            <h5 class="mt-0" ><a th:text="${act_aug.getMovieTitle()}" th:href="@{movie/{id} (id=${act_aug.getMovieId()})}" class="text-dark" >Movie title</a></h5>
+                                            <span th:text="${act_aug.getContent()}">User rated the movie with 5</span>
+                                            <br>
+                                            <span><small th:text="${#dates.format(act_aug.getDate(), 'dd.MM.yyyy HH:mm')}" class="text-left font-weight-light text-dark">dd.MM.yyyy HH:mm</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" th:classappend="${currentMonth.equals('9')} ? 'show active'" id="september" role="tabpanel" aria-labelledby="september-tab">
+                        <div class="overflow-auto" style="height: 600px;">
+                            <div class="card border-dark mb-2" th:each="act_sep : ${activitiesForm.getSeptember()}">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <img th:src="${act_sep.getCover().getSource()}" th:alt="${act_sep.getMovieTitle()}" class="mr-3 img-fluid" style="height:100px;">
+                                        <div class="media-body">
+                                            <h5 class="mt-0" ><a th:text="${act_sep.getMovieTitle()}" th:href="@{movie/{id} (id=${act_sep.getMovieId()})}" class="text-dark" >Movie title</a></h5>
+                                            <span th:text="${act_sep.getContent()}">User rated the movie with 5</span>
+                                            <br>
+                                            <span><small th:text="${#dates.format(act_sep.getDate(), 'dd.MM.yyyy HH:mm')}" class="text-left font-weight-light text-dark">dd.MM.yyyy HH:mm</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" th:classappend="${currentMonth.equals('10')} ? 'show active'" id="october" role="tabpanel" aria-labelledby="october-tab">
+                        <div class="overflow-auto" style="height: 600px;">
+                            <div class="card border-dark mb-2" th:each="act_oct : ${activitiesForm.getOctober()}">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <img th:src="${act_oct.getCover().getSource()}" th:alt="${act_oct.getMovieTitle()}" class="mr-3 img-fluid" style="height:100px;">
+                                        <div class="media-body">
+                                            <h5 class="mt-0" ><a th:text="${act_oct.getMovieTitle()}" th:href="@{movie/{id} (id=${act_oct.getMovieId()})}" class="text-dark" >Movie title</a></h5>
+                                            <span th:text="${act_oct.getContent()}">User rated the movie with 5</span>
+                                            <br>
+                                            <span><small th:text="${#dates.format(act_oct.getDate(), 'dd.MM.yyyy HH:mm')}" class="text-left font-weight-light text-dark">dd.MM.yyyy HH:mm</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" th:classappend="${currentMonth.equals('11')} ? 'show active'" id="november" role="tabpanel" aria-labelledby="november-tab">
+                        <div class="overflow-auto" style="height: 600px;">
+                            <div class="card border-dark mb-2" th:each="act_nov : ${activitiesForm.getNovember()}">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <img th:src="${act_nov.getCover().getSource()}" th:alt="${act_nov.getMovieTitle()}" class="mr-3 img-fluid" style="height:100px;">
+                                        <div class="media-body">
+                                            <h5 class="mt-0" ><a th:text="${act_nov.getMovieTitle()}" th:href="@{movie/{id} (id=${act_nov.getMovieId()})}" class="text-dark" >Movie title</a></h5>
+                                            <span th:text="${act_nov.getContent()}">User rated the movie with 5</span>
+                                            <br>
+                                            <span><small th:text="${#dates.format(act_nov.getDate(), 'dd.MM.yyyy HH:mm')}" class="text-left font-weight-light text-dark">dd.MM.yyyy HH:mm</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" th:classappend="${currentMonth.equals('12')} ? 'show active'" id="december" role="tabpanel" aria-labelledby="december-tab">
+                        <div class="overflow-auto" style="height: 600px;">
+                            <div class="card border-dark mb-2" th:each="act_dec : ${activitiesForm.getDecember()}">
+                                <div class="card-body">
+                                    <div class="media">
+                                        <img th:src="${act_dec.getCover().getSource()}" th:alt="${act_dec.getMovieTitle()}" class="mr-3 img-fluid" style="height:100px;">
+                                        <div class="media-body">
+                                            <h5 class="mt-0" ><a th:text="${act_dec.getMovieTitle()}" th:href="@{movie/{id} (id=${act_dec.getMovieId()})}" class="text-dark" >Movie title</a></h5>
+                                            <span th:text="${act_dec.getContent()}">User rated the movie with 5</span>
+                                            <br>
+                                            <span><small th:text="${#dates.format(act_dec.getDate(), 'dd.MM.yyyy HH:mm')}" class="text-left font-weight-light text-dark">dd.MM.yyyy HH:mm</small></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+<style>
+    .nav-pills > a.active {
+        background-color: #1d2124 !important;
+        color: #ffffff !important;
+    }
+
+    .nav-pills > a:hover {
+        background-color: #1d2124 !important;
+        color: #ffffff !important;
+    }
+</style>
+</body>
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>

@@ -1,4 +1,4 @@
-package com.rooq37.filmzone.activity;
+package com.rooq37.filmzone.activities;
 
 import com.rooq37.filmzone.commons.Image;
 

@@ -1,6 +1,6 @@
 package com.rooq37.filmzone.profiles;
 
-import com.rooq37.filmzone.activity.Activity;
+import com.rooq37.filmzone.activities.Activity;
 import com.rooq37.filmzone.entities.UserEntity;
 import com.rooq37.filmzone.notifications.NotificationService;
 import com.rooq37.filmzone.services.ProfileService;
