@@ -1,6 +1,7 @@
 package com.rooq37.filmzone.entities;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -24,28 +25,28 @@ public class MovieEntity {
     private int duration;
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "movies")
-    private Set<CategoryEntity> categories;
+    private Set<CategoryEntity> categories = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "movies")
-    private Set<CountryEntity> countries;
+    private Set<CountryEntity> countries = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "movies")
-    private Set<MediaEntity> media;
+    private Set<MediaEntity> media = new HashSet<>();
 
     @ManyToMany(mappedBy = "movies")
-    private Set<FavouriteListEntity> favouriteLists;
+    private Set<FavouriteListEntity> favouriteLists = new HashSet<>();
 
     @OneToMany(mappedBy = "movie")
-    private Set<CommentEntity> comments;
+    private Set<CommentEntity> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "movie")
-    private Set<MoviePersonEntity> people;
+    private Set<MoviePersonEntity> people = new HashSet<>();
 
     @OneToMany(mappedBy = "movie")
-    private Set<RatingEntity> ratings;
+    private Set<RatingEntity> ratings = new HashSet<>();
 
     @OneToMany(mappedBy = "movie")
-    private Set<ViewEntity> views;
+    private Set<ViewEntity> views = new HashSet<>();
 
     public Long getId() {
         return id;

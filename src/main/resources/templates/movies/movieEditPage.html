@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/head :: head"></head>
+<header th:replace="fragments/header :: header"></header>
+<body>
+<main role="main" class="container">
+    <div class="jumbotron">
+        <h2>Dodaj film</h2>
+        <hr class="my-4">
+        <form th:action="@{/saveMovie}" method="post" enctype="multipart/form-data" th:object="${movieForm}">
+
+            <div class="form-group row">
+                <div class="form-group col-md-9">
+                    <label for="movie_title">Tytuł filmu</label>
+                    <input th:field="${movieForm.title}" type="text" class="form-control" id="movie_title" placeholder="Tytuł filmu" required>
+                </div>
+                <div class="form-group col-md-3">
+                    <label for="movie_year">Rok produkcji</label>
+                    <input th:field="${movieForm.productionYear}" type="number" class="form-control" id="movie_year" placeholder="Rok produkcji" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="form-group col-md-6">
+                        <label for="movie_cover">Okładka</label>
+                        <div class="custom-file mt-1" id="movie_cover">
+                            <input name="cover_file" type="file" class="custom-file-input" id="movie_cover_input" onchange="$(this).next().after().text($(this).val().split('\\').slice(-1)[0])">
+                            <label class="custom-file-label text-truncate" for="movie_cover_input">Wybierz plik okładki</label>
+                        </div>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label for="movie_cover_author">Autor</label>
+                        <input name="cover_author" type="text" class="form-control my-1" id="movie_cover_author" placeholder="Źródło/Nazwa studia filmowego">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-4 pt-0">Wybierz kategorie:</legend>
+                        <div class="col-sm-10">
+                            <div th:each="category : ${allCategories}" class="form-check form-check-inline">
+                                <input name="selectedCategory" class="form-check-input" type="checkbox" th:id="'cat_' + ${categoryStat.index}" th:value="${category}">
+                                <label class="form-check-label" th:for="'cat_' + ${categoryStat.index}" th:text="${category}">category</label>
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="form-group">
+                <label for="movie_description">Opis filmu</label>
+                <textarea th:field="${movieForm.description}" class="form-control" id="movie_description" rows="4"></textarea>
+            </div>
+
+            <div class="form-group row">
+                <div class="form-group col-md-3">
+                    <label for="movie_duration">Czas trwania [min]</label>
+                    <input th:field="${movieForm.duration}" type="number" class="form-control" id="movie_duration" placeholder="Czas trwania">
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="form-group">
+                <div id="movie_directors">
+                    <label for="movie_director">Reżyseria</label>
+                    <div id="movie_director" class="row">
+                        <div class="form-group col-md-6">
+                            <input name="movie_directors_name" type="text" class="form-control" placeholder="Imię/Imiona">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input name="movie_directors_surname" type="text" class="form-control" placeholder="Nazwisko">
+                        </div>
+                    </div>
+                </div>
+                <button onclick="addDirector()" class="btn btn-dark my-2 my-sm-0" type="button">Dodaj kolejnego reżysera</button>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="form-group">
+                <div id="movie_scenarios">
+                    <label for="movie_scenario">Scenariusz</label>
+                    <div id="movie_scenario" class="row">
+                        <div class="form-group col-md-6">
+                            <input name="movie_scenario_name" type="text" class="form-control" placeholder="Imię/Imiona">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input name="movie_scenario_surname" type="text" class="form-control" placeholder="Nazwisko">
+                        </div>
+                    </div>
+                </div>
+                <button onclick="addScenario()" class="btn btn-dark my-2 my-sm-0" type="button">Dodaj kolejnego autora scenariusza</button>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="form-group">
+                <div id="movie_countries">
+                    <label for="movie_country">Kraj produkcji</label>
+                    <div id="movie_country" class="row">
+                        <div class="form-group col-md-6">
+                            <input name="movie_country" type="text" class="form-control my-1" placeholder="Nazwa kraju">
+                        </div>
+                    </div>
+                </div>
+                <button onclick="addCountry()" class="btn btn-dark my-2 my-sm-0" type="button">Dodaj kolejny kraj produkcji</button>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="form-group">
+                <label for="movie_pictures">Zdjęcia</label>
+                <div id="movie_pictures">
+                    <div  class="row">
+                        <div class="form-group col-md-6">
+                            <div class="custom-file mt-1">
+                                <input name="picture_file" type="file" class="custom-file-input" id="movie_picture_input_0" onchange="$(this).next().after().text($(this).val().split('\\').slice(-1)[0])">
+                                <label class="custom-file-label text-truncate" for="movie_picture_input_0">Wybierz plik zdjęcia</label>
+                            </div>
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input name="picture_author" type="text" class="form-control my-1" placeholder="Źródło/Nazwa studia filmowego">
+                        </div>
+                    </div>
+                </div>
+                <button onclick="addPicture()" class="btn btn-dark my-2 my-sm-0" type="button">Dodaj kolejne zdjęcie</button>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="form-group row">
+                <div class="form-group col-md-6">
+                    <label for="movie_trailer">Trailer</label>
+                    <input th:field="${movieForm.trailerUrl}" type="text" class="form-control" id="movie_trailer" placeholder="Link do traileru youtube">
+                    <small class="form-text text-muted">
+                        Np. https://www.youtube.com/embed/sY1S34973zA
+                    </small>
+                </div>
+            </div>
+
+            <hr class="my-4">
+
+            <div class="form-group">
+                <label for="movie_cast">Obsada</label>
+                <div id="movie_cast">
+                    <div class="row">
+                        <div class="form-group col-md-3">
+                            <label for="movie_cast_actor_name_0">Aktor</label>
+                            <input name="movie_cast_actor_name" type="text" id="movie_cast_actor_name_0" class="form-control" placeholder="Imię/Imiona">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <label for="movie_cast_actor_surname_0"></label>
+                            <input name="movie_cast_actor_surname" type="text" id="movie_cast_actor_surname_0" class="form-control mt-2" placeholder="Nazwisko">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="movie_cast_role_0">Rola</label>
+                            <input name="movie_cast_actor_role" type="text" id="movie_cast_role_0" class="form-control" placeholder="Rola">
+                        </div>
+                    </div>
+                </div>
+                <button onclick="addCast()" class="btn btn-dark my-2 my-sm-0" type="button">Dodaj kolejną postać</button>
+            </div>
+
+            <div class="row mt-5">
+                <button type="submit" class="btn btn-dark btn-lg btn-block">Zapisz</button>
+            </div>
+        </form>
+    </div>
+</main>
+</body>
+<footer th:replace="fragments/footer :: footer"></footer>
+</html>

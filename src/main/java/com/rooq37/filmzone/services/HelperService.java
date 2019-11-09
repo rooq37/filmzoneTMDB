@@ -3,18 +3,27 @@ package com.rooq37.filmzone.services;
 import com.rooq37.filmzone.commons.Image;
 import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.entities.*;
+import com.rooq37.filmzone.movies.editMovieForm.Character;
+import com.rooq37.filmzone.movies.editMovieForm.Person;
 import com.rooq37.filmzone.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
 public class HelperService {
 
-    private static final String PICTURES_PATH = "../images/";
+    private static final String SEPARATOR = File.separator;
+
+    //private static final String PICTURES_PATH = "../images/";
+    private static final String PICTURES_PATH = System.getProperty("catalina.home")
+            + SEPARATOR + "webapps" + SEPARATOR + "ROOT" + SEPARATOR + "movie_media" + SEPARATOR;
+
 
     @Autowired
     private MovieRepository movieRepository;
@@ -28,6 +37,10 @@ public class HelperService {
     private CountryRepository countryRepository;
     @Autowired
     private MediaRepository mediaRepository;
+    @Autowired
+    private PersonRepository personRepository;
+    @Autowired
+    private MoviePersonRepository moviePersonRepository;
 
     public List<MovieListElement> getAllMovieListElements(){
         List<MovieListElement> movieList = new ArrayList<>();
@@ -59,11 +72,13 @@ public class HelperService {
 
     public double countAverageRating(MovieEntity movieEntity){
         List<Integer> ratings = ratingRepository.findAllByMovie(movieEntity).stream().map(RatingEntity::getValue).collect(Collectors.toList());
+        if(ratings.isEmpty()) return 0;
         return ratings.stream().mapToInt(Integer::intValue).average().getAsDouble();
     }
 
     public Image getCover(MovieEntity movieEntity){
-        MediaEntity cover = mediaRepository.findAllByMoviesEqualsAndType(movieEntity, "COVER").get(0);
+        List<MediaEntity> mediaEntityList = mediaRepository.findAllByMoviesEqualsAndType(movieEntity, "COVER");
+        MediaEntity cover = !mediaEntityList.isEmpty() ? mediaEntityList.get(0) : new MediaEntity();
         return new Image(movieEntity.getTitle(), PICTURES_PATH + cover.getValue(), cover.getAuthor());
     }
 
@@ -91,6 +106,71 @@ public class HelperService {
 
     public List<String> getAllCountries(){
         return countryRepository.findAll().stream().map(CountryEntity::getName).collect(Collectors.toList());
+    }
+
+    public void saveCategoryEntities(MovieEntity movie, List<String> categories){
+        for(CategoryEntity category : categoryRepository.findAll()){
+            if(categories.contains(category.getName())){
+                category.getMovies().add(movie);
+                categoryRepository.save(category);
+            }
+        }
+    }
+
+    public void saveCountryEntities(MovieEntity movie, List<String> countries){
+        for(String country : countries){
+            Optional<CountryEntity> optionalCountry = countryRepository.findCountryEntityByName(country);
+            CountryEntity countryEntity;
+            if(optionalCountry.isPresent()){
+                countryEntity = optionalCountry.get();
+            }else{
+                countryEntity = new CountryEntity();
+                countryEntity.setName(country);
+            }
+            countryEntity.getMovies().add(movie);
+            countryRepository.save(countryEntity);
+        }
+    }
+
+    public void saveMoviePersonEntities(MovieEntity movie, List<Person> directors, List<Person> scenarios, List<Character> characters){
+        saveMoviePeople(directors, movie, null, "DIRECTOR");
+        saveMoviePeople(scenarios, movie, null, "SCENARIO");
+        saveMovieCharacters(characters, movie, "ACTOR");
+    }
+
+    private PersonEntity savePersonEntity(Person person){
+        Optional<PersonEntity> optionalPerson = personRepository.findPersonEntityByNameAndSurname(person.getName(), person.getSurname());
+        PersonEntity personEntity;
+        if(optionalPerson.isPresent()){
+            personEntity = optionalPerson.get();
+        }else{
+            personEntity = new PersonEntity();
+            personEntity.setName(person.getName());
+            personEntity.setSurname(person.getSurname());
+        }
+        return personRepository.save(personEntity);
+    }
+
+    private MoviePersonEntity saveMoviePersonEntity(Person person, MovieEntity movieEntity, String role, String type){
+        PersonEntity personEntity = savePersonEntity(person);
+        MoviePersonEntity moviePersonEntity = new MoviePersonEntity();
+        moviePersonEntity.setPerson(personEntity);
+        moviePersonEntity.setMovie(movieEntity);
+        moviePersonEntity.setRole(role);
+        moviePersonEntity.setType(type);
+        return moviePersonRepository.save(moviePersonEntity);
+    }
+
+    private void saveMoviePeople(List<Person> people, MovieEntity movieEntity, String role, String type){
+        for(Person person : people){
+            saveMoviePersonEntity(person, movieEntity, role, type);
+        }
+    }
+
+    private void saveMovieCharacters(List<Character> characters, MovieEntity movieEntity, String type){
+        for(Character character : characters){
+            saveMoviePersonEntity(character.getActor(), movieEntity, character.getRole(), type);
+        }
     }
 
 }

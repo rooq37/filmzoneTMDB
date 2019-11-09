@@ -1,6 +1,7 @@
 package com.rooq37.filmzone.entities;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -8,7 +9,7 @@ import java.util.Set;
 public class CountryEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "name")
@@ -19,7 +20,7 @@ public class CountryEntity {
             name = "MOVIE_COUNTRY",
             joinColumns = @JoinColumn(name = "id_country"),
             inverseJoinColumns = @JoinColumn(name = "id_movie"))
-    private Set<MovieEntity> movies;
+    private Set<MovieEntity> movies = new HashSet<>();
 
     public Long getId() {
         return id;

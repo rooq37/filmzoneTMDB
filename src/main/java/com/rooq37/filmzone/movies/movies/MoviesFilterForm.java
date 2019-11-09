@@ -15,7 +15,7 @@ public class MoviesFilterForm {
     private List<String> possibleCategories;
     private String selectedCountries;
     private List<String> possibleCountries;
-    private int minRate = 1;
+    private int minRate = 0;
     private int maxRate = 10;
 
     public String getName() {

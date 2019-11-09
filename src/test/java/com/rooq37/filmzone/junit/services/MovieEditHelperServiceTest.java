@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = FilmzoneApplication.class)
-public class HelperServiceTest {
+public class MovieEditHelperServiceTest {
 
     @Autowired
     private HelperService helperService;

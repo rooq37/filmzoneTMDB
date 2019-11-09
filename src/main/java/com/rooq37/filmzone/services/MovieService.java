@@ -3,6 +3,8 @@ package com.rooq37.filmzone.services;
 import com.rooq37.filmzone.commons.CastPair;
 import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.entities.*;
+import com.rooq37.filmzone.movies.editMovieForm.EditMovieForm;
+import com.rooq37.filmzone.movies.editMovieForm.ImageFile;
 import com.rooq37.filmzone.movies.movieDetails.*;
 import com.rooq37.filmzone.movies.movies.MoviesFilterForm;
 import com.rooq37.filmzone.repositories.*;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -32,6 +35,8 @@ public class MovieService {
     private UserService userService;
     @Autowired
     private MediaRepository mediaRepository;
+    @Autowired
+    private FileSaverService fileSaverService;
 
     public MovieSummary getMovieSummary(Long id){
         MovieSummary movieSummary = new MovieSummary();
@@ -78,7 +83,8 @@ public class MovieService {
         MovieEntity movie = movieRepository.findById(id).get();
 
         movieMedia.setPhotos(helperService.getPictures(movie));
-        movieMedia.setTrailerLink(mediaRepository.findAllByMoviesEqualsAndType(movie, "TRAILER").get(0).getValue());
+        List<MediaEntity> trailers = mediaRepository.findAllByMoviesEqualsAndType(movie, "TRAILER");
+        movieMedia.setTrailerLink(!trailers.isEmpty() ? trailers.get(0).getValue() : "");
 
         return movieMedia;
     }
@@ -175,6 +181,26 @@ public class MovieService {
         commentEntity.setContent(content);
         commentEntity.setDate(new Date());
         commentRepository.save(commentEntity);
+    }
+
+    public MovieEntity saveMovie(EditMovieForm movieForm, ImageFile cover, List<ImageFile> pictures){
+        MovieEntity movie = new MovieEntity();
+        movie.setTitle(movieForm.getTitle());
+        movie.setDescription(movieForm.getDescription());
+        movie.setDuration(movieForm.getDuration());
+        movie.setYear(movieForm.getProductionYear());
+        movie = movieRepository.save(movie);
+        helperService.saveMoviePersonEntities(movie, movieForm.getDirectors(), movieForm.getScenario(), movieForm.getCharacters());
+        helperService.saveCategoryEntities(movie, movieForm.getCategories());
+        helperService.saveCountryEntities(movie, movieForm.getCountries());
+        try {
+            fileSaverService.saveMediaEntity(cover, movie, "COVER");
+            for(ImageFile image : pictures) fileSaverService.saveMediaEntity(image, movie, "PICTURE");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return movie;
     }
 
 }

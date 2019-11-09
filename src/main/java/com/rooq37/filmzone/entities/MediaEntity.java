@@ -1,6 +1,8 @@
 package com.rooq37.filmzone.entities;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -8,7 +10,7 @@ import java.util.Set;
 public class MediaEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "value")
@@ -21,14 +23,14 @@ public class MediaEntity {
     private String author;
 
     @Column(name = "date")
-    private String date;
+    private Date date;
 
     @ManyToMany
     @JoinTable(
             name = "MOVIE_MEDIA",
             joinColumns = @JoinColumn(name = "id_media"),
             inverseJoinColumns = @JoinColumn(name = "id_movie"))
-    private Set<MovieEntity> movies;
+    private Set<MovieEntity> movies = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -62,11 +64,11 @@ public class MediaEntity {
         this.author = author;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
