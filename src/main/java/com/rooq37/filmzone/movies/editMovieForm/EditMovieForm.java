@@ -2,22 +2,32 @@ package com.rooq37.filmzone.movies.editMovieForm;
 
 import com.rooq37.filmzone.commons.Image;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class EditMovieForm {
 
-    private String title;
+    private Long id;
+    private String title = "";
     private int productionYear = 1900;
     private Image cover;
-    private List<String> categories;
+    private List<String> categories = new ArrayList<>();
     private String description;
     private int duration;
-    private List<Person> directors;
-    private List<Person> scenario;
-    private List<String> countries;
-    private List<Image> pictures;
+    private List<Person> directors = new ArrayList<>();
+    private List<Person> scenario = new ArrayList<>();
+    private List<String> countries = new ArrayList<>();
+    private List<Image> pictures = new ArrayList<>();
     private String trailerUrl;
-    private List<Character> characters;
+    private List<Character> characters = new ArrayList<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;

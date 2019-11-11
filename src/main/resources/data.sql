@@ -1,20 +1,12 @@
 INSERT INTO MOVIE VALUES (1, 'Starzejący się patriarcha dynastii przestępczości zorganizowanej przekazuje kontrolę nad swoim tajnym imperium niechętnemu synowi.', 175, 'Ojciec chrzestny', 1972);
 
-INSERT INTO MEDIA VALUES (1, 'Paramount Pictures', now(), 'COVER', 'godfather/the_godfather_cover.jpg');
-INSERT INTO MEDIA VALUES (2, 'Paramount Pictures', now(), 'PICTURE', 'godfather/godfather1.jpg');
-INSERT INTO MEDIA VALUES (3, 'Paramount Pictures', now(), 'PICTURE', 'godfather/godfather2.jpg');
-INSERT INTO MEDIA VALUES (4, 'Paramount Pictures', now(), 'PICTURE', 'godfather/godfather3.jpg');
-INSERT INTO MEDIA VALUES (5, 'Paramount Pictures', now(), 'PICTURE', 'godfather/godfather4.jpg');
-INSERT INTO MEDIA VALUES (6, 'Paramount Pictures', now(), 'PICTURE', 'godfather/godfather5.jpg');
-INSERT INTO MEDIA VALUES (7, 'YouTube', now(), 'TRAILER', 'https://www.youtube.com/embed/sY1S34973zA');
-
-INSERT INTO MOVIE_MEDIA VALUES (1, 1);
-INSERT INTO MOVIE_MEDIA VALUES (2, 1);
-INSERT INTO MOVIE_MEDIA VALUES (3, 1);
-INSERT INTO MOVIE_MEDIA VALUES (4, 1);
-INSERT INTO MOVIE_MEDIA VALUES (5, 1);
-INSERT INTO MOVIE_MEDIA VALUES (6, 1);
-INSERT INTO MOVIE_MEDIA VALUES (7, 1);
+INSERT INTO MEDIA VALUES (1, 'Paramount Pictures', now(), 'COVER', 'godfather/the_godfather_cover.jpg', 1);
+INSERT INTO MEDIA VALUES (2, 'Paramount Pictures', now(), 'PICTURE', 'godfather/godfather1.jpg', 1);
+INSERT INTO MEDIA VALUES (3, 'Paramount Pictures', now(), 'PICTURE', 'godfather/godfather2.jpg', 1);
+INSERT INTO MEDIA VALUES (4, 'Paramount Pictures', now(), 'PICTURE', 'godfather/godfather3.jpg', 1);
+INSERT INTO MEDIA VALUES (5, 'Paramount Pictures', now(), 'PICTURE', 'godfather/godfather4.jpg', 1);
+INSERT INTO MEDIA VALUES (6, 'Paramount Pictures', now(), 'PICTURE', 'godfather/godfather5.jpg', 1);
+INSERT INTO MEDIA VALUES (7, 'YouTube', now(), 'TRAILER', 'https://www.youtube.com/embed/sY1S34973zA', 1);
 
 INSERT INTO CATEGORY VALUES (1, 'dramat');
 INSERT INTO CATEGORY VALUES (2, 'gangsterski');
@@ -63,19 +55,12 @@ INSERT INTO COMMENT VALUES (11, 'Great movie!', '2019-09-17 20:59:10', 4, 1, 1);
 
 INSERT INTO MOVIE VALUES (2, 'Podróż hobbita z Shire i jego ośmiu towarzyszy, której celem jest zniszczenie potężnego pierścienia pożądanego przez Czarnego Władcę - Saurona.', 178, 'Władca Pierścieni: Drużyna Pierścienia', 2001);
 
-INSERT INTO MEDIA VALUES (8, 'New Line Cinema', now(), 'COVER', 'tlotr_1/tlotr_1_cover.jpg');
-INSERT INTO MEDIA VALUES (9, 'New Line Cinema', now(), 'PICTURE', 'tlotr_1/tlotr_1_1.jpg');
-INSERT INTO MEDIA VALUES (10, 'New Line Cinema', now(), 'PICTURE', 'tlotr_1/tlotr_1_2.jpg');
-INSERT INTO MEDIA VALUES (11, 'New Line Cinema', now(), 'PICTURE', 'tlotr_1/tlotr_1_3.jpg');
-INSERT INTO MEDIA VALUES (12, 'New Line Cinema', now(), 'PICTURE', 'tlotr_1/tlotr_1_4.jpg');
-INSERT INTO MEDIA VALUES (13, 'YouTube', now(), 'TRAILER', 'https://www.youtube.com/embed/K_QJkYUrKn0');
-
-INSERT INTO MOVIE_MEDIA VALUES (8, 2);
-INSERT INTO MOVIE_MEDIA VALUES (9, 2);
-INSERT INTO MOVIE_MEDIA VALUES (10, 2);
-INSERT INTO MOVIE_MEDIA VALUES (11, 2);
-INSERT INTO MOVIE_MEDIA VALUES (12, 2);
-INSERT INTO MOVIE_MEDIA VALUES (13, 2);
+INSERT INTO MEDIA VALUES (8, 'New Line Cinema', now(), 'COVER', 'tlotr_1/tlotr_1_cover.jpg', 2);
+INSERT INTO MEDIA VALUES (9, 'New Line Cinema', now(), 'PICTURE', 'tlotr_1/tlotr_1_1.jpg', 2);
+INSERT INTO MEDIA VALUES (10, 'New Line Cinema', now(), 'PICTURE', 'tlotr_1/tlotr_1_2.jpg', 2);
+INSERT INTO MEDIA VALUES (11, 'New Line Cinema', now(), 'PICTURE', 'tlotr_1/tlotr_1_3.jpg', 2);
+INSERT INTO MEDIA VALUES (12, 'New Line Cinema', now(), 'PICTURE', 'tlotr_1/tlotr_1_4.jpg', 2);
+INSERT INTO MEDIA VALUES (13, 'YouTube', now(), 'TRAILER', 'https://www.youtube.com/embed/K_QJkYUrKn0', 2);
 
 INSERT INTO CATEGORY VALUES (3, 'fantasy');
 INSERT INTO CATEGORY VALUES (4, 'przygodowy');
@@ -120,15 +105,10 @@ INSERT INTO COMMENT VALUES (22, 'Great movie!', '2019-09-17 20:59:10', 4, 2, 1);
 
 INSERT INTO MOVIE VALUES (3, 'Poruszająca historia jednego z największych bokserów wszech czasów - Muhammada Ali''ego.', 157, 'Ali', 2001);
 
-INSERT INTO MEDIA VALUES (14, 'Columbia Pictures Corporation', now(), 'COVER', 'ali/ali_cover.jpg');
-INSERT INTO MEDIA VALUES (15, 'Columbia Pictures Corporation', now(), 'PICTURE', 'ali/ali_1.jpg');
-INSERT INTO MEDIA VALUES (16, 'Columbia Pictures Corporation', now(), 'PICTURE', 'ali/ali_2.jpg');
-INSERT INTO MEDIA VALUES (17, 'YouTube', now(), 'TRAILER', 'https://www.youtube.com/embed/STuHQ5HpmEE');
-
-INSERT INTO MOVIE_MEDIA VALUES (14, 3);
-INSERT INTO MOVIE_MEDIA VALUES (15, 3);
-INSERT INTO MOVIE_MEDIA VALUES (16, 3);
-INSERT INTO MOVIE_MEDIA VALUES (17, 3);
+INSERT INTO MEDIA VALUES (14, 'Columbia Pictures Corporation', now(), 'COVER', 'ali/ali_cover.jpg', 3);
+INSERT INTO MEDIA VALUES (15, 'Columbia Pictures Corporation', now(), 'PICTURE', 'ali/ali_1.jpg', 3);
+INSERT INTO MEDIA VALUES (16, 'Columbia Pictures Corporation', now(), 'PICTURE', 'ali/ali_2.jpg', 3);
+INSERT INTO MEDIA VALUES (17, 'YouTube', now(), 'TRAILER', 'https://www.youtube.com/embed/STuHQ5HpmEE', 3);
 
 INSERT INTO CATEGORY VALUES (5, 'biograficzny');
 INSERT INTO CATEGORY VALUES (6, 'sportowy');
@@ -161,19 +141,12 @@ INSERT INTO RATING VALUES (3, 1, '2019-09-30 16:01:15', 8);
 
 INSERT INTO MOVIE VALUES (4, 'Historia tego, jak George Jung wraz z kartelem Medellín kierowanym przez Pablo Escobara założył amerykański rynek kokainy w latach 70. XX wieku w Stanach Zjednoczonych.', 124, 'Blow', 2001);
 
-INSERT INTO MEDIA VALUES (18, 'New Line Cinema', now(), 'COVER', 'blow/blow_cover.jpg');
-INSERT INTO MEDIA VALUES (19, 'New Line Cinema', now(), 'PICTURE', 'blow/blow_1.jpg');
-INSERT INTO MEDIA VALUES (20, 'New Line Cinema', now(), 'PICTURE', 'blow/blow_2.jpg');
-INSERT INTO MEDIA VALUES (21, 'New Line Cinema', now(), 'PICTURE', 'blow/blow_3.jpg');
-INSERT INTO MEDIA VALUES (22, 'New Line Cinema', now(), 'PICTURE', 'blow/blow_4.jpg');
-INSERT INTO MEDIA VALUES (23, 'YouTube', now(), 'TRAILER', 'https://www.youtube.com/embed/scWkP1GdnuU');
-
-INSERT INTO MOVIE_MEDIA VALUES (18, 4);
-INSERT INTO MOVIE_MEDIA VALUES (19, 4);
-INSERT INTO MOVIE_MEDIA VALUES (20, 4);
-INSERT INTO MOVIE_MEDIA VALUES (21, 4);
-INSERT INTO MOVIE_MEDIA VALUES (22, 4);
-INSERT INTO MOVIE_MEDIA VALUES (23, 4);
+INSERT INTO MEDIA VALUES (18, 'New Line Cinema', now(), 'COVER', 'blow/blow_cover.jpg', 4);
+INSERT INTO MEDIA VALUES (19, 'New Line Cinema', now(), 'PICTURE', 'blow/blow_1.jpg', 4);
+INSERT INTO MEDIA VALUES (20, 'New Line Cinema', now(), 'PICTURE', 'blow/blow_2.jpg', 4);
+INSERT INTO MEDIA VALUES (21, 'New Line Cinema', now(), 'PICTURE', 'blow/blow_3.jpg', 4);
+INSERT INTO MEDIA VALUES (22, 'New Line Cinema', now(), 'PICTURE', 'blow/blow_4.jpg', 4);
+INSERT INTO MEDIA VALUES (23, 'YouTube', now(), 'TRAILER', 'https://www.youtube.com/embed/scWkP1GdnuU', 4);
 
 INSERT INTO MOVIE_CATEGORY VALUES (1, 4);
 INSERT INTO MOVIE_CATEGORY VALUES (2, 4);
@@ -201,17 +174,11 @@ INSERT INTO RATING VALUES (4, 1, '2019-10-04 18:46:15', 8);
 
 INSERT INTO MOVIE VALUES (5, 'Osierocony chłopiec zapisuje się do szkoły magii, gdzie poznaje prawdę o sobie, swojej rodzinie i straszliwym złu, które nawiedzają magiczny świat.', 152, 'Harry Potter i Kamień Filozoficzny', 2001);
 
-INSERT INTO MEDIA VALUES (24, 'Warner Bros', now(), 'COVER', 'harry_potter_sorcerers_stone/hp1_cover.jpg');
-INSERT INTO MEDIA VALUES (25, 'Warner Bros', now(), 'PICTURE', 'harry_potter_sorcerers_stone/hp1_1.jpg');
-INSERT INTO MEDIA VALUES (26, 'Warner Bros', now(), 'PICTURE', 'harry_potter_sorcerers_stone/hp1_2.jpg');
-INSERT INTO MEDIA VALUES (27, 'Warner Bros', now(), 'PICTURE', 'harry_potter_sorcerers_stone/hp1_3.jpg');
-INSERT INTO MEDIA VALUES (28, 'YouTube', now(), 'TRAILER', 'https://www.youtube.com/embed/VyHV0BRtdxo');
-
-INSERT INTO MOVIE_MEDIA VALUES (24, 5);
-INSERT INTO MOVIE_MEDIA VALUES (25, 5);
-INSERT INTO MOVIE_MEDIA VALUES (26, 5);
-INSERT INTO MOVIE_MEDIA VALUES (27, 5);
-INSERT INTO MOVIE_MEDIA VALUES (28, 5);
+INSERT INTO MEDIA VALUES (24, 'Warner Bros', now(), 'COVER', 'harry_potter_sorcerers_stone/hp1_cover.jpg', 5);
+INSERT INTO MEDIA VALUES (25, 'Warner Bros', now(), 'PICTURE', 'harry_potter_sorcerers_stone/hp1_1.jpg', 5);
+INSERT INTO MEDIA VALUES (26, 'Warner Bros', now(), 'PICTURE', 'harry_potter_sorcerers_stone/hp1_2.jpg', 5);
+INSERT INTO MEDIA VALUES (27, 'Warner Bros', now(), 'PICTURE', 'harry_potter_sorcerers_stone/hp1_3.jpg', 5);
+INSERT INTO MEDIA VALUES (28, 'YouTube', now(), 'TRAILER', 'https://www.youtube.com/embed/VyHV0BRtdxo', 5);
 
 INSERT INTO MOVIE_CATEGORY VALUES (3, 5);
 INSERT INTO MOVIE_CATEGORY VALUES (4, 5);

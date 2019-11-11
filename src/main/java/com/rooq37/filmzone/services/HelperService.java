@@ -8,6 +8,7 @@ import com.rooq37.filmzone.movies.editMovieForm.Person;
 import com.rooq37.filmzone.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -20,9 +21,8 @@ public class HelperService {
 
     private static final String SEPARATOR = File.separator;
 
-    //private static final String PICTURES_PATH = "../images/";
-    private static final String PICTURES_PATH = System.getProperty("catalina.home")
-            + SEPARATOR + "webapps" + SEPARATOR + "ROOT" + SEPARATOR + "movie_media" + SEPARATOR;
+    private static final String PICTURES_PATH = "../images/";
+    //private static final String PICTURES_PATH = System.getProperty("catalina.home") + SEPARATOR + "webapps" + SEPARATOR + "ROOT" + SEPARATOR + "movie_media" + SEPARATOR;
 
 
     @Autowired
@@ -77,14 +77,14 @@ public class HelperService {
     }
 
     public Image getCover(MovieEntity movieEntity){
-        List<MediaEntity> mediaEntityList = mediaRepository.findAllByMoviesEqualsAndType(movieEntity, "COVER");
+        List<MediaEntity> mediaEntityList = mediaRepository.findAllByMovieEqualsAndType(movieEntity, "COVER");
         MediaEntity cover = !mediaEntityList.isEmpty() ? mediaEntityList.get(0) : new MediaEntity();
         return new Image(movieEntity.getTitle(), PICTURES_PATH + cover.getValue(), cover.getAuthor());
     }
 
     public List<Image> getPictures(MovieEntity movieEntity){
         List<Image> photos = new ArrayList<>();
-        for(MediaEntity mm : mediaRepository.findAllByMoviesEqualsAndType(movieEntity, "PICTURE"))
+        for(MediaEntity mm : mediaRepository.findAllByMovieEqualsAndType(movieEntity, "PICTURE"))
             photos.add(new Image(movieEntity.getTitle(), PICTURES_PATH + mm.getValue(), mm.getAuthor()));
 
         return photos;
@@ -112,8 +112,10 @@ public class HelperService {
         for(CategoryEntity category : categoryRepository.findAll()){
             if(categories.contains(category.getName())){
                 category.getMovies().add(movie);
-                categoryRepository.save(category);
+            }else{
+                category.getMovies().remove(movie);
             }
+            categoryRepository.save(category);
         }
     }
 
@@ -130,9 +132,17 @@ public class HelperService {
             countryEntity.getMovies().add(movie);
             countryRepository.save(countryEntity);
         }
+        for(CountryEntity country : countryRepository.findAll()){
+            if(!countries.contains(country.getName())){
+                country.getMovies().remove(movie);
+                countryRepository.save(country);
+            }
+        }
     }
 
+    @Transactional
     public void saveMoviePersonEntities(MovieEntity movie, List<Person> directors, List<Person> scenarios, List<Character> characters){
+        moviePersonRepository.deleteAllByMovie_Id(movie.getId());
         saveMoviePeople(directors, movie, null, "DIRECTOR");
         saveMoviePeople(scenarios, movie, null, "SCENARIO");
         saveMovieCharacters(characters, movie, "ACTOR");

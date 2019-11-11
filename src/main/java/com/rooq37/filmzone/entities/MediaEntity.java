@@ -25,12 +25,9 @@ public class MediaEntity {
     @Column(name = "date")
     private Date date;
 
-    @ManyToMany
-    @JoinTable(
-            name = "MOVIE_MEDIA",
-            joinColumns = @JoinColumn(name = "id_media"),
-            inverseJoinColumns = @JoinColumn(name = "id_movie"))
-    private Set<MovieEntity> movies = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "id_movie")
+    private MovieEntity movie;
 
     public Long getId() {
         return id;
@@ -72,12 +69,11 @@ public class MediaEntity {
         this.date = date;
     }
 
-    public Set<MovieEntity> getMovies() {
-        return movies;
+    public MovieEntity getMovie() {
+        return movie;
     }
 
-    public void setMovies(Set<MovieEntity> movies) {
-        this.movies = movies;
+    public void setMovie(MovieEntity movie) {
+        this.movie = movie;
     }
-
 }

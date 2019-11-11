@@ -28,4 +28,8 @@ public class ImageFile {
         this.source = source;
     }
 
+    public boolean isEmpty(){
+        return (multipartFile.isEmpty() || source.isEmpty());
+    }
+
 }

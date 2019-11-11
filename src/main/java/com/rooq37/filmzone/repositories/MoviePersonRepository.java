@@ -12,5 +12,6 @@ public interface MoviePersonRepository
         extends CrudRepository<MoviePersonEntity, Long> {
 
     List<MoviePersonEntity> findAllByMovieAndType(MovieEntity movieEntity, String type);
+    void deleteAllByMovie_Id(Long movieId);
 
 }

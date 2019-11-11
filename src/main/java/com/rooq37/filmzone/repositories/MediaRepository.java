@@ -11,6 +11,9 @@ import java.util.List;
 public interface MediaRepository
         extends CrudRepository<MediaEntity, Long> {
 
-    List<MediaEntity> findAllByMoviesEqualsAndType(MovieEntity movie, String type);
+    List<MediaEntity> findAllByMovieEqualsAndType(MovieEntity movie, String type);
+    MediaEntity findByMovieAndType(MovieEntity movie, String type);
+    void deleteAllByMovieAndType(MovieEntity movie, String type);
+    void deleteByValue(String value);
 
 }

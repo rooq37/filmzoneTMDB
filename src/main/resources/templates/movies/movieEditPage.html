@@ -5,9 +5,10 @@
 <body>
 <main role="main" class="container">
     <div class="jumbotron">
-        <h2>Dodaj film</h2>
+        <h2 th:text="${!movieForm.getTitle().isEmpty()} ? 'Edycja filmu: ' + ${movieForm.getTitle()} : 'Dodaj film'">Dodaj film</h2>
         <hr class="my-4">
         <form th:action="@{/saveMovie}" method="post" enctype="multipart/form-data" th:object="${movieForm}">
+            <input th:field="${movieForm.id}" hidden>
 
             <div class="form-group row">
                 <div class="form-group col-md-9">
@@ -22,14 +23,19 @@
 
             <div class="form-group">
                 <div class="row">
-                    <div class="form-group col-md-6">
+                    <div th:if="${movieForm.getCover() != null}" class="form-group col-md-2">
+                        <button th:attr="onclick='changePictureInModal(\'' + ${movieForm.getCover().getSource()} + '\');'" type="button" class="btn btn-default text-center">
+                            <img th:src="${movieForm.getCover().getSource()}" title="Obecna okładka" class="img-fluid" style="height:100px;">
+                        </button>
+                    </div>
+                    <div class="form-group col-md">
                         <label for="movie_cover">Okładka</label>
                         <div class="custom-file mt-1" id="movie_cover">
                             <input name="cover_file" type="file" class="custom-file-input" id="movie_cover_input" onchange="$(this).next().after().text($(this).val().split('\\').slice(-1)[0])">
                             <label class="custom-file-label text-truncate" for="movie_cover_input">Wybierz plik okładki</label>
                         </div>
                     </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md">
                         <label for="movie_cover_author">Autor</label>
                         <input name="cover_author" type="text" class="form-control my-1" id="movie_cover_author" placeholder="Źródło/Nazwa studia filmowego">
                     </div>
@@ -42,7 +48,7 @@
                         <legend class="col-form-label col-sm-4 pt-0">Wybierz kategorie:</legend>
                         <div class="col-sm-10">
                             <div th:each="category : ${allCategories}" class="form-check form-check-inline">
-                                <input name="selectedCategory" class="form-check-input" type="checkbox" th:id="'cat_' + ${categoryStat.index}" th:value="${category}">
+                                <input th:checked="${movieForm.getCategories().contains(category)}" name="selectedCategory" class="form-check-input" type="checkbox" th:id="'cat_' + ${categoryStat.index}" th:value="${category}">
                                 <label class="form-check-label" th:for="'cat_' + ${categoryStat.index}" th:text="${category}">category</label>
                             </div>
                         </div>
@@ -65,10 +71,24 @@
             <hr class="my-4">
 
             <div class="form-group">
+                <label for="movie_directors">Reżyseria</label>
                 <div id="movie_directors">
-                    <label for="movie_director">Reżyseria</label>
-                    <div id="movie_director" class="row">
+                    <div th:id="'movie_director_old_' + ${directorStat.index}" th:each="director : ${movieForm.getDirectors()}" class="row">
+                        <div class="form-group col-md-5">
+                            <input th:value="${director.getName()}" name="movie_directors_name" type="text" class="form-control" placeholder="Imię/Imiona">
+                        </div>
                         <div class="form-group col-md-6">
+                            <input th:value="${director.getSurname()}" name="movie_directors_surname" type="text" class="form-control" placeholder="Nazwisko">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <button th:attr="onclick='removeElement(\'movie_director_old_' + ${directorStat.index} + '\');'"
+                                    type="button" class="close text-danger mt-auto text-right" aria-label="Remove" data-toggle="tooltip" data-placement="bottom" title="Usuń">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="movie_director_new_0" class="row" th:if="${movieForm.getDirectors().isEmpty()}">
+                        <div class="form-group col-md-5">
                             <input name="movie_directors_name" type="text" class="form-control" placeholder="Imię/Imiona">
                         </div>
                         <div class="form-group col-md-6">
@@ -82,9 +102,23 @@
             <hr class="my-4">
 
             <div class="form-group">
+                <label for="movie_scenarios">Scenariusz</label>
                 <div id="movie_scenarios">
-                    <label for="movie_scenario">Scenariusz</label>
-                    <div id="movie_scenario" class="row">
+                    <div th:id="'movie_scenario_old_' + ${scenarioStat.index}" th:each="scenario : ${movieForm.getScenario()}" class="row">
+                        <div class="form-group col-md-5">
+                            <input th:value="${scenario.getName()}" name="movie_scenario_name" type="text" class="form-control" placeholder="Imię/Imiona">
+                        </div>
+                        <div class="form-group col-md-6">
+                            <input th:value="${scenario.getSurname()}" name="movie_scenario_surname" type="text" class="form-control" placeholder="Nazwisko">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <button th:attr="onclick='removeElement(\'movie_scenario_old_' + ${scenarioStat.index} + '\');'"
+                                    type="button" class="close text-danger mt-auto text-right" aria-label="Remove" data-toggle="tooltip" data-placement="bottom" title="Usuń">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="movie_scenario_new_0" class="row" th:if="${movieForm.getScenario().isEmpty()}">
                         <div class="form-group col-md-6">
                             <input name="movie_scenario_name" type="text" class="form-control" placeholder="Imię/Imiona">
                         </div>
@@ -99,9 +133,20 @@
             <hr class="my-4">
 
             <div class="form-group">
+                <label for="movie_countries">Kraj produkcji</label>
                 <div id="movie_countries">
-                    <label for="movie_country">Kraj produkcji</label>
-                    <div id="movie_country" class="row">
+                    <div th:id="'movie_country_old_' + ${countryStat.index}" th:each="country : ${movieForm.getCountries()}" class="row">
+                        <div class="form-group col-md-6">
+                            <input th:value="${country}" name="movie_country" type="text" class="form-control" placeholder="Nazwa kraju">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <button th:attr="onclick='removeElement(\'movie_country_old_' + ${countryStat.index} + '\');'"
+                                    type="button" class="close text-danger mt-auto text-right" aria-label="Remove" data-toggle="tooltip" data-placement="bottom" title="Usuń">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="movie_country_new_0" th:if="${movieForm.getCountries().isEmpty()}" class="row">
                         <div class="form-group col-md-6">
                             <input name="movie_country" type="text" class="form-control my-1" placeholder="Nazwa kraju">
                         </div>
@@ -115,8 +160,20 @@
             <div class="form-group">
                 <label for="movie_pictures">Zdjęcia</label>
                 <div id="movie_pictures">
-                    <div  class="row">
-                        <div class="form-group col-md-6">
+                    <div class="row">
+                        <div th:id="'movie_picture_old_' + ${pictureStat.index}" th:each="picture : ${movieForm.getPictures()}" class="form-group col-md-2 btn-group dropright">
+                            <button type="button" class="btn btn-default text-center" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <input th:value="${picture.getSource()}" name="old_picture" hidden>
+                                <img th:src="${picture.getSource()}" th:alt="${picture.getAuthor()}" class="img-fluid" style="height:100px;">
+                            </button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" th:attr="onclick='changePictureInModal(\'' + ${picture.getSource()} + '\');'">Powiększ</a>
+                                <a class="dropdown-item" th:attr="onclick='removeElement(\'movie_picture_old_' + ${pictureStat.index} + '\');'">Usuń</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="movie_picture_new_0" th:if="${movieForm.getPictures().isEmpty()}" class="row">
+                        <div class="form-group col-md-5">
                             <div class="custom-file mt-1">
                                 <input name="picture_file" type="file" class="custom-file-input" id="movie_picture_input_0" onchange="$(this).next().after().text($(this).val().split('\\').slice(-1)[0])">
                                 <label class="custom-file-label text-truncate" for="movie_picture_input_0">Wybierz plik zdjęcia</label>
@@ -147,18 +204,32 @@
             <div class="form-group">
                 <label for="movie_cast">Obsada</label>
                 <div id="movie_cast">
-                    <div class="row">
+                    <div th:id="'movie_character_old_' + ${characterStat.index}" th:each="character : ${movieForm.getCharacters()}" class="row">
                         <div class="form-group col-md-3">
-                            <label for="movie_cast_actor_name_0">Aktor</label>
-                            <input name="movie_cast_actor_name" type="text" id="movie_cast_actor_name_0" class="form-control" placeholder="Imię/Imiona">
+                            <input th:value="${character.getActor().getName()}" name="movie_cast_actor_name" type="text" class="form-control" placeholder="Imię/Imiona aktora">
                         </div>
                         <div class="form-group col-md-3">
-                            <label for="movie_cast_actor_surname_0"></label>
-                            <input name="movie_cast_actor_surname" type="text" id="movie_cast_actor_surname_0" class="form-control mt-2" placeholder="Nazwisko">
+                            <input th:value="${character.getActor().getSurname()}" name="movie_cast_actor_surname" type="text" class="form-control" placeholder="Nazwisko aktora">
                         </div>
-                        <div class="form-group col-md-6">
-                            <label for="movie_cast_role_0">Rola</label>
-                            <input name="movie_cast_actor_role" type="text" id="movie_cast_role_0" class="form-control" placeholder="Rola">
+                        <div class="form-group col-md-5">
+                            <input th:value="${character.getRole()}" name="movie_cast_actor_role" type="text" class="form-control" placeholder="Rola">
+                        </div>
+                        <div class="form-group col-md-1">
+                            <button th:attr="onclick='removeElement(\'movie_character_old_' + ${characterStat.index} + '\');'"
+                                    type="button" class="close text-danger mt-auto text-right" aria-label="Remove" data-toggle="tooltip" data-placement="bottom" title="Usuń">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="movie_character_new_0" th:if="${movieForm.getCharacters().isEmpty()}" class="row">
+                        <div class="form-group col-md-3">
+                            <input name="movie_cast_actor_name" type="text" class="form-control" placeholder="Imię/Imiona aktora">
+                        </div>
+                        <div class="form-group col-md-3">
+                            <input name="movie_cast_actor_surname" type="text" class="form-control" placeholder="Nazwisko aktora">
+                        </div>
+                        <div class="form-group col-md-5">
+                            <input name="movie_cast_actor_role" type="text" class="form-control" placeholder="Rola">
                         </div>
                     </div>
                 </div>
@@ -170,6 +241,17 @@
             </div>
         </form>
     </div>
+
+    <div class="modal fade" id="imagePreview" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <img id="movie_image_preview" src="..." class="img-fluid" style="max-height: 500px;">
+                </div>
+            </div>
+        </div>
+    </div>
+
 </main>
 </body>
 <footer th:replace="fragments/footer :: footer"></footer>

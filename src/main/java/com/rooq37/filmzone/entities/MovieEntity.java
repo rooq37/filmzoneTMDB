@@ -30,7 +30,7 @@ public class MovieEntity {
     @ManyToMany(fetch = FetchType.EAGER, mappedBy = "movies")
     private Set<CountryEntity> countries = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, mappedBy = "movies")
+    @OneToMany(mappedBy = "movie")
     private Set<MediaEntity> media = new HashSet<>();
 
     @ManyToMany(mappedBy = "movies")
