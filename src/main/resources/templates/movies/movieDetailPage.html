@@ -8,7 +8,7 @@
     <div class="jumbotron pb-3 pt-4" th:object="${movieSummary}">
         <div class="row">
             <div class="col-md-4">
-                <img th:src="${movieSummary.getCover().getSource()}" class="card-img" th:alt="${movieSummary.getCover().getName()}" th:title="'@Autor: ' + ${movieSummary.getCover().getAuthor()}">
+                <img th:src="${movieSummary.getCover().getSource()}" class="card-img" th:alt="${movieSummary.getCover().getName()}" th:title="'© ' + ${movieSummary.getCover().getAuthor()}">
             </div>
             <div class="col">
                 <div class="row">
@@ -23,25 +23,34 @@
                     <a href="#" class="badge badge-pill badge-dark" th:each="category : ${movieSummary.getCategories()}" th:text="'#' + ${category}">#category</a>
                 </h5>
                 <br>
-                <span id="moviePage:movieDescription" th:text="${movieSummary.getDescription()}">Description</span>
+                <span id="moviePage:movieDescription"
+                      th:text="${movieSummary.getDescription().isEmpty()} ? 'Ten film nie ma jeszcze opisu...' : ${movieSummary.getDescription()}">Description</span>
                 <hr class="my-4">
                 <ul>
                     <li>
                         <span th:text="'Rok produkcji: ' + ${movieSummary.getYear()}">Year</span>
                     </li>
-                    <li>
+                    <li th:if="${movieSummary.getDuration() != 0}">
                         <span th:text="'Czas trwania: ' + ${movieSummary.getDuration() + ' min'}">Duration</span>
                     </li>
-                    <li>
+                    <li th:if="${!movieSummary.getDirector().isEmpty()}">
                         <span th:text="'Reżyseria: ' + ${movieSummary.getDirector()}">Director</span>
                     </li>
-                    <li>
+                    <li th:if="${!movieSummary.getScenario().isEmpty()}">
                         <span th:text="'Scenariusz: ' + ${movieSummary.getScenario()}">Scenario</span>
                     </li>
-                    <li>
+                    <li th:if="${!movieSummary.getCountry().isEmpty()}">
                         <span th:text="'Produkcja: ' + ${movieSummary.getCountry()}">Country</span>
                     </li>
                 </ul>
+            </div>
+        </div>
+        <div sec:authorize="hasRole('ROLE_ADMIN')" class="row">
+            <div class="col">
+                <span></span>
+            </div>
+            <div class="col-md-auto">
+                <a th:href="@{/editMovie/{id} (id=${movieId})}" class="btn btn-dark">Edytuj</a>
             </div>
         </div>
     </div>
@@ -103,7 +112,7 @@
         </div>
     </div>
 
-    <div class="jumbotron pb-3 pt-4" th:object="${movieMedia}">
+    <div th:if="${!movieMedia.getPhotos().isEmpty()}" class="jumbotron pb-3 pt-4" th:object="${movieMedia}">
         <h4>Zdjęcia</h4>
             <div id="carouselPhotos" class="carousel slide bg-dark rounded" data-ride="carousel">
                 <ol class="carousel-indicators">
@@ -128,14 +137,14 @@
             </div>
     </div>
 
-    <div class="jumbotron pb-3 pt-4" th:object="${movieMedia}">
+    <div th:if="${!movieMedia.getTrailerLink().isEmpty()}" class="jumbotron pb-3 pt-4" th:object="${movieMedia}">
         <h4>Trailer</h4>
         <div class="embed-responsive embed-responsive-16by9">
             <iframe class="embed-responsive-item" th:src="${movieMedia.getTrailerLink()}" allowfullscreen></iframe>
         </div>
     </div>
 
-    <div class="jumbotron pb-3 pt-4" th:object="${movieCast}">
+    <div th:if="${!movieCast.getCast().isEmpty()}" class="jumbotron pb-3 pt-4" th:object="${movieCast}">
         <h4>Obsada</h4>
         <div class="row">
             <div class="col">
@@ -158,8 +167,6 @@
                     <select class="custom-select border-dark" th:name="sort">
                         <option value="1" th:selected="${#httpServletRequest.getParameter('sort') == '1'}">Wg. daty malejąco</option>
                         <option value="2" th:selected="${#httpServletRequest.getParameter('sort') == '2'}">Wg. daty rosnąco</option>
-                        <option value="3" th:selected="${#httpServletRequest.getParameter('sort') == '3'}">Wg. oceny malejąco</option>
-                        <option value="4" th:selected="${#httpServletRequest.getParameter('sort') == '4'}">Wg. oceny rosnąco</option>
                     </select>
                 </div>
             </div>
@@ -213,14 +220,9 @@
                     <div class="col">
                         <span th:text="${comment.getContent()}">content</span>
                     </div>
-                    <div class="col-md-auto">
-                        <div class="input-group">
-                            <input type="button" class="form-control bg-dark border-dark text-danger font-weight-bold" value="-"/>
-                            <div class="input-group-append">
-                                <span class="input-group-text text-dark border-dark bg-white font-weight-bold" th:text="${comment.getRating()}">rate</span>
-                            </div>
-                            <input type="button" class="form-control bg-dark border-dark text-success font-weight-bold" value="+"/>
-                        </div>
+                    <div sec:authorize="hasRole('ROLE_ADMIN')" class="col-md-auto">
+                        <button th:attr="onclick='confirmCommentRemoval(\'' + ${comment.getUser().getNickname()} +'\',\''+ ${comment.getContent()} + '\',\''+ ${comment.getId()} + '\');'"
+                                class="btn btn-danger text-white">Usuń komentarz</button>
                     </div>
                 </div>
             </div>
@@ -246,6 +248,35 @@
             </ul>
         </nav>
 
+    </div>
+
+    <div class="modal fade" id="commentRemovalModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <form th:action="@{/removeComment}" method="post">
+            <input type="hidden" th:value="${movieId}" name="movieId"/>
+            <input type="hidden" id="commentRemovalModal_commentId" name="commentId"/>
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ostrzeżenie</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <span>Czy na pewno chcesz usunąć komentarz użytkownika </span>
+                        <label class="font-weight-bold" id="commentRemovalModal_username">username</label>
+                        <span> o treści </span>
+                        <span>"</span>
+                        <span class="font-italic" id="commentRemovalModal_content">content</span>
+                        <span>"?</span>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                        <button type="submit" class="btn btn-primary">Potwierdź</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 
 </main>

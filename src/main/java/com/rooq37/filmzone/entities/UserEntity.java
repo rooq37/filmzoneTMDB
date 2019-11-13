@@ -25,6 +25,9 @@ public class UserEntity {
     @Column(name = "register_date")
     private Date registerDate;
 
+    @Column(name = "role")
+    private String role;
+
     @OneToMany(mappedBy = "user")
     private Set<CommentEntity> comments;
 
@@ -42,6 +45,12 @@ public class UserEntity {
 
     @ManyToMany(mappedBy="followed")
     private Set<UserEntity> followers = new HashSet<>();
+
+    @Column(name = "blocked_till_date")
+    private Date blockedTill;
+
+    @Column(name = "block_reason")
+    private String blockReason;
 
     public Long getId() {
         return id;
@@ -83,6 +92,14 @@ public class UserEntity {
         this.registerDate = registerDate;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public Set<CommentEntity> getComments() {
         return comments;
     }
@@ -121,6 +138,22 @@ public class UserEntity {
 
     public void setFollowers(Set<UserEntity> followers) {
         this.followers = followers;
+    }
+
+    public Date getBlockedTill() {
+        return blockedTill;
+    }
+
+    public void setBlockedTill(Date blockedTill) {
+        this.blockedTill = blockedTill;
+    }
+
+    public String getBlockReason() {
+        return blockReason;
+    }
+
+    public void setBlockReason(String blockReason) {
+        this.blockReason = blockReason;
     }
 
 }

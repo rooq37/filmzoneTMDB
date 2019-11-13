@@ -28,6 +28,7 @@ public class UserService {
         userEntity.setEmail(registerForm.getEmail());
         userEntity.setPassword(new BCryptPasswordEncoder(11).encode(registerForm.getPassword()));
         userEntity.setRegisterDate(new Date());
+        userEntity.setRole("USER");
         userRepository.save(userEntity);
         return "Konto zostało pomyślnie utworzone!";
     }

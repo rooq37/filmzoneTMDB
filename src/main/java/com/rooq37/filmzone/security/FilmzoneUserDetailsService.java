@@ -26,8 +26,12 @@ public class FilmzoneUserDetailsService implements UserDetailsService {
                 notificationService.addErrorMessage("Użytkownik o adresie email " + email + " nie istnieje!");
                 throw new UsernameNotFoundException("No user found with email: " + email);
             }
+            UserPrincipals userPrincipals = new UserPrincipals(user);
+            if(!userPrincipals.isAccountNonLocked()){
+                notificationService.addErrorMessage("To konto jest zablokowane do " + user.getBlockedTill() + " z powodu \"" + user.getBlockReason() + "\"");
+            }
 
-            return new UserPrincipals(user);
+            return userPrincipals;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

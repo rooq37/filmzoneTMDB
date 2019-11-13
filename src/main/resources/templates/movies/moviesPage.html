@@ -115,7 +115,7 @@
             <div class="card mb-3 border-dark" th:each="movie : ${moviesPage.getContent()}">
                 <div class="row no-gutters">
                     <div class="col-md-2">
-                        <img th:src="${movie.getCover().getSource()}" class="card-img" th:alt="${movie.getTitle()}" th:title="'@Author: ' + ${movie.getCover().getAuthor()}">
+                        <img th:src="${movie.getCover().getSource()}" class="card-img" th:alt="${movie.getTitle()}" th:title="'© ' + ${movie.getCover().getAuthor()}">
                     </div>
                     <div class="col-md-10">
                         <div class="card-body">
@@ -124,7 +124,7 @@
                                 <a href="#" class="badge badge-pill badge-dark" th:each="category : ${movie.getCategories()}" th:text="'#' + ${category}">category</a>
                             </h7>
                             <p></p>
-                            <p class="card-text" th:text="${movie.getDescription()}">description</p>
+                            <p class="card-text" th:text="${movie.getDescription().isEmpty()} ? 'Ten film nie ma jeszcze opisu...' : ${movie.getDescription()}">description</p>
                             <ul class="list-inline">
                                 <li class="list-inline-item font-weight-bold" th:text="'⦿ Średnia ocena: ' + ${movie.getAvgUsersRatingAsString()}">Average★</li>
                                 <li class="list-inline-item font-weight-bold" th:text="'⦿ ' + ${movie.getNumberOfPeopleWhoWatched()} + ' użytkowników oceniło ten film'">Number of people who watched</li>

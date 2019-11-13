@@ -77,9 +77,12 @@ public class HelperService {
     }
 
     public Image getCover(MovieEntity movieEntity){
-        List<MediaEntity> mediaEntityList = mediaRepository.findAllByMovieEqualsAndType(movieEntity, "COVER");
-        MediaEntity cover = !mediaEntityList.isEmpty() ? mediaEntityList.get(0) : new MediaEntity();
-        return new Image(movieEntity.getTitle(), PICTURES_PATH + cover.getValue(), cover.getAuthor());
+        MediaEntity cover = mediaRepository.findByMovieAndType(movieEntity, "COVER");
+        if(cover != null) {
+            return new Image(movieEntity.getTitle(), PICTURES_PATH + cover.getValue(), cover.getAuthor());
+        }else{
+            return new Image(movieEntity.getTitle(), "../images/filmzone_default.png", "default");
+        }
     }
 
     public List<Image> getPictures(MovieEntity movieEntity){

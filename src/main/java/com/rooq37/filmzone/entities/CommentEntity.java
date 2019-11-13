@@ -21,9 +21,6 @@ public class CommentEntity {
     @Column(name = "date")
     private Date date;
 
-    @Column(name = "rating")
-    private int rating;
-
     @ManyToOne
     @JoinColumn(name = "id_movie")
     private MovieEntity movie;
@@ -58,14 +55,6 @@ public class CommentEntity {
 
     public void setDate(Date date) {
         this.date = date;
-    }
-
-    public int getRating() {
-        return rating;
-    }
-
-    public void setRating(int rating) {
-        this.rating = rating;
     }
 
     public MovieEntity getMovie() {

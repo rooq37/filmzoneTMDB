@@ -147,3 +147,17 @@ function removeElement(elementId) {
     var element = document.getElementById(elementId);
     element.parentNode.removeChild(element);
 }
+function confirmCommentRemoval(username, commentContent, commentId){
+    var mod_commentId = $('#commentRemovalModal_commentId');
+    var mod_username = $('#commentRemovalModal_username');
+    var mod_content = $('#commentRemovalModal_content');
+    mod_commentId.val(commentId);
+    mod_username.text(username);
+    mod_content.text(commentContent);
+    $('#commentRemovalModal').modal('show');
+}
+function blockUser(username){
+    var mod_username = $('#blockUserModal_username');
+    mod_username.text(username);
+    $('#blockUserModal').modal('show');
+}

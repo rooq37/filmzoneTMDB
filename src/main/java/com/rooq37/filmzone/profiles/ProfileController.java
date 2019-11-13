@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Controller
 public class ProfileController {
@@ -85,6 +88,26 @@ public class ProfileController {
         }
 
         return "redirect:/profile/" + anotherUser.getId();
+    }
+
+    @RequestMapping(value = "/blockUser", method = RequestMethod.POST)
+    public String followUser(Principal principal,
+                             @RequestParam(value = "userId") Long userId,
+                             @RequestParam(value = "reason") String reason,
+                             @RequestParam(value = "tillDate") String date) {
+
+        UserEntity user = userService.getUserByEmail(userService.getUserEmailById(userId));
+        Date tillDate = null;
+        try {
+            tillDate = new SimpleDateFormat("dd-MM-yyyy").parse(date);
+        } catch (ParseException e) {
+            notificationService.addErrorMessage("Błędny format daty!");
+            return "redirect:/profile/" + userId;
+        }
+        profileService.blockUser(userId, reason, tillDate);
+        notificationService.addInfoMessage("Użytkownik o nazwie " + user.getNickname() + " został zablokowany do " + date + ".");
+
+        return "redirect:/profile/" + userId;
     }
 
 }

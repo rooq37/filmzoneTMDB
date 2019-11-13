@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -198,10 +197,14 @@ public class MovieService {
         CommentEntity commentEntity = new CommentEntity();
         commentEntity.setMovie(movieRepository.findMovieEntityById(movieId));
         commentEntity.setUser(userService.getUserByEmail(userEmail));
-        commentEntity.setRating(0);
         commentEntity.setContent(content);
         commentEntity.setDate(new Date());
         commentRepository.save(commentEntity);
+    }
+
+    @Transactional
+    public void removeComment(Long commentId){
+        commentRepository.deleteById(commentId);
     }
 
     public EditMovieForm getEditMovieForm(Long movieId){

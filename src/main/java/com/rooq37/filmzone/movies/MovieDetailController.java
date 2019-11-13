@@ -101,4 +101,13 @@ public class MovieDetailController {
         return "redirect:/movie/" + movieId + "#mymovies";
     }
 
+    @RequestMapping(value = "/removeComment", method = RequestMethod.POST)
+    public String removeComment(Principal principal,
+                                @RequestParam(value = "commentId") Long commentId,
+                                @RequestParam(value = "movieId") Long movieId){
+
+        movieService.removeComment(commentId);
+        return "redirect:/movie/" + movieId + "#comments";
+    }
+
 }

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head th:replace="fragments/head :: head"></head>
 <header th:replace="fragments/header :: header"></header>
 <body>
@@ -38,6 +38,15 @@
                         <button title="Przestań obserwować" type="submit" name="action" value="unfollow" class="form-control btn btn-outline-dark bg-dark text-white">Obserwujesz</button>
                     </div>
                 </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <span></span>
+            </div>
+            <div sec:authorize="hasRole('ROLE_ADMIN')" class="col-md-auto">
+                <button th:attr="onclick='blockUser(\'' + ${profile.getNickname()} + '\');'"
+                        class="btn btn-danger text-white">Zablokuj użytkownika</button>
             </div>
         </div>
     </div>
@@ -187,7 +196,41 @@
             </div>
         </div>
 
+    </div>
 
+    <div class="modal fade" id="blockUserModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <form th:action="@{/blockUser}" method="post">
+            <input type="hidden" th:value="${profile.getId()}" name="userId"/>
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Ostrzeżenie</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <span>Czy na pewno chcesz zablokować użytkownika </span>
+                        <label class="font-weight-bold" id="blockUserModal_username">username</label>
+                        <span>?</span>
+                        <div class="form-group">
+                            <label for="blockUserModal_reason">Powód</label>
+                            <textarea class="form-control" id="blockUserModal_reason" name="reason"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="blockUserModal_tillDate">Do dnia</label>
+                            <input class="form-control" id="blockUserModal_tillDate" name="tillDate"/>
+                            <small>Format daty: dd-MM-rrrr</small>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Anuluj</button>
+                        <button type="submit" class="btn btn-primary">Potwierdź</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
 
 </main>
