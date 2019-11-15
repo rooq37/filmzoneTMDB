@@ -1,12 +1,12 @@
-package com.rooq37.filmzone.commons;
+package com.rooq37.filmzone.dtos;
 
-public class Image {
+public class ImageDTO {
 
     private String name;
     private String source;
     private String author;
 
-    public Image(String name, String source, String author) {
+    public ImageDTO(String name, String source, String author) {
         this.name = name;
         this.source = source;
         this.author = author;

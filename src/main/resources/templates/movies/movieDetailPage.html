@@ -5,42 +5,42 @@
 <body>
 <main role="main" class="container">
 
-    <div class="jumbotron pb-3 pt-4" th:object="${movieSummary}">
+    <div class="jumbotron pb-3 pt-4">
         <div class="row">
             <div class="col-md-4">
-                <img th:src="${movieSummary.getCover().getSource()}" class="card-img" th:alt="${movieSummary.getCover().getName()}" th:title="'© ' + ${movieSummary.getCover().getAuthor()}">
+                <img th:src="${movieDetailsDTO.getCover().getSource()}" class="card-img" th:alt="${movieDetailsDTO.getCover().getName()}" th:title="'© ' + ${movieDetailsDTO.getCover().getAuthor()}">
             </div>
             <div class="col">
                 <div class="row">
                     <div class="col">
-                        <h1 id="moviePage:movieTitle" class="text-dark" th:text="${movieSummary.getTitle()}">Title</h1>
+                        <h1 id="moviePage:movieTitle" class="text-dark" th:text="${movieDetailsDTO.getTitle()}">Title</h1>
                     </div>
                     <div class="col">
-                        <h1 class="text-right"><span class="text-warning">★</span><span id="moviePage:movieRating" class="text-dark" th:text="${movieSummary.getAvgUsersRating()}">Rating</span></h1>
+                        <h1 class="text-right"><span class="text-warning">★</span><span id="moviePage:movieRating" class="text-dark" th:text="${movieDetailsDTO.getAvgUsersRating()}">Rating</span></h1>
                     </div>
                 </div>
                 <h5 class="text-muted">
-                    <a href="#" class="badge badge-pill badge-dark" th:each="category : ${movieSummary.getCategories()}" th:text="'#' + ${category}">#category</a>
+                    <a href="#" class="badge badge-pill badge-dark" th:each="category : ${movieDetailsDTO.getCategories()}" th:text="'#' + ${category}">#category</a>
                 </h5>
                 <br>
                 <span id="moviePage:movieDescription"
-                      th:text="${movieSummary.getDescription().isEmpty()} ? 'Ten film nie ma jeszcze opisu...' : ${movieSummary.getDescription()}">Description</span>
+                      th:text="${movieDetailsDTO.getDescription().isEmpty()} ? 'Ten film nie ma jeszcze opisu...' : ${movieDetailsDTO.getDescription()}">Description</span>
                 <hr class="my-4">
                 <ul>
                     <li>
-                        <span th:text="'Rok produkcji: ' + ${movieSummary.getYear()}">Year</span>
+                        <span th:text="'Rok produkcji: ' + ${movieDetailsDTO.getYear()}">Year</span>
                     </li>
-                    <li th:if="${movieSummary.getDuration() != 0}">
-                        <span th:text="'Czas trwania: ' + ${movieSummary.getDuration() + ' min'}">Duration</span>
+                    <li th:if="${movieDetailsDTO.getDuration() != 0}">
+                        <span th:text="'Czas trwania: ' + ${movieDetailsDTO.getDuration() + ' min'}">Duration</span>
                     </li>
-                    <li th:if="${!movieSummary.getDirector().isEmpty()}">
-                        <span th:text="'Reżyseria: ' + ${movieSummary.getDirector()}">Director</span>
+                    <li th:if="${!movieDetailsDTO.getDirector().isEmpty()}">
+                        <span th:text="'Reżyseria: ' + ${movieDetailsDTO.getDirector()}">Director</span>
                     </li>
-                    <li th:if="${!movieSummary.getScenario().isEmpty()}">
-                        <span th:text="'Scenariusz: ' + ${movieSummary.getScenario()}">Scenario</span>
+                    <li th:if="${!movieDetailsDTO.getScenario().isEmpty()}">
+                        <span th:text="'Scenariusz: ' + ${movieDetailsDTO.getScenario()}">Scenario</span>
                     </li>
-                    <li th:if="${!movieSummary.getCountry().isEmpty()}">
-                        <span th:text="'Produkcja: ' + ${movieSummary.getCountry()}">Country</span>
+                    <li th:if="${!movieDetailsDTO.getCountry().isEmpty()}">
+                        <span th:text="'Produkcja: ' + ${movieDetailsDTO.getCountry()}">Country</span>
                     </li>
                 </ul>
             </div>
@@ -50,25 +50,25 @@
                 <span></span>
             </div>
             <div class="col-md-auto">
-                <a th:href="@{/editMovie/{id} (id=${movieId})}" class="btn btn-dark">Edytuj</a>
+                <a th:href="@{/editMovie/{id} (id=${movieDetailsDTO.getMovieId()})}" class="btn btn-dark">Edytuj</a>
             </div>
         </div>
     </div>
 
-    <div class="jumbotron pb-3 pt-4" th:object="${movieRating}">
-        <h4 th:text="'Średnia ocena: ' + ${movieRating.getAvg()}">Average users rating</h4>
+    <div class="jumbotron pb-3 pt-4">
+        <h4 th:text="'Średnia ocena: ' + ${movieDetailsDTO.getAvgUsersRating()}">Average users rating</h4>
         <ul>
             <li>
-                <span id="moviePage:numberOfRatings" th:text="${movieRating.getNumberOfPeopleWhoWatched()} + ' użytkowników oceniło ten film'">watched</span>
+                <span id="moviePage:numberOfRatings" th:text="${movieDetailsDTO.getNumberOfPeopleWhoWatched()} + ' użytkowników oceniło ten film'">watched</span>
             </li>
             <li>
-                <span id="moviePage:numberOfPeopleWhoWantToWatch" th:text="${movieRating.getNumberOfPeopleWhoWantToWatch()} + ' chce go zobaczyć'">want to see</span>
+                <span id="moviePage:numberOfPeopleWhoWantToWatch" th:text="${movieDetailsDTO.getNumberOfPeopleWhoWantToWatch()} + ' chce go zobaczyć'">want to see</span>
             </li>
         </ul>
         <div sec:authorize="isAuthenticated()">
             <hr class="my-4">
             <form th:action="@{/rateMovie}" method="post">
-                <input type="hidden" th:name="rating_movieId" th:value="${movieId}" />
+                <input type="hidden" th:name="rating_movieId" th:value="${movieDetailsDTO.getMovieId()}" />
                 <div class="btn-toolbar" style="justify-content: center; display: flex;" role="toolbar">
                     <div class="btn-group mr-2" data-toggle="tooltip" data-placement="bottom" th:with="intList=${ {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} }"
                          th:title="${userRating.getTooltip()}" role="group" aria-label="Rating group">
@@ -94,7 +94,7 @@
         </div>
         <div>
             <form th:action="@{/addMovieToList}" method="post">
-                <input type="hidden" th:name="mymovies_movieId" th:value="${movieId}" />
+                <input type="hidden" th:name="mymovies_movieId" th:value="${movieDetailsDTO.getMovieId()}" />
                 <div class="input-group">
                     <select th:name="selectedList" class="custom-select border-dark">
                         <option class="disabled" value="-1">Wybierz listę, do której chcesz dodać film...</option>
@@ -112,14 +112,14 @@
         </div>
     </div>
 
-    <div th:if="${!movieMedia.getPhotos().isEmpty()}" class="jumbotron pb-3 pt-4" th:object="${movieMedia}">
+    <div th:if="${!movieDetailsDTO.getPictures().isEmpty()}" class="jumbotron pb-3 pt-4">
         <h4>Zdjęcia</h4>
             <div id="carouselPhotos" class="carousel slide bg-dark rounded" data-ride="carousel">
                 <ol class="carousel-indicators">
-                    <li th:each="id : ${movieMedia.getPhotos()}" data-target="#carouselPhotos" th:data-slide-to="${idStat.index}" th:classappend="${idStat.first}? active"></li>
+                    <li th:each="id : ${movieDetailsDTO.getPictures()}" data-target="#carouselPhotos" th:data-slide-to="${idStat.index}" th:classappend="${idStat.first}? active"></li>
                 </ol>
                 <div class="carousel-inner">
-                    <div th:each="photo : ${movieMedia.getPhotos()}" class="carousel-item" th:classappend="${photoStat.first}? active">
+                    <div th:each="photo : ${movieDetailsDTO.getPictures()}" class="carousel-item" th:classappend="${photoStat.first}? active">
                         <img th:src="${photo.getSource()}" class="d-block mx-auto" style="max-height: 500px;" th:alt="${photo.getName()}">
                         <div class="carousel-caption d-none d-md-block">
                             <span class="bg-dark px-3 py-1 rounded-pill" th:text="'@Autor: ' + ${photo.getAuthor()}">@Author</span>
@@ -137,36 +137,36 @@
             </div>
     </div>
 
-    <div th:if="${!movieMedia.getTrailerLink().isEmpty()}" class="jumbotron pb-3 pt-4" th:object="${movieMedia}">
+    <div th:if="${!movieDetailsDTO.getTrailerLink().isEmpty()}" class="jumbotron pb-3 pt-4">
         <h4>Trailer</h4>
         <div class="embed-responsive embed-responsive-16by9">
-            <iframe class="embed-responsive-item" th:src="${movieMedia.getTrailerLink()}" allowfullscreen></iframe>
+            <iframe class="embed-responsive-item" th:src="${movieDetailsDTO.getTrailerLink()}" allowfullscreen></iframe>
         </div>
     </div>
 
-    <div th:if="${!movieCast.getCast().isEmpty()}" class="jumbotron pb-3 pt-4" th:object="${movieCast}">
+    <div th:if="${!movieDetailsDTO.getCharacters().isEmpty()}" class="jumbotron pb-3 pt-4">
         <h4>Obsada</h4>
-        <div class="row">
+        <div th:each="character : ${movieDetailsDTO.getCharacters()}" class="row">
             <div class="col">
-                <p class="text-right font-weight-bold" th:each="actor : ${movieCast.getCast()}" th:text="${actor.getActorName()}">Actor name</p>
+                <p class="text-right font-weight-bold" th:text="${character.getActor().getName()} + ' ' + ${character.getActor().getSurname()}">Actor name</p>
             </div>
             <div class="col">
-                <p class="text-left" th:each="character : ${movieCast.getCast()}" th:text="${character.getCharacterName()}">Don Vito Corleone</p>
+                <p class="text-left" th:text="${character.getRole()}">Don Vito Corleone</p>
             </div>
         </div>
     </div>
 
     <div class="jumbotron pb-3 pt-4" id="comments">
         <h4>Komentarze</h4>
-        <form th:action="@{/movie/__${movieId}__#comments}" method="get" class="row pb-4">
+        <form th:action="@{/movie/__${movieDetailsDTO.getMovieId()}__#comments}" method="get" class="row pb-4">
             <div class="col" th:if="${commentPage.getTotalElements() > 0}">
                 <div class="input-group">
                     <div class="input-group-prepend">
                         <button class="btn btn-outline-dark bg-dark text-white px-4" type="submit">Sortuj</button>
                     </div>
                     <select class="custom-select border-dark" th:name="sort">
-                        <option value="1" th:selected="${#httpServletRequest.getParameter('sort') == '1'}">Wg. daty malejąco</option>
-                        <option value="2" th:selected="${#httpServletRequest.getParameter('sort') == '2'}">Wg. daty rosnąco</option>
+                        <option value="date:DESC" th:selected="${#httpServletRequest.getParameter('sort') == 'date:DESC'}">Wg. daty malejąco</option>
+                        <option value="date:ASC" th:selected="${#httpServletRequest.getParameter('sort') == 'date:ASC'}">Wg. daty rosnąco</option>
                     </select>
                 </div>
             </div>
@@ -198,7 +198,7 @@
             <div class="card-body">
                 <form th:action="@{/addCommentToMovie}" method="post">
                     <div class="mb-3">
-                        <input type="hidden" th:name="comment_movieId" th:value="${movieId}" />
+                        <input type="hidden" th:name="comment_movieId" th:value="${movieDetailsDTO.getMovieId()}" />
                         <textarea th:name="comment_content" class="form-control" placeholder="Wpisz treść komentarza"></textarea>
                     </div>
                     <div class="text-right">
@@ -231,19 +231,19 @@
         <nav class="pt-3" th:if="${commentPage.getTotalElements() > 0}">
             <ul class="pagination justify-content-center">
                 <li class="page-item" th:classappend="${commentPage.first}? disabled">
-                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=${movieId}, size=${commentPage.size}, page=1, sort=${#httpServletRequest.getParameter('sort')})}">|<</a>
+                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=${movieDetailsDTO.getMovieId()}, size=${commentPage.size}, page=1, sort=${#httpServletRequest.getParameter('sort')})}">|<</a>
                 </li>
                 <li class="page-item" th:classappend="${!commentPage.hasPrevious()}? disabled">
-                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=${movieId}, size=${commentPage.size}, page=${commentPage.getNumber()}, sort=${#httpServletRequest.getParameter('sort')})}"><</a>
+                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=${movieDetailsDTO.getMovieId()}, size=${commentPage.size}, page=${commentPage.getNumber()}, sort=${#httpServletRequest.getParameter('sort')})}"><</a>
                 </li>
                 <li class="page-item disabled">
                     <a class="page-link border-dark bg-dark text-white" th:text="${commentPage.getNumber()+1} + ' z ' + ${commentPage.getTotalPages()}">current page</a>
                 </li>
                 <li class="page-item" th:classappend="${!commentPage.hasNext()}? disabled">
-                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=${movieId}, size=${commentPage.size}, page=${commentPage.getNumber()+2}, sort=${#httpServletRequest.getParameter('sort')})}">></a>
+                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=${movieDetailsDTO.getMovieId()}, size=${commentPage.size}, page=${commentPage.getNumber()+2}, sort=${#httpServletRequest.getParameter('sort')})}">></a>
                 </li>
                 <li class="page-item" th:classappend="${commentPage.last}? disabled">
-                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=${movieId}, size=${commentPage.size}, page=${commentPage.getTotalPages()}, sort=${#httpServletRequest.getParameter('sort')})}">>|</a>
+                    <a class="page-link border-dark text-dark" th:href="@{/movie/{id}#comments (id=${movieDetailsDTO.getMovieId()}, size=${commentPage.size}, page=${commentPage.getTotalPages()}, sort=${#httpServletRequest.getParameter('sort')})}">>|</a>
                 </li>
             </ul>
         </nav>
@@ -252,7 +252,7 @@
 
     <div class="modal fade" id="commentRemovalModal" tabindex="-1" role="dialog" aria-hidden="true">
         <form th:action="@{/removeComment}" method="post">
-            <input type="hidden" th:value="${movieId}" name="movieId"/>
+            <input type="hidden" th:value="${movieDetailsDTO.getMovieId()}" name="movieId"/>
             <input type="hidden" id="commentRemovalModal_commentId" name="commentId"/>
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">

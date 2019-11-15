@@ -1,6 +1,8 @@
 package com.rooq37.filmzone.movies.editMovieForm;
 
-import com.rooq37.filmzone.commons.Image;
+import com.rooq37.filmzone.dtos.CharacterDTO;
+import com.rooq37.filmzone.dtos.ImageDTO;
+import com.rooq37.filmzone.dtos.PersonDTO;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,16 +12,16 @@ public class EditMovieForm {
     private Long id;
     private String title = "";
     private int productionYear = 1900;
-    private Image cover;
+    private ImageDTO cover;
     private List<String> categories = new ArrayList<>();
     private String description;
     private int duration;
-    private List<Person> directors = new ArrayList<>();
-    private List<Person> scenario = new ArrayList<>();
+    private List<PersonDTO> directors = new ArrayList<>();
+    private List<PersonDTO> scenario = new ArrayList<>();
     private List<String> countries = new ArrayList<>();
-    private List<Image> pictures = new ArrayList<>();
+    private List<ImageDTO> pictures = new ArrayList<>();
     private String trailerUrl;
-    private List<Character> characters = new ArrayList<>();
+    private List<CharacterDTO> characters = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -45,11 +47,11 @@ public class EditMovieForm {
         this.productionYear = productionYear;
     }
 
-    public Image getCover() {
+    public ImageDTO getCover() {
         return cover;
     }
 
-    public void setCover(Image cover) {
+    public void setCover(ImageDTO cover) {
         this.cover = cover;
     }
 
@@ -77,19 +79,19 @@ public class EditMovieForm {
         this.duration = duration;
     }
 
-    public List<Person> getDirectors() {
+    public List<PersonDTO> getDirectors() {
         return directors;
     }
 
-    public void setDirectors(List<Person> directors) {
+    public void setDirectors(List<PersonDTO> directors) {
         this.directors = directors;
     }
 
-    public List<Person> getScenario() {
+    public List<PersonDTO> getScenario() {
         return scenario;
     }
 
-    public void setScenario(List<Person> scenario) {
+    public void setScenario(List<PersonDTO> scenario) {
         this.scenario = scenario;
     }
 
@@ -101,11 +103,11 @@ public class EditMovieForm {
         this.countries = countries;
     }
 
-    public List<Image> getPictures() {
+    public List<ImageDTO> getPictures() {
         return pictures;
     }
 
-    public void setPictures(List<Image> pictures) {
+    public void setPictures(List<ImageDTO> pictures) {
         this.pictures = pictures;
     }
 
@@ -117,11 +119,11 @@ public class EditMovieForm {
         this.trailerUrl = trailerUrl;
     }
 
-    public List<Character> getCharacters() {
+    public List<CharacterDTO> getCharacters() {
         return characters;
     }
 
-    public void setCharacters(List<Character> characters) {
+    public void setCharacters(List<CharacterDTO> characters) {
         this.characters = characters;
     }
 

@@ -1,20 +1,20 @@
-package com.rooq37.filmzone.movies.editMovieForm;
+package com.rooq37.filmzone.dtos;
 
-public class Character {
+public class CharacterDTO {
 
-    private Person actor;
+    private PersonDTO actor;
     private String role;
 
-    public Character(Person actor, String role) {
+    public CharacterDTO(PersonDTO actor, String role) {
         this.actor = actor;
         this.role = role;
     }
 
-    public Person getActor() {
+    public PersonDTO getActor() {
         return actor;
     }
 
-    public void setActor(Person actor) {
+    public void setActor(PersonDTO actor) {
         this.actor = actor;
     }
 

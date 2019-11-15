@@ -1,5 +1,7 @@
 package com.rooq37.filmzone.entities;
 
+import org.hibernate.annotations.Formula;
+
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,6 +49,12 @@ public class MovieEntity {
 
     @OneToMany(mappedBy = "movie")
     private Set<ViewEntity> views = new HashSet<>();
+
+    @Formula("(SELECT AVG(R.value) FROM RATING R WHERE R.id_movie = id AND R.value > 0)")
+    private Double averageUsersRating;
+
+    @Formula("(SELECT COUNT(*) FROM RATING R WHERE R.id_movie = id AND R.value > 0)")
+    private int numberOfRatings;
 
     public Long getId() {
         return id;
@@ -152,4 +160,19 @@ public class MovieEntity {
         this.views = views;
     }
 
+    public double getAverageUsersRating() {
+        return averageUsersRating;
+    }
+
+    public void setAverageUsersRating(double averageUsersRating) {
+        this.averageUsersRating = averageUsersRating;
+    }
+
+    public int getNumberOfRatings() {
+        return numberOfRatings;
+    }
+
+    public void setNumberOfRatings(int numberOfRatings) {
+        this.numberOfRatings = numberOfRatings;
+    }
 }

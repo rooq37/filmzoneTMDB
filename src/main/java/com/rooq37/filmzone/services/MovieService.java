@@ -1,13 +1,11 @@
 package com.rooq37.filmzone.services;
 
-import com.rooq37.filmzone.commons.CastPair;
-import com.rooq37.filmzone.commons.Image;
-import com.rooq37.filmzone.commons.MovieListElement;
+import com.rooq37.filmzone.dtos.*;
 import com.rooq37.filmzone.entities.*;
-import com.rooq37.filmzone.movies.editMovieForm.Character;
+import com.rooq37.filmzone.mappers.MovieDetailsMapper;
+import com.rooq37.filmzone.mappers.MovieSimpleMapper;
 import com.rooq37.filmzone.movies.editMovieForm.EditMovieForm;
 import com.rooq37.filmzone.movies.editMovieForm.ImageFile;
-import com.rooq37.filmzone.movies.editMovieForm.Person;
 import com.rooq37.filmzone.movies.movieDetails.*;
 import com.rooq37.filmzone.movies.movies.MoviesFilterForm;
 import com.rooq37.filmzone.repositories.*;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,33 +39,10 @@ public class MovieService {
     @Autowired
     private FileSaverService fileSaverService;
 
-    public MovieSummary getMovieSummary(Long id){
-        MovieSummary movieSummary = new MovieSummary();
-
-        MovieEntity movie = movieRepository.findById(id).get();
-        movieSummary.setTitle(movie.getTitle());
-        movieSummary.setCover(helperService.getCover(movie));
-        movieSummary.setCategories(helperService.getCategories(movie));
-
-        movieSummary.setDescription(movie.getDescription());
-        movieSummary.setDuration(movie.getDuration());
-        movieSummary.setYear(movie.getYear());
-
-        String directors = getDirectors(movie).stream().
-                map(moviePerson -> moviePerson.getPerson().getFullName()).collect(Collectors.joining(", "));
-        movieSummary.setDirector(directors);
-
-        String scenario = getScenarioAuthors(movie).stream().
-                map(moviePerson -> moviePerson.getPerson().getFullName()).collect(Collectors.joining(", "));
-        movieSummary.setScenario(scenario);
-
-        String countries = movie.getCountries().stream().
-                map(CountryEntity::getName).collect(Collectors.joining(", "));
-        movieSummary.setCountry(countries);
-
-        movieSummary.setAvgUsersRating(String.format("%.1f", helperService.countAverageRating(movie)));
-
-        return movieSummary;
+    public MovieDetailsDTO getMovieDetailsDTO(Long movieId){
+        MovieEntity movieEntity = movieRepository.findMovieEntityById(movieId);
+        MovieDetailsMapper movieDetailsMapper = new MovieDetailsMapper(movieEntity);
+        return movieDetailsMapper.getMovieDetailsDTO();
     }
 
     private List<MoviePersonEntity> getDirectors(MovieEntity movieEntity){
@@ -83,43 +57,9 @@ public class MovieService {
         return  moviePersonRepository.findAllByMovieAndType(movieEntity, "ACTOR");
     }
 
-    public MovieRating getMovieRating(Long id){
-        MovieRating movieRating = new MovieRating();
-        MovieEntity movie = movieRepository.findById(id).get();
-
-        movieRating.setAvg(String.format("%.2f", helperService.countAverageRating(movie)));
-        movieRating.setNumberOfPeopleWhoWatched(String.valueOf(ratingRepository.countByMovieAndValueGreaterThan(movie, 0)));
-        movieRating.setNumberOfPeopleWhoWantToWatch(String.valueOf(ratingRepository.countByMovieAndValueIs(movie, 0)));
-
-        return movieRating;
-    }
-
-    public MovieMedia getMovieMedia(Long id){
-        MovieMedia movieMedia = new MovieMedia();
-        MovieEntity movie = movieRepository.findById(id).get();
-
-        movieMedia.setPhotos(helperService.getPictures(movie));
-        movieMedia.setTrailerLink(getTrailerLink(movie));
-
-        return movieMedia;
-    }
-
     private String getTrailerLink(MovieEntity movie){
         List<MediaEntity> trailers = mediaRepository.findAllByMovieEqualsAndType(movie, "TRAILER");
         return !trailers.isEmpty() ? trailers.get(0).getValue() : "";
-    }
-
-    public MovieCast getMovieCast(Long id){
-        MovieCast movieCast = new MovieCast();
-        MovieEntity movie = movieRepository.findById(id).get();
-
-        List<CastPair> cast = new ArrayList<>();
-        for(MoviePersonEntity mp : moviePersonRepository.findAllByMovieAndType(movie, "ACTOR"))
-            cast.add(new CastPair(mp.getPerson().getFullName(), mp.getRole()));
-
-        movieCast.setCast(cast);
-
-        return movieCast;
     }
 
     public Page<CommentEntity> getMovieComments(Long id, Pageable pageable) {
@@ -129,50 +69,13 @@ public class MovieService {
         return commentRepository.findAllByMovie(movie, paging);
     }
 
-    public Page<MovieListElement> getMovieListElements(Pageable pageable, Integer sort, MoviesFilterForm moviesFilter){
-        List<MovieListElement> movieElements = new ArrayList<>();
-        if(sort >= 3 && sort <= 6) pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), setSortByDatabase(sort));
-        List<MovieEntity> movieList = movieRepository.findMovieEntitiesByYearBetween(moviesFilter.getMinYear(), moviesFilter.getMaxYear(), pageable.getSort());
+    public Page<MovieSimpleDTO> getMovieSimplePage(Pageable pageable, MoviesFilterForm moviesFilter){
+        Page<MovieEntity> movieEntityPage = movieRepository.findAll(moviesFilter.movieMatchesFilter(), pageable);
 
-        for(MovieEntity movie : movieList)
-            movieElements.add(helperService.getMovieListElement(movie));
-
-        movieElements = movieElements.stream().filter(movie ->
-                moviesFilter.checkIfCategoriesMatchFilter(movie.getCategories())
-                        && moviesFilter.checkIfCountriesMatchFilter(movie.getCountries())
-                        && movie.getAvgUsersRating() >= moviesFilter.getMinRate()
-                        && movie.getAvgUsersRating() <= moviesFilter.getMaxRate()).collect(Collectors.toList());
-
-        if(moviesFilter.getName() != null && !moviesFilter.getName().isEmpty())
-            movieElements = movieElements.stream().filter(movie ->
-                    movie.getTitle().toLowerCase().contains(moviesFilter.getName().toLowerCase())).collect(Collectors.toList());
-
-        if(sort <= 2 || sort >= 7) sortMovieElementList(movieElements, sort);
-
-        return new PageImpl<>(movieElements, pageable, movieElements.size());
-    }
-
-    private Sort setSortByDatabase(int sort){
-        switch (sort){
-            case 3: return Sort.by("title").descending();
-            case 4: return Sort.by("title").ascending();
-            case 5: return Sort.by("year").descending();
-            case 6: return Sort.by("year").ascending();
-        }
-        return Sort.by(Sort.DEFAULT_DIRECTION);
-    }
-
-    private void sortMovieElementList (List<MovieListElement> movieElementList, Integer sort){
-        switch (sort){
-            case 1: movieElementList.sort(MovieListElement.avgUsersRatingComparator.reversed());
-                break;
-            case 2: movieElementList.sort(MovieListElement.avgUsersRatingComparator);
-                break;
-            case 7: movieElementList.sort(MovieListElement.numberOfPeopleWhoWatchedComparator.reversed());
-                break;
-            case 8: movieElementList.sort(MovieListElement.numberOfPeopleWhoWatchedComparator);
-                break;
-        }
+        return movieEntityPage.map(movieEntity -> {
+            MovieSimpleMapper mapper = new MovieSimpleMapper(movieEntity);
+            return mapper.getMovieSimpleDTO();
+        });
     }
 
     public SingleUserRating getMovieRatingByUser(Long movieId, String userEmail){
@@ -218,15 +121,15 @@ public class MovieService {
         editMovieForm.setDuration(movie.getDuration());
         editMovieForm.setCategories(helperService.getCategories(movie));
         editMovieForm.setCover(helperService.getCover(movie));
-        editMovieForm.setDirectors(getDirectors(movie).stream().map(mpe -> new Person(mpe.getPerson().getName(), mpe.getPerson().getSurname()))
+        editMovieForm.setDirectors(getDirectors(movie).stream().map(mpe -> new PersonDTO(mpe.getPerson().getName(), mpe.getPerson().getSurname()))
                 .collect(Collectors.toList()));
-        editMovieForm.setScenario(getScenarioAuthors(movie).stream().map(mpe -> new Person(mpe.getPerson().getName(), mpe.getPerson().getSurname()))
+        editMovieForm.setScenario(getScenarioAuthors(movie).stream().map(mpe -> new PersonDTO(mpe.getPerson().getName(), mpe.getPerson().getSurname()))
                 .collect(Collectors.toList()));
         editMovieForm.setCountries(helperService.getCountries(movie));
         editMovieForm.setPictures(helperService.getPictures(movie));
         editMovieForm.setTrailerUrl(getTrailerLink(movie));
         editMovieForm.setCharacters(getCharacters(movie).stream().
-                map(mpe -> new Character(new Person(mpe.getPerson().getName(), mpe.getPerson().getSurname()), mpe.getRole()))
+                map(mpe -> new CharacterDTO(new PersonDTO(mpe.getPerson().getName(), mpe.getPerson().getSurname()), mpe.getRole()))
                 .collect(Collectors.toList()));
 
         return editMovieForm;
@@ -260,8 +163,8 @@ public class MovieService {
     }
 
     @Transactional
-    void removeOldPictures(List<Image> currentImages, List<String> oldPictures){
-        for(Image currImg : currentImages){
+    void removeOldPictures(List<ImageDTO> currentImageDTOS, List<String> oldPictures){
+        for(ImageDTO currImg : currentImageDTOS){
             if(!oldPictures.contains(currImg.getSource())){
                 fileSaverService.removeMediaEntity(currImg.getSource());
             }

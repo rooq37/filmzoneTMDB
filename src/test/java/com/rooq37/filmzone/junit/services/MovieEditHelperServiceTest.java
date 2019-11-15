@@ -1,14 +1,13 @@
 package com.rooq37.filmzone.junit.services;
 
 import com.rooq37.filmzone.FilmzoneApplication;
-import com.rooq37.filmzone.commons.Image;
+import com.rooq37.filmzone.dtos.ImageDTO;
 import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.entities.MovieEntity;
 import com.rooq37.filmzone.repositories.CategoryRepository;
 import com.rooq37.filmzone.repositories.MovieRepository;
 import com.rooq37.filmzone.services.HelperService;
 import org.hibernate.Hibernate;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,7 +65,7 @@ public class MovieEditHelperServiceTest {
     @Test
     public void getCover() {
         MovieEntity movieEntity = movieRepository.findMovieEntityById((long) 1);
-        Image cover = helperService.getCover(movieEntity);
+        ImageDTO cover = helperService.getCover(movieEntity);
         assertThat(cover.getAuthor()).isEqualTo("Paramount Pictures");
         assertThat(cover.getName()).isEqualTo("Ojciec chrzestny");
         assertThat(cover.getSource()).contains("../images/godfather/");
@@ -76,13 +75,13 @@ public class MovieEditHelperServiceTest {
     @Test
     public void getPictures() {
         MovieEntity movieEntity = movieRepository.findMovieEntityById((long) 1);
-        List<Image> pictures = helperService.getPictures(movieEntity);
+        List<ImageDTO> pictures = helperService.getPictures(movieEntity);
         assertThat(pictures.size()).isEqualTo(5);
-        for(Image image : pictures){
-            assertThat(image.getAuthor()).isEqualTo("Paramount Pictures");
-            assertThat(image.getName()).isEqualTo("Ojciec chrzestny");
-            assertThat(image.getSource()).contains("../images/godfather/");
-            assertThat(image.getSource()).endsWith(".jpg");
+        for(ImageDTO imageDTO : pictures){
+            assertThat(imageDTO.getAuthor()).isEqualTo("Paramount Pictures");
+            assertThat(imageDTO.getName()).isEqualTo("Ojciec chrzestny");
+            assertThat(imageDTO.getSource()).contains("../images/godfather/");
+            assertThat(imageDTO.getSource()).endsWith(".jpg");
         }
     }
 

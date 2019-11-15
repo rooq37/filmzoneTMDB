@@ -1,6 +1,6 @@
 package com.rooq37.filmzone.activities;
 
-import com.rooq37.filmzone.commons.Image;
+import com.rooq37.filmzone.dtos.ImageDTO;
 
 import java.util.Comparator;
 import java.util.Date;
@@ -8,7 +8,7 @@ import java.util.Date;
 public class Activity {
 
     private Date date;
-    private Image cover;
+    private ImageDTO cover;
     private String movieTitle;
     private Long movieId;
     private String content;
@@ -21,11 +21,11 @@ public class Activity {
         this.date = date;
     }
 
-    public Image getCover() {
+    public ImageDTO getCover() {
         return cover;
     }
 
-    public void setCover(Image cover) {
+    public void setCover(ImageDTO cover) {
         this.cover = cover;
     }
 

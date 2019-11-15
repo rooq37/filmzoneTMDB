@@ -1,5 +1,7 @@
 package com.rooq37.filmzone.commons;
 
+import com.rooq37.filmzone.dtos.ImageDTO;
+
 import java.util.Comparator;
 import java.util.List;
 
@@ -7,7 +9,7 @@ public class MovieListElement {
 
     private Long id;
     private String title;
-    private Image cover;
+    private ImageDTO cover;
     private List<String> categories;
     private List<String> countries;
     private String description;
@@ -34,11 +36,11 @@ public class MovieListElement {
         this.title = title;
     }
 
-    public Image getCover() {
+    public ImageDTO getCover() {
         return cover;
     }
 
-    public void setCover(Image cover) {
+    public void setCover(ImageDTO cover) {
         this.cover = cover;
     }
 

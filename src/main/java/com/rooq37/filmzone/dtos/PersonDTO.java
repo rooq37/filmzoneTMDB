@@ -1,11 +1,11 @@
-package com.rooq37.filmzone.movies.editMovieForm;
+package com.rooq37.filmzone.dtos;
 
-public class Person {
+public class PersonDTO {
 
     private String name;
     private String surname;
 
-    public Person(String name, String surname) {
+    public PersonDTO(String name, String surname) {
         this.name = name;
         this.surname = surname;
     }

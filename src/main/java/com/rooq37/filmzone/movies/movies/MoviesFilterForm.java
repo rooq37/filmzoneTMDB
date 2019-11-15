@@ -1,14 +1,21 @@
 package com.rooq37.filmzone.movies.movies;
 
+import com.rooq37.filmzone.entities.CategoryEntity;
+import com.rooq37.filmzone.entities.CountryEntity;
+import com.rooq37.filmzone.entities.MovieEntity;
+import org.springframework.data.jpa.domain.Specification;
+
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class MoviesFilterForm {
 
     private static final String DELIMITER = ", ";
 
-    private String name;
+    private String name = "";
     private int minYear = 1900;
     private int maxYear = 2020;
     private String selectedCategories;
@@ -46,7 +53,7 @@ public class MoviesFilterForm {
         return selectedCategories;
     }
 
-    public List<String> getSelectedCategoriesAsList(){
+    private List<String> getSelectedCategoriesAsList(){
         if(selectedCategories == null || selectedCategories.isEmpty()) return new ArrayList<>();
         return new ArrayList<>(Arrays.asList(selectedCategories.split(DELIMITER)));
     }
@@ -67,7 +74,7 @@ public class MoviesFilterForm {
         return selectedCountries;
     }
 
-    public List<String> getSelectedCountriesAsList(){
+    private List<String> getSelectedCountriesAsList(){
         if(selectedCountries == null || selectedCountries.isEmpty()) return new ArrayList<>();
         return new ArrayList<>(Arrays.asList(selectedCountries.split(DELIMITER)));
     }
@@ -112,6 +119,59 @@ public class MoviesFilterForm {
             if(!movieCountries.contains(selectedCountry)) return false;
         }
         return true;
+    }
+
+    private Predicate getCategoriesPredicate(Root<MovieEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder){
+        Predicate[] predicates = new Predicate[getSelectedCategoriesAsList().size()];
+        for(int i = 0; i < getSelectedCategoriesAsList().size(); i++){
+            Subquery<CategoryEntity> categorySubquery = criteriaQuery.subquery(CategoryEntity.class);
+            Root<CategoryEntity> categoryRoot = categorySubquery.from(CategoryEntity.class);
+            Expression<Collection<MovieEntity>> moviesCollection = categoryRoot.get("movies");
+
+            categorySubquery
+                    .select(categoryRoot)
+                    .where(criteriaBuilder.and(criteriaBuilder.equal(categoryRoot.get("name"), getSelectedCategoriesAsList().get(i)), criteriaBuilder.isMember(root, moviesCollection)));
+            predicates[i] = criteriaBuilder.exists(categorySubquery);
+        }
+        return criteriaBuilder.and(predicates);
+    }
+
+    private Predicate getCountriesPredicate(Root<MovieEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder){
+        Predicate[] predicates = new Predicate[getSelectedCountriesAsList().size()];
+        for(int i = 0; i < getSelectedCountriesAsList().size(); i++){
+            Subquery<CountryEntity> countrySubquery = criteriaQuery.subquery(CountryEntity.class);
+            Root<CountryEntity> countryRoot = countrySubquery.from(CountryEntity.class);
+            Expression<Collection<MovieEntity>> moviesCollection = countryRoot.get("movies");
+
+            countrySubquery
+                    .select(countryRoot)
+                    .where(criteriaBuilder.and(criteriaBuilder.equal(countryRoot.get("name"), getSelectedCountriesAsList().get(i)), criteriaBuilder.isMember(root, moviesCollection)));
+            predicates[i] = criteriaBuilder.exists(countrySubquery);
+        }
+        return criteriaBuilder.and(predicates);
+    }
+
+    public Specification<MovieEntity> movieMatchesFilter() {
+        return (Specification<MovieEntity>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.and(
+                criteriaBuilder.between(root.get("year"), minYear, maxYear),
+                criteriaBuilder.or(
+                        criteriaBuilder.between(root.get("averageUsersRating"), minRate, maxRate),
+                        criteriaBuilder.isNull(root.get("averageUsersRating"))
+                ),
+                getCategoriesPredicate(root, criteriaQuery, criteriaBuilder),
+                getCountriesPredicate(root, criteriaQuery, criteriaBuilder),
+                criteriaBuilder.or(
+                        criteriaBuilder.like(
+                                criteriaBuilder.lower(
+                                        root.get(
+                                                root.getModel().getDeclaredSingularAttribute("title", String.class)
+                                        )
+                                ), criteriaBuilder.lower(criteriaBuilder.literal("%" + name + "%")
+                                )
+                        ),
+                        criteriaBuilder.equal(criteriaBuilder.literal(name), "")
+                )
+        );
     }
 
 }

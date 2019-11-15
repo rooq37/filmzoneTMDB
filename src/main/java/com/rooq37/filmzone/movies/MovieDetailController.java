@@ -34,39 +34,26 @@ public class MovieDetailController {
                                @PathVariable Long id,
                                @RequestParam(value = "page", defaultValue = "1") Integer page,
                                @RequestParam(value = "size", defaultValue = "10") Integer size,
-                               @RequestParam(value = "sort", defaultValue = "1") Integer sort) {
+                               @RequestParam(value = "sort", defaultValue = "date:DESC") String sort) {
 
         viewService.saveViewLog(id);
 
-        Page<CommentEntity> commentPage;
-        switch(sort){
-            default:
-            case 1: commentPage = movieService.getMovieComments(id, PageRequest.of(page - 1, size, Sort.by("date").descending()));
-            break;
-            case 2: commentPage = movieService.getMovieComments(id, PageRequest.of(page - 1, size, Sort.by("date").ascending()));
-            break;
-            case 3: commentPage = movieService.getMovieComments(id, PageRequest.of(page - 1, size, Sort.by("rating").descending()));
-            break;
-            case 4: commentPage = movieService.getMovieComments(id, PageRequest.of(page - 1, size, Sort.by("rating").ascending()));
-            break;
-        }
+        Page<CommentEntity> commentPage = movieService.getMovieComments(id, PageRequest.of(page - 1, size,
+                Sort.by(Sort.Direction.fromString(sort.split(":")[1]), sort.split(":")[0])));
+
 
         if (!SecurityContextHolder.getContext().getAuthentication().getPrincipal().equals("anonymousUser")){
             model.addAttribute("userRating", movieService.getMovieRatingByUser(id, principal.getName()));
             model.addAttribute("myMovies", favouriteListService.getMyMovies(id, principal.getName()));
         }
-        model.addAttribute("movieId", id);
+        model.addAttribute("movieDetailsDTO", movieService.getMovieDetailsDTO(id));
         model.addAttribute("commentPage", commentPage);
-        model.addAttribute("movieSummary", movieService.getMovieSummary(id));
-        model.addAttribute("movieRating", movieService.getMovieRating(id));
-        model.addAttribute("movieMedia", movieService.getMovieMedia(id));
-        model.addAttribute("movieCast", movieService.getMovieCast(id));
 
         return "movies/movieDetailPage";
     }
 
     @RequestMapping(value = "/rateMovie", method = RequestMethod.POST)
-    public String displayMovie(Principal principal, @RequestParam(value = "rating") String rating, @RequestParam(value = "rating_movieId") String movieId){
+    public String rateMovie(Principal principal, @RequestParam(value = "rating") String rating, @RequestParam(value = "rating_movieId") String movieId){
 
         movieService.rateMovie(Long.valueOf(movieId), principal.getName(), Integer.valueOf(rating));
         return "redirect:/movie/" + movieId;

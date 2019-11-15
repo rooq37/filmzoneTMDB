@@ -1,10 +1,10 @@
 package com.rooq37.filmzone.services;
 
-import com.rooq37.filmzone.commons.Image;
+import com.rooq37.filmzone.dtos.CharacterDTO;
+import com.rooq37.filmzone.dtos.ImageDTO;
 import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.entities.*;
-import com.rooq37.filmzone.movies.editMovieForm.Character;
-import com.rooq37.filmzone.movies.editMovieForm.Person;
+import com.rooq37.filmzone.dtos.PersonDTO;
 import com.rooq37.filmzone.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -76,19 +76,19 @@ public class HelperService {
         return ratings.stream().mapToInt(Integer::intValue).average().getAsDouble();
     }
 
-    public Image getCover(MovieEntity movieEntity){
+    public ImageDTO getCover(MovieEntity movieEntity){
         MediaEntity cover = mediaRepository.findByMovieAndType(movieEntity, "COVER");
         if(cover != null) {
-            return new Image(movieEntity.getTitle(), PICTURES_PATH + cover.getValue(), cover.getAuthor());
+            return new ImageDTO(movieEntity.getTitle(), PICTURES_PATH + cover.getValue(), cover.getAuthor());
         }else{
-            return new Image(movieEntity.getTitle(), "../images/filmzone_default.png", "default");
+            return new ImageDTO(movieEntity.getTitle(), "../images/filmzone_default.png", "default");
         }
     }
 
-    public List<Image> getPictures(MovieEntity movieEntity){
-        List<Image> photos = new ArrayList<>();
+    public List<ImageDTO> getPictures(MovieEntity movieEntity){
+        List<ImageDTO> photos = new ArrayList<>();
         for(MediaEntity mm : mediaRepository.findAllByMovieEqualsAndType(movieEntity, "PICTURE"))
-            photos.add(new Image(movieEntity.getTitle(), PICTURES_PATH + mm.getValue(), mm.getAuthor()));
+            photos.add(new ImageDTO(movieEntity.getTitle(), PICTURES_PATH + mm.getValue(), mm.getAuthor()));
 
         return photos;
     }
@@ -144,28 +144,28 @@ public class HelperService {
     }
 
     @Transactional
-    public void saveMoviePersonEntities(MovieEntity movie, List<Person> directors, List<Person> scenarios, List<Character> characters){
+    public void saveMoviePersonEntities(MovieEntity movie, List<PersonDTO> directors, List<PersonDTO> scenarios, List<CharacterDTO> characterDTOS){
         moviePersonRepository.deleteAllByMovie_Id(movie.getId());
         saveMoviePeople(directors, movie, null, "DIRECTOR");
         saveMoviePeople(scenarios, movie, null, "SCENARIO");
-        saveMovieCharacters(characters, movie, "ACTOR");
+        saveMovieCharacters(characterDTOS, movie, "ACTOR");
     }
 
-    private PersonEntity savePersonEntity(Person person){
-        Optional<PersonEntity> optionalPerson = personRepository.findPersonEntityByNameAndSurname(person.getName(), person.getSurname());
+    private PersonEntity savePersonEntity(PersonDTO personDTO){
+        Optional<PersonEntity> optionalPerson = personRepository.findPersonEntityByNameAndSurname(personDTO.getName(), personDTO.getSurname());
         PersonEntity personEntity;
         if(optionalPerson.isPresent()){
             personEntity = optionalPerson.get();
         }else{
             personEntity = new PersonEntity();
-            personEntity.setName(person.getName());
-            personEntity.setSurname(person.getSurname());
+            personEntity.setName(personDTO.getName());
+            personEntity.setSurname(personDTO.getSurname());
         }
         return personRepository.save(personEntity);
     }
 
-    private MoviePersonEntity saveMoviePersonEntity(Person person, MovieEntity movieEntity, String role, String type){
-        PersonEntity personEntity = savePersonEntity(person);
+    private MoviePersonEntity saveMoviePersonEntity(PersonDTO personDTO, MovieEntity movieEntity, String role, String type){
+        PersonEntity personEntity = savePersonEntity(personDTO);
         MoviePersonEntity moviePersonEntity = new MoviePersonEntity();
         moviePersonEntity.setPerson(personEntity);
         moviePersonEntity.setMovie(movieEntity);
@@ -174,15 +174,15 @@ public class HelperService {
         return moviePersonRepository.save(moviePersonEntity);
     }
 
-    private void saveMoviePeople(List<Person> people, MovieEntity movieEntity, String role, String type){
-        for(Person person : people){
-            saveMoviePersonEntity(person, movieEntity, role, type);
+    private void saveMoviePeople(List<PersonDTO> people, MovieEntity movieEntity, String role, String type){
+        for(PersonDTO personDTO : people){
+            saveMoviePersonEntity(personDTO, movieEntity, role, type);
         }
     }
 
-    private void saveMovieCharacters(List<Character> characters, MovieEntity movieEntity, String type){
-        for(Character character : characters){
-            saveMoviePersonEntity(character.getActor(), movieEntity, character.getRole(), type);
+    private void saveMovieCharacters(List<CharacterDTO> characterDTOS, MovieEntity movieEntity, String type){
+        for(CharacterDTO characterDTO : characterDTOS){
+            saveMoviePersonEntity(characterDTO.getActor(), movieEntity, characterDTO.getRole(), type);
         }
     }
 

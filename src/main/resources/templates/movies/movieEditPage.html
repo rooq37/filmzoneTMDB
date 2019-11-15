@@ -204,15 +204,15 @@
             <div class="form-group">
                 <label for="movie_cast">Obsada</label>
                 <div id="movie_cast">
-                    <div th:id="'movie_character_old_' + ${characterStat.index}" th:each="character : ${movieForm.getCharacters()}" class="row">
+                    <div th:id="'movie_character_old_' + ${characterStat.index}" th:each="characterDTO : ${movieForm.getCharacters()}" class="row">
                         <div class="form-group col-md-3">
-                            <input th:value="${character.getActor().getName()}" name="movie_cast_actor_name" type="text" class="form-control" placeholder="Imię/Imiona aktora">
+                            <input th:value="${characterDTO.getActor().getName()}" name="movie_cast_actor_name" type="text" class="form-control" placeholder="Imię/Imiona aktora">
                         </div>
                         <div class="form-group col-md-3">
-                            <input th:value="${character.getActor().getSurname()}" name="movie_cast_actor_surname" type="text" class="form-control" placeholder="Nazwisko aktora">
+                            <input th:value="${characterDTO.getActor().getSurname()}" name="movie_cast_actor_surname" type="text" class="form-control" placeholder="Nazwisko aktora">
                         </div>
                         <div class="form-group col-md-5">
-                            <input th:value="${character.getRole()}" name="movie_cast_actor_role" type="text" class="form-control" placeholder="Rola">
+                            <input th:value="${characterDTO.getRole()}" name="movie_cast_actor_role" type="text" class="form-control" placeholder="Rola">
                         </div>
                         <div class="form-group col-md-1">
                             <button th:attr="onclick='removeElement(\'movie_character_old_' + ${characterStat.index} + '\');'"

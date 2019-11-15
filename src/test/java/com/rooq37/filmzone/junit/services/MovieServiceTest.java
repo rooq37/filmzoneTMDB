@@ -3,10 +3,6 @@ package com.rooq37.filmzone.junit.services;
 import com.rooq37.filmzone.FilmzoneApplication;
 import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.entities.CommentEntity;
-import com.rooq37.filmzone.movies.movieDetails.MovieCast;
-import com.rooq37.filmzone.movies.movieDetails.MovieMedia;
-import com.rooq37.filmzone.movies.movieDetails.MovieRating;
-import com.rooq37.filmzone.movies.movieDetails.MovieSummary;
 import com.rooq37.filmzone.movies.movies.MoviesFilterForm;
 import com.rooq37.filmzone.services.MovieService;
 import org.junit.Test;
@@ -27,49 +23,6 @@ public class MovieServiceTest {
     @Autowired
     private MovieService movieService;
 
-    @Test
-    public void getMovieSummary() {
-        MovieSummary movieSummary = movieService.getMovieSummary(1L);
-        assertThat(movieSummary.getYear()).isEqualTo(1972);
-        assertThat(movieSummary.getTitle()).isEqualTo("Ojciec chrzestny");
-        assertThat(movieSummary.getScenario()).isEqualTo("Francis Ford Coppola, Mario Puzo");
-        assertThat(movieSummary.getDuration()).isEqualTo(175);
-        assertThat(movieSummary.getDirector()).isEqualTo("Francis Ford Coppola");
-        assertThat(movieSummary.getDescription()).isEqualTo("Starzejący się patriarcha dynastii przestępczości zorganizowanej przekazuje kontrolę nad swoim tajnym imperium niechętnemu synowi.");
-        assertThat(movieSummary.getCover().getName()).isEqualTo("Ojciec chrzestny");
-        assertThat(movieSummary.getCountry()).isEqualTo("USA");
-        assertThat(movieSummary.getCategories().size()).isEqualTo(2);
-        assertThat(movieSummary.getCategories()).contains("dramat");
-        assertThat(movieSummary.getCategories()).contains("gangsterski");
-        assertThat(movieSummary.getAvgUsersRating()).isEqualTo("10,0");
-    }
-
-    @Test
-    public void getMovieRating() {
-        MovieRating movieRating = movieService.getMovieRating(1L);
-        assertThat(movieRating.getAvg()).isEqualTo("10,00");
-        assertThat(movieRating.getNumberOfPeopleWhoWantToWatch()).isEqualTo("0");
-        assertThat(movieRating.getNumberOfPeopleWhoWatched()).isEqualTo("1");
-    }
-
-    @Test
-    public void getMovieMedia() {
-        MovieMedia movieMedia = movieService.getMovieMedia(1L);
-        assertThat(movieMedia.getPhotos().size()).isEqualTo(5);
-        assertThat(movieMedia.getPhotos().get(0).getAuthor()).isEqualTo("Paramount Pictures");
-        assertThat(movieMedia.getPhotos().get(0).getName()).isEqualTo("Ojciec chrzestny");
-        assertThat(movieMedia.getTrailerLink()).isEqualTo("https://www.youtube.com/embed/sY1S34973zA");
-    }
-
-    @Test
-    public void getMovieCast() {
-        MovieCast movieCast = movieService.getMovieCast(1L);
-        assertThat(movieCast.getCast().size()).isEqualTo(5);
-        assertThat(movieCast.getCast().get(0).getCharacterName()).isEqualTo("Don Vito Corleone");
-        assertThat(movieCast.getCast().get(0).getActorName()).isEqualTo("Marlon Brando");
-        assertThat(movieCast.getCast().get(1).getCharacterName()).isEqualTo("Michael Corleone");
-        assertThat(movieCast.getCast().get(1).getActorName()).isEqualTo("Al Pacino");
-    }
 
     @Test
     public void getMovieComments() {
@@ -80,6 +33,7 @@ public class MovieServiceTest {
         assertThat(comments.size()).isEqualTo(5);
     }
 
+    /*
     @Test
     public void getMovieListElementsSortByRatingDescending() {
         List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 1, new MoviesFilterForm()).getContent();
@@ -298,5 +252,6 @@ public class MovieServiceTest {
         assertThat(movies.size()).isEqualTo(3);
         assertThat(movies.get(0).getTitle()).isEqualTo("Ali");
     }
+    */
 
 }
