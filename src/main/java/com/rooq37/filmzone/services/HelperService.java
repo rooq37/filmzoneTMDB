@@ -42,16 +42,6 @@ public class HelperService {
     @Autowired
     private MoviePersonRepository moviePersonRepository;
 
-    public List<MovieListElement> getAllMovieListElements(){
-        List<MovieListElement> movieList = new ArrayList<>();
-        List<MovieEntity> movies = movieRepository.findAll();
-
-        for(MovieEntity movie : movies)
-            movieList.add(getMovieListElement(movie));
-
-        return movieList;
-    }
-
     public MovieListElement getMovieListElement(MovieEntity movie){
         MovieListElement mle = new MovieListElement();
 

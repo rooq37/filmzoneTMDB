@@ -56,6 +56,12 @@ public class MovieEntity {
     @Formula("(SELECT COUNT(*) FROM RATING R WHERE R.id_movie = id AND R.value > 0)")
     private int numberOfRatings;
 
+    @Formula("(SELECT COUNT(*) FROM RATING R WHERE R.id_movie = id AND R.value = 0)")
+    private int numberOfWantToWatch;
+
+    @Formula("(SELECT COUNT(*) FROM VIEW V WHERE V.id_movie = id)")
+    private long numberOfSearches;
+
     public Long getId() {
         return id;
     }
@@ -174,5 +180,21 @@ public class MovieEntity {
 
     public void setNumberOfRatings(int numberOfRatings) {
         this.numberOfRatings = numberOfRatings;
+    }
+
+    public int getNumberOfWantToWatch() {
+        return numberOfWantToWatch;
+    }
+
+    public void setNumberOfWantToWatch(int numberOfWantToWatch) {
+        this.numberOfWantToWatch = numberOfWantToWatch;
+    }
+
+    public long getNumberOfSearches() {
+        return numberOfSearches;
+    }
+
+    public void setNumberOfSearches(long numberOfSearches) {
+        this.numberOfSearches = numberOfSearches;
     }
 }

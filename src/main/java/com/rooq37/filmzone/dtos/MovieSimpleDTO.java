@@ -16,7 +16,7 @@ public class MovieSimpleDTO {
     private String avgUsersRating;
     private String numberOfPeopleWhoWatched;
     private String numberOfPeopleWhoWantToWatch;
-    private int numberOfSearches;
+    private long numberOfSearches;
 
     public Long getMovieId() {
         return movieId;
@@ -98,11 +98,11 @@ public class MovieSimpleDTO {
         this.numberOfPeopleWhoWantToWatch = numberOfPeopleWhoWantToWatch;
     }
 
-    public int getNumberOfSearches() {
+    public long getNumberOfSearches() {
         return numberOfSearches;
     }
 
-    public void setNumberOfSearches(int numberOfSearches) {
+    public void setNumberOfSearches(long numberOfSearches) {
         this.numberOfSearches = numberOfSearches;
     }
 

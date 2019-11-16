@@ -69,6 +69,15 @@ public class MovieService {
         return commentRepository.findAllByMovie(movie, paging);
     }
 
+    public Page<MovieSimpleDTO> getMovieSimplePage(Pageable pageable){
+        Page<MovieEntity> movieEntityPage = movieRepository.findAll(pageable);
+
+        return movieEntityPage.map(movieEntity -> {
+            MovieSimpleMapper mapper = new MovieSimpleMapper(movieEntity);
+            return mapper.getMovieSimpleDTO();
+        });
+    }
+
     public Page<MovieSimpleDTO> getMovieSimplePage(Pageable pageable, MoviesFilterForm moviesFilter){
         Page<MovieEntity> movieEntityPage = movieRepository.findAll(moviesFilter.movieMatchesFilter(), pageable);
 
