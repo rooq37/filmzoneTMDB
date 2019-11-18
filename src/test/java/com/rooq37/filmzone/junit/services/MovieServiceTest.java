@@ -1,9 +1,7 @@
 package com.rooq37.filmzone.junit.services;
 
 import com.rooq37.filmzone.FilmzoneApplication;
-import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.entities.CommentEntity;
-import com.rooq37.filmzone.movies.movies.MoviesFilterForm;
 import com.rooq37.filmzone.services.MovieService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,7 +34,7 @@ public class MovieServiceTest {
     /*
     @Test
     public void getMovieListElementsSortByRatingDescending() {
-        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 1, new MoviesFilterForm()).getContent();
+        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 1, new MoviesFilterDTO()).getContent();
         assertThat(movies.get(0).getTitle()).isEqualTo("Ojciec chrzestny");
         assertThat(movies.get(1).getTitle()).isEqualTo("Władca Pierścieni: Drużyna Pierścienia");
         assertThat(movies.get(2).getTitle()).isEqualTo("Ali");
@@ -44,7 +42,7 @@ public class MovieServiceTest {
 
     @Test
     public void getMovieListElementsSortByRatingAscending() {
-        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 2, new MoviesFilterForm()).getContent();
+        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 2, new MoviesFilterDTO()).getContent();
         assertThat(movies.get(0).getTitle()).isEqualTo("Ali");
         assertThat(movies.get(1).getTitle()).isEqualTo("Blow");
         assertThat(movies.get(2).getTitle()).isEqualTo("Harry Potter i Kamień Filozoficzny");
@@ -52,7 +50,7 @@ public class MovieServiceTest {
 
     @Test
     public void getMovieListElementsSortByNameDescending() {
-        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 3, new MoviesFilterForm()).getContent();
+        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 3, new MoviesFilterDTO()).getContent();
         assertThat(movies.get(0).getTitle()).isEqualTo("Władca Pierścieni: Drużyna Pierścienia");
         assertThat(movies.get(1).getTitle()).isEqualTo("Ojciec chrzestny");
         assertThat(movies.get(2).getTitle()).isEqualTo("Harry Potter i Kamień Filozoficzny");
@@ -60,7 +58,7 @@ public class MovieServiceTest {
 
     @Test
     public void getMovieListElementsSortByNameAscending() {
-        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 4, new MoviesFilterForm()).getContent();
+        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 4, new MoviesFilterDTO()).getContent();
         assertThat(movies.get(0).getTitle()).isEqualTo("Ali");
         assertThat(movies.get(1).getTitle()).isEqualTo("Blow");
         assertThat(movies.get(2).getTitle()).isEqualTo("Harry Potter i Kamień Filozoficzny");
@@ -68,7 +66,7 @@ public class MovieServiceTest {
 
     @Test
     public void getMovieListElementsSortByYearDescending() {
-        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 5, new MoviesFilterForm()).getContent();
+        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 5, new MoviesFilterDTO()).getContent();
         assertThat(movies.get(0).getTitle()).isEqualTo("Władca Pierścieni: Drużyna Pierścienia");
         assertThat(movies.get(1).getTitle()).isEqualTo("Ali");
         assertThat(movies.get(2).getTitle()).isEqualTo("Blow");
@@ -76,7 +74,7 @@ public class MovieServiceTest {
 
     @Test
     public void getMovieListElementsSortByYearAscending() {
-        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 6, new MoviesFilterForm()).getContent();
+        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 6, new MoviesFilterDTO()).getContent();
         assertThat(movies.get(0).getTitle()).isEqualTo("Ojciec chrzestny");
         assertThat(movies.get(1).getTitle()).isEqualTo("Władca Pierścieni: Drużyna Pierścienia");
         assertThat(movies.get(2).getTitle()).isEqualTo("Ali");
@@ -84,7 +82,7 @@ public class MovieServiceTest {
 
     @Test
     public void getMovieListElementsSortByNumberOfRatingsDescending() {
-        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 7, new MoviesFilterForm()).getContent();
+        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 7, new MoviesFilterDTO()).getContent();
         assertThat(movies.get(0).getTitle()).isEqualTo("Ojciec chrzestny");
         assertThat(movies.get(1).getTitle()).isEqualTo("Władca Pierścieni: Drużyna Pierścienia");
         assertThat(movies.get(2).getTitle()).isEqualTo("Ali");
@@ -92,7 +90,7 @@ public class MovieServiceTest {
 
     @Test
     public void getMovieListElementsSortByNumberOfRatingsAscending() {
-        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 8, new MoviesFilterForm()).getContent();
+        List<MovieListElement> movies = movieService.getMovieListElements(PageRequest.of(0, Integer.MAX_VALUE), 8, new MoviesFilterDTO()).getContent();
         assertThat(movies.get(0).getTitle()).isEqualTo("Ojciec chrzestny");
         assertThat(movies.get(1).getTitle()).isEqualTo("Władca Pierścieni: Drużyna Pierścienia");
         assertThat(movies.get(2).getTitle()).isEqualTo("Ali");
@@ -100,7 +98,7 @@ public class MovieServiceTest {
 
     @Test
     public void getMovieListElementsFilterByName() {
-        MoviesFilterForm moviesFilterForm = new MoviesFilterForm();
+        MoviesFilterDTO moviesFilterForm = new MoviesFilterDTO();
         List<MovieListElement> movies;
 
         moviesFilterForm.setName("O");
@@ -131,7 +129,7 @@ public class MovieServiceTest {
 
     @Test
     public void getMovieListElementsFilterByYear() {
-        MoviesFilterForm moviesFilterForm = new MoviesFilterForm();
+        MoviesFilterDTO moviesFilterForm = new MoviesFilterDTO();
         List<MovieListElement> movies;
 
         moviesFilterForm.setMinYear(1972);
@@ -163,7 +161,7 @@ public class MovieServiceTest {
 
     @Test
     public void getMovieListElementsFilterByCategories() {
-        MoviesFilterForm moviesFilterForm = new MoviesFilterForm();
+        MoviesFilterDTO moviesFilterForm = new MoviesFilterDTO();
         List<MovieListElement> movies;
 
         moviesFilterForm.setSelectedCategories("dramat");
@@ -195,7 +193,7 @@ public class MovieServiceTest {
 
     @Test
     public void getMovieListElementsFilterByCountries() {
-        MoviesFilterForm moviesFilterForm = new MoviesFilterForm();
+        MoviesFilterDTO moviesFilterForm = new MoviesFilterDTO();
         List<MovieListElement> movies;
 
         moviesFilterForm.setSelectedCountries("USA");
@@ -224,7 +222,7 @@ public class MovieServiceTest {
 
     @Test
     public void getMovieListElementsFilterByRating() {
-        MoviesFilterForm moviesFilterForm = new MoviesFilterForm();
+        MoviesFilterDTO moviesFilterForm = new MoviesFilterDTO();
         List<MovieListElement> movies;
 
         moviesFilterForm.setMinRate(10);

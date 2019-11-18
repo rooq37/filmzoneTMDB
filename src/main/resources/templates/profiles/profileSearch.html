@@ -22,20 +22,33 @@
 
         <p class="text-center" th:if="${userList.size() == 0}">Nie znaleziono użytkowników o podanej nazwie</p>
 
-        <div class="card mb-3 border-dark" th:each="user : ${userList}">
-            <div class="row no-gutters">
-                <div class="col-md-10">
+        <div class="card-deck">
+
+            <div class="w-25 d-flex align-items-stretch mb-4" th:each="user : ${userList}">
+                <div class="card text-white bg-dark">
                     <div class="card-body">
-                        <h3 class="card-title"><a class="text-dark" th:href="@{/profile/{id} (id=${user.getId()})}" th:text="${user.getNickname()}">Nickname</a></h3>
-                        <p></p>
-                        <ul class="list-inline">
-                            <li class="list-inline-item font-weight-bold" th:text="'Data rejestracji: ' + ${#dates.format(user.getRegisterDate(), 'dd MMM yyyy')}">Register date</li>
-                            <li class="list-inline-item font-weight-bold" th:text="'Liczba ocenionych filmów: ' + ${user.getRatings().size()}">Number of rated movies</li>
-                        </ul>
+                        <h5 class="card-title text-warning" th:text="${user.getNickname()}">Username</h5>
+                        <h6 title="Data rejestracji" class="card-subtitle mb-2 text-muted" th:text="${#dates.format(user.getRegisterDate(), 'dd MMM yyyy')}">15 lip 2019</h6>
+                        <small>
+                            Liczba
+                            <ul style="padding-inline-start: 20px !important;">
+                                <li>
+                                    <span>ocen filmów: </span>
+                                    <span th:text="${user.getRatings().size()}"></span>
+                                </li>
+                                <li>
+                                    <span>komentarzy: </span>
+                                    <span th:text="${user.getComments().size()}"></span>
+                                </li>
+                            </ul>
+                        </small>
+                        <small><a th:href="@{/profile/{id} (id=${user.getId()})}" class="card-link">Przejdź do profilu</a></small>
                     </div>
                 </div>
             </div>
+
         </div>
+
     </div>
 
 </main>

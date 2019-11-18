@@ -2,7 +2,6 @@ package com.rooq37.filmzone.services;
 
 import com.rooq37.filmzone.dtos.CharacterDTO;
 import com.rooq37.filmzone.dtos.ImageDTO;
-import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.entities.*;
 import com.rooq37.filmzone.dtos.PersonDTO;
 import com.rooq37.filmzone.repositories.*;
@@ -24,13 +23,6 @@ public class HelperService {
     private static final String PICTURES_PATH = "../images/";
     //private static final String PICTURES_PATH = System.getProperty("catalina.home") + SEPARATOR + "webapps" + SEPARATOR + "ROOT" + SEPARATOR + "movie_media" + SEPARATOR;
 
-
-    @Autowired
-    private MovieRepository movieRepository;
-    @Autowired
-    private ViewRepository viewRepository;
-    @Autowired
-    private RatingRepository ratingRepository;
     @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
@@ -41,30 +33,6 @@ public class HelperService {
     private PersonRepository personRepository;
     @Autowired
     private MoviePersonRepository moviePersonRepository;
-
-    public MovieListElement getMovieListElement(MovieEntity movie){
-        MovieListElement mle = new MovieListElement();
-
-        mle.setId(movie.getId());
-        mle.setTitle(movie.getTitle());
-        mle.setCover(getCover(movie));
-        mle.setCategories(getCategories(movie));
-        mle.setCountries(getCountries(movie));
-        mle.setDescription(movie.getDescription());
-        mle.setYear(movie.getYear());
-        mle.setAvgUsersRating(countAverageRating(movie));
-        mle.setNumberOfPeopleWhoWatched(ratingRepository.countByMovieAndValueGreaterThan(movie, 0));
-        mle.setNumberOfPeopleWhoWantToWatch(ratingRepository.countByMovieAndValueIs(movie, 0));
-        mle.setNumberOfSearches(viewRepository.countByMovie(movie));
-
-        return mle;
-    }
-
-    public double countAverageRating(MovieEntity movieEntity){
-        List<Integer> ratings = ratingRepository.findAllByMovie(movieEntity).stream().map(RatingEntity::getValue).collect(Collectors.toList());
-        if(ratings.isEmpty()) return 0;
-        return ratings.stream().mapToInt(Integer::intValue).average().getAsDouble();
-    }
 
     public ImageDTO getCover(MovieEntity movieEntity){
         MediaEntity cover = mediaRepository.findByMovieAndType(movieEntity, "COVER");
@@ -81,16 +49,6 @@ public class HelperService {
             photos.add(new ImageDTO(movieEntity.getTitle(), PICTURES_PATH + mm.getValue(), mm.getAuthor()));
 
         return photos;
-    }
-
-    public List<String> getCategories(MovieEntity movieEntity){
-        return movieEntity.getCategories().stream().
-                map(CategoryEntity::getName).collect(Collectors.toList());
-    }
-
-    public List<String> getCountries(MovieEntity movieEntity){
-        return movieEntity.getCountries().stream().
-                map(CountryEntity::getName).collect(Collectors.toList());
     }
 
     public List<String> getAllCategories(){

@@ -39,8 +39,8 @@ public class UserEntity {
 
     @ManyToMany(cascade={CascadeType.ALL})
     @JoinTable(name="USER_FOLLOWED",
-            joinColumns={@JoinColumn(name="USER_ENTITY_ID")},
-            inverseJoinColumns={@JoinColumn(name="FOLLOWED_ID")})
+            joinColumns={@JoinColumn(name="user_entity_id")},
+            inverseJoinColumns={@JoinColumn(name="followed_id")})
     private Set<UserEntity> followed = new HashSet<>();
 
     @ManyToMany(mappedBy="followed")

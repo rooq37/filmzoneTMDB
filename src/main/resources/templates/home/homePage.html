@@ -5,7 +5,7 @@
 <body>
 <main role="main" class="container" th:object="${homeView}">
     <div class="jumbotron">
-        <h1 class="display-4">Najpopularniejsze w ostatnim tygodniu</h1>
+        <h2>Najpopularniejsze w ostatnim tygodniu</h2>
         <hr class="my-4">
         <div id="carouselMostPopularMovies" class="carousel slide rounded" data-ride="carousel">
             <ol class="carousel-indicators" style="position: absolute; bottom: -50px;">
@@ -16,20 +16,20 @@
                     <div class="card mb-3 border-dark">
                         <div class="row no-gutters">
                             <div class="col-md-auto">
-                                <img style="max-height: 400px" th:src="${movie.getKey().getCover().getSource()}" class="d-block mx-auto" th:alt="${movie.getKey().getCover().getName()}">
+                                <img style="max-height: 400px" th:src="${movie.getCover().getSource()}" class="d-block mx-auto" th:alt="${movie.getCover().getName()}">
                             </div>
                             <div class="col">
                                 <div class="card-body">
-                                    <h3 class="card-title"><a class="text-dark" th:href="@{/movie/{id} (id=${movie.getKey().getId()})}" th:text="${movie.getKey().getTitle()}">Title</a></h3>
+                                    <h3 class="card-title"><a class="text-dark" th:href="@{/movie/{id} (id=${movie.getMovieId()})}" th:text="${movie.getTitle()}">Title</a></h3>
                                     <h7>
-                                        <a href="#" class="badge badge-pill badge-dark" th:each="category : ${movie.getKey().getCategories()}" th:text="'#' + ${category}">#category</a>
+                                        <a href="#" class="badge badge-pill badge-dark" th:each="category : ${movie.getCategories()}" th:text="'#' + ${category}">#category</a>
                                     </h7>
-                                    <p class="card-text" th:text="${movie.getKey().getDescription()}">Description</p>
+                                    <p class="card-text" th:text="${movie.getDescription()}">Description</p>
                                     <ul>
-                                        <li class="font-weight-bold" th:text="'Liczba wyszukiwań: ' + ${movie.getValue()}">Number of searches</li>
-                                        <li class="font-weight-bold" th:text="'Średnia ocena: ' + ${movie.getKey().getAvgUsersRatingAsString()}">Average★</li>
-                                        <li class="font-weight-bold" th:text="'' + ${movie.getKey().getNumberOfPeopleWhoWatched()} + ' użytkowników oceniło ten film'">Number of people who watched</li>
-                                        <li class="font-weight-bold" th:text="'' + ${movie.getKey().getNumberOfPeopleWhoWantToWatch()} + ' chce go zobaczyć'">Number of people who want to watch</li>
+                                        <li class="font-weight-bold" th:text="'Liczba wyszukiwań: ' + ${movie.getNumberOfSearches()}">Number of searches</li>
+                                        <li class="font-weight-bold" th:text="'Średnia ocena: ' + ${movie.getAvgUsersRating()}">Average★</li>
+                                        <li class="font-weight-bold" th:text="'' + ${movie.getNumberOfPeopleWhoWatched()} + ' użytkowników oceniło ten film'">Number of people who watched</li>
+                                        <li class="font-weight-bold" th:text="'' + ${movie.getNumberOfPeopleWhoWantToWatch()} + ' chce go zobaczyć'">Number of people who want to watch</li>
                                     </ul>
                                 </div>
                             </div>
@@ -40,7 +40,7 @@
         </div>
     </div>
     <div class="jumbotron">
-        <h1 class="display-4">Statystyki ogólne</h1>
+        <h2>Statystyki ogólne</h2>
         <hr class="my-4">
         <table class="table">
             <tbody>
@@ -68,7 +68,7 @@
         </table>
     </div>
     <div class="jumbotron">
-        <h1 class="display-4">Statystyki ostatniego tygodnia</h1>
+        <h2>Statystyki ostatniego tygodnia</h2>
         <hr class="my-4">
         <table class="table">
             <tbody>

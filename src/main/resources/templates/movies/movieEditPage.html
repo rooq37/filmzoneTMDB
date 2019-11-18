@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     <div id="movie_scenario_new_0" class="row" th:if="${movieForm.getScenario().isEmpty()}">
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-5">
                             <input name="movie_scenario_name" type="text" class="form-control" placeholder="Imię/Imiona">
                         </div>
                         <div class="form-group col-md-6">
@@ -204,7 +204,7 @@
             <div class="form-group">
                 <label for="movie_cast">Obsada</label>
                 <div id="movie_cast">
-                    <div th:id="'movie_character_old_' + ${characterStat.index}" th:each="characterDTO : ${movieForm.getCharacters()}" class="row">
+                    <div th:id="'movie_character_old_' + ${characterDTOStat.index}" th:each="characterDTO : ${movieForm.getCharacters()}" class="row">
                         <div class="form-group col-md-3">
                             <input th:value="${characterDTO.getActor().getName()}" name="movie_cast_actor_name" type="text" class="form-control" placeholder="Imię/Imiona aktora">
                         </div>
@@ -215,7 +215,7 @@
                             <input th:value="${characterDTO.getRole()}" name="movie_cast_actor_role" type="text" class="form-control" placeholder="Rola">
                         </div>
                         <div class="form-group col-md-1">
-                            <button th:attr="onclick='removeElement(\'movie_character_old_' + ${characterStat.index} + '\');'"
+                            <button th:attr="onclick='removeElement(\'movie_character_old_' + ${characterDTOStat.index} + '\');'"
                                     type="button" class="close text-danger mt-auto text-right" aria-label="Remove" data-toggle="tooltip" data-placement="bottom" title="Usuń">
                                 <span aria-hidden="true">&times;</span>
                             </button>

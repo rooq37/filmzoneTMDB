@@ -2,9 +2,7 @@ package com.rooq37.filmzone.junit.services;
 
 import com.rooq37.filmzone.FilmzoneApplication;
 import com.rooq37.filmzone.dtos.ImageDTO;
-import com.rooq37.filmzone.commons.MovieListElement;
 import com.rooq37.filmzone.entities.MovieEntity;
-import com.rooq37.filmzone.repositories.CategoryRepository;
 import com.rooq37.filmzone.repositories.MovieRepository;
 import com.rooq37.filmzone.services.HelperService;
 import org.hibernate.Hibernate;
@@ -28,40 +26,6 @@ public class MovieEditHelperServiceTest {
     @Autowired
     private MovieRepository movieRepository;
 
-    @Autowired
-    private CategoryRepository categoryRepository;
-
-    @Test
-    public void getAllMovieListElements() {
-        List<MovieListElement> movieListElements = helperService.getAllMovieListElements();
-        assertThat(movieListElements.size()).isEqualTo(5);
-    }
-
-    @Test
-    public void getMovieListElement() {
-        MovieEntity movieEntity = movieRepository.findMovieEntityById((long) 1);
-        MovieListElement movieListElement = helperService.getMovieListElement(movieEntity);
-        assertThat(movieListElement.getYear()).isEqualTo(movieEntity.getYear());
-        assertThat(movieListElement.getId()).isEqualTo(movieEntity.getId());
-        assertThat(movieListElement.getDescription()).isEqualTo(movieEntity.getDescription());
-        assertThat(movieListElement.getCover()).isEqualToComparingFieldByField(helperService.getCover(movieEntity));
-        assertThat(movieListElement.getAvgUsersRatingAsString()).isEqualTo("10,00");
-        assertThat(movieListElement.getTitle()).isEqualTo(movieEntity.getTitle());
-        assertThat(movieListElement.getCountries()).contains("USA");
-        assertThat(movieListElement.getCategories()).contains("dramat");
-        assertThat(movieListElement.getCategories()).contains("gangsterski");
-        assertThat(movieListElement.getNumberOfSearches()).isEqualTo(0);
-        assertThat(movieListElement.getNumberOfPeopleWhoWatched()).isEqualTo(1);
-        assertThat(movieListElement.getNumberOfPeopleWhoWantToWatch()).isEqualTo(0);
-    }
-
-    @Test
-    public void countAverageRating() {
-        MovieEntity movieEntity = movieRepository.findMovieEntityById((long) 1);
-        double avgRating = helperService.countAverageRating(movieEntity);
-        assertThat(avgRating).isEqualTo(10.0);
-    }
-
     @Test
     public void getCover() {
         MovieEntity movieEntity = movieRepository.findMovieEntityById((long) 1);
@@ -83,24 +47,6 @@ public class MovieEditHelperServiceTest {
             assertThat(imageDTO.getSource()).contains("../images/godfather/");
             assertThat(imageDTO.getSource()).endsWith(".jpg");
         }
-    }
-
-    @Test
-    public void getCategories() {
-        MovieEntity movieEntity = movieRepository.findMovieEntityById((long) 1);
-        Hibernate.initialize(movieEntity.getCategories());
-        List<String> categories = helperService.getCategories(movieEntity);
-        assertThat(categories.size()).isEqualTo(2);
-        assertThat(categories).contains("dramat");
-        assertThat(categories).contains("gangsterski");
-    }
-
-    @Test
-    public void getCountries() {
-        MovieEntity movieEntity = movieRepository.findMovieEntityById((long) 1);
-        List<String> countries = helperService.getCountries(movieEntity);
-        assertThat(countries.size()).isEqualTo(1);
-        assertThat(countries).contains("USA");
     }
 
     @Test

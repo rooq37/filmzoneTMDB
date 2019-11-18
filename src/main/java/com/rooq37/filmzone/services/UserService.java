@@ -1,7 +1,7 @@
 package com.rooq37.filmzone.services;
 
 import com.rooq37.filmzone.entities.UserEntity;
-import com.rooq37.filmzone.register.RegisterForm;
+import com.rooq37.filmzone.dtos.RegisterDTO;
 import com.rooq37.filmzone.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,17 +16,17 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public String checkRegisterAbility(RegisterForm registerForm){
-        if(userRepository.findByEmail(registerForm.getEmail()) != null) return "Użytkownik o podanym adresie email już istnieje!";
-        if(!registerForm.getPassword().equals(registerForm.getConfirmPassword())) return "Podane hasła różnią się od siebie!";
+    public String checkRegisterAbility(RegisterDTO registerDTO){
+        if(userRepository.findByEmail(registerDTO.getEmail()) != null) return "Użytkownik o podanym adresie email już istnieje!";
+        if(!registerDTO.getPassword().equals(registerDTO.getConfirmPassword())) return "Podane hasła różnią się od siebie!";
         return null;
     }
 
-    public String registerUser(RegisterForm registerForm){
+    public String registerUser(RegisterDTO registerDTO){
         UserEntity userEntity = new UserEntity();
-        userEntity.setNickname(registerForm.getNickname());
-        userEntity.setEmail(registerForm.getEmail());
-        userEntity.setPassword(new BCryptPasswordEncoder(11).encode(registerForm.getPassword()));
+        userEntity.setNickname(registerDTO.getNickname());
+        userEntity.setEmail(registerDTO.getEmail());
+        userEntity.setPassword(new BCryptPasswordEncoder(11).encode(registerDTO.getPassword()));
         userEntity.setRegisterDate(new Date());
         userEntity.setRole("USER");
         userRepository.save(userEntity);

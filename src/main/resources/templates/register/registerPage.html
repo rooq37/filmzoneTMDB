@@ -5,20 +5,19 @@
 <body>
 <main role="main" class="container">
 
-    <form th:action="@{/register}" th:method="post" th:object="${registerForm}" class="col-md-4 mx-auto pt-4">
-        <img class="mb-4" src="/docs/4.3/assets/brand/bootstrap-solid.svg" alt="LOGO.PNG" width="72" height="72">
+    <form th:action="@{/register}" th:method="post" th:object="${registerDTO}" class="col-md-4 mx-auto pt-4">
         <h1 class="h3 mb-3 font-weight-normal text-center">Rejestracja</h1>
         <div class="form-group">
-            <input th:field="${registerForm.nickname}" type="text" id="inputNickname" class="form-control border-dark" placeholder="Nick" required="">
+            <input th:field="${registerDTO.nickname}" type="text" id="inputNickname" class="form-control border-dark" placeholder="Nick" required="">
         </div>
         <div class="form-group">
-            <input th:field="${registerForm.email}" type="email" id="inputEmail" class="form-control border-dark" placeholder="Adres email" required="">
+            <input th:field="${registerDTO.email}" type="email" id="inputEmail" class="form-control border-dark" placeholder="Adres email" required="">
         </div>
         <div class="form-group">
-            <input th:field="${registerForm.password}" type="password" id="inputPassword" class="form-control border-dark" placeholder="Hasło" required="">
+            <input th:field="${registerDTO.password}" type="password" id="inputPassword" class="form-control border-dark" placeholder="Hasło" required="">
         </div>
         <div class="form-group">
-            <input th:field="${registerForm.confirmPassword}" type="password" id="inputConfirmPassword" class="form-control border-dark" placeholder="Powtórz hasło" required="">
+            <input th:field="${registerDTO.confirmPassword}" type="password" id="inputConfirmPassword" class="form-control border-dark" placeholder="Powtórz hasło" required="">
         </div>
         <button class="btn btn-lg btn-dark btn-block" type="submit">Zarejestruj się</button>
         <div class="text-center my-3" >Masz już konto?</div>

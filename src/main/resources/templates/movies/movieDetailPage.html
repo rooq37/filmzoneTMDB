@@ -70,11 +70,11 @@
             <form th:action="@{/rateMovie}" method="post">
                 <input type="hidden" th:name="rating_movieId" th:value="${movieDetailsDTO.getMovieId()}" />
                 <div class="btn-toolbar" style="justify-content: center; display: flex;" role="toolbar">
-                    <div class="btn-group mr-2" data-toggle="tooltip" data-placement="bottom" th:with="intList=${ {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} }"
+                    <div class="btn-group mr-2" data-toggle="tooltip" data-placement="bottom" th:with="intList=${ {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10} }"
                          th:title="${userRating.getTooltip()}" role="group" aria-label="Rating group">
                         <div class="btn btn-outline-dark bg-dark text-white" th:text="${userRating.getHeader()}">Movie rating</div>
                         <button type="submit" th:each="i : ${intList}" th:classappend="${userRating.getRate() == i}? text-warning : text-white" class="btn btn-outline-dark bg-dark"
-                                th:name="rating" th:text="|${i}|" th:value="|${i}|">1</button>
+                                th:name="rating" th:text="${i != 0} ? |${i}| : 'Chcę obejrzeć'" th:value="|${i}|">1</button>
                     </div>
                 </div>
             </form>

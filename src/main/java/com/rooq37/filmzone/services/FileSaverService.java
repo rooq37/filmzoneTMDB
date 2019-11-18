@@ -2,7 +2,7 @@ package com.rooq37.filmzone.services;
 
 import com.rooq37.filmzone.entities.MediaEntity;
 import com.rooq37.filmzone.entities.MovieEntity;
-import com.rooq37.filmzone.movies.editMovieForm.ImageFile;
+import com.rooq37.filmzone.dtos.ImageFileDTO;
 import com.rooq37.filmzone.repositories.MediaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,8 +24,8 @@ public class FileSaverService {
 
     private File createRootDirectory(){
         String rootPath = System.getProperty("catalina.home");
-        //String path = rootPath + SEPARATOR + "webapps" + SEPARATOR + "ROOT" + SEPARATOR + "movie_media";
-        String path = "C:/Projekty/Java/filmzone/src/main/resources/static/images";
+        String path = rootPath + SEPARATOR + "webapps" + SEPARATOR + "ROOT" + SEPARATOR + "movie_media";
+        //String path = "C:/Projekty/Java/filmzone/src/main/resources/static/images";
         File dir = new File(path);
         if (!dir.exists()) dir.mkdirs();
         return dir;
@@ -38,7 +38,7 @@ public class FileSaverService {
         return movieDir;
     }
 
-    public MediaEntity saveMediaEntity(ImageFile image, MovieEntity movie, String type) throws IOException {
+    public MediaEntity saveMediaEntity(ImageFileDTO image, MovieEntity movie, String type) throws IOException {
         if(image.getMultipartFile().isEmpty()) return new MediaEntity();
 
         File movieDir = createMovieDirectory(movie);

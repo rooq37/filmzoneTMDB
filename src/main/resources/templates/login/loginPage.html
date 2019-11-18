@@ -6,8 +6,7 @@
 <main role="main" class="container">
 
     <form th:action="@{/login}" method="post" class="col-md-4 mx-auto pt-4">
-        <img class="mb-4" src="/docs/4.3/assets/brand/bootstrap-solid.svg" alt="LOGO.PNG" width="72" height="72">
-        <h1 class="h3 mb-3 font-weight-normal">Logowanie</h1>
+        <h1 class="h3 mb-3 font-weight-normal text-center">Logowanie</h1>
         <div class="form-group">
             <input th:field="${user.email}" type="email" id="inputEmail" class="form-control border-dark" placeholder="Adres email" required="" autofocus="">
         </div>

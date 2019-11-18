@@ -1,26 +1,17 @@
 package com.rooq37.filmzone.mappers;
 
-import com.rooq37.filmzone.dtos.ImageDTO;
 import com.rooq37.filmzone.dtos.MovieSimpleDTO;
 import com.rooq37.filmzone.entities.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MovieSimpleMapper {
-
-    protected static final String PICTURES_PATH = "../images/";
-
-    private static final String MEDIA_TYPE_COVER = "COVER";
-
-    private static final String DEFAULT_COVER_PATH = "../images/filmzone_default.png";
-    private static final String DEFAULT_COVER_AUTHOR = "Filmzone";
+public class MovieSimpleMapper extends MovieMapper {
 
     protected MovieSimpleDTO movieDTO;
-    protected MovieEntity movieEntity;
 
     public MovieSimpleMapper(MovieEntity movieEntity){
-        this.movieEntity = movieEntity;
+        super(movieEntity);
         movieDTO = new MovieSimpleDTO();
     }
 
@@ -38,21 +29,6 @@ public class MovieSimpleMapper {
         movieDTO.setNumberOfSearches(getNumberOfSearches());
 
         return movieDTO;
-    }
-
-    protected ImageDTO getCover(){
-        List<MediaEntity> covers = movieEntity.getMedia().stream()
-                .filter(mediaEntity -> mediaEntity.getType().equals(MEDIA_TYPE_COVER)).collect(Collectors.toList());
-        if(covers.isEmpty()){
-            return new ImageDTO(movieEntity.getTitle(), DEFAULT_COVER_PATH, DEFAULT_COVER_AUTHOR) ;
-        }else{
-            MediaEntity cover = covers.get(0);
-            return new ImageDTO(movieEntity.getTitle(), PICTURES_PATH + cover.getValue(), cover.getAuthor());
-        }
-    }
-
-    protected List<String> getCategories(){
-        return movieEntity.getCategories().stream().map(CategoryEntity::getName).collect(Collectors.toList());
     }
 
     protected String getCountry(){

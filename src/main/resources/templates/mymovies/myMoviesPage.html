@@ -80,8 +80,8 @@
                             </div>
                             <div class="card-body d-flex flex-column">
                                 <h7>
-                                    <a class="text-white" th:href="@{movie/{id} (id=${movie.getId()})}" th:text="${movie.getTitle()}">Title</a>
-                                    <button th:attr="onclick='confirmMovieFromListRemoval(\'' + ${movie.getTitle()} +'\',\''+ ${movie.getId()} + '\',\''+ ${selectedList} + '\');'"
+                                    <a class="text-white" th:href="@{movie/{id} (id=${movie.getMovieId()})}" th:text="${movie.getTitle()}">Title</a>
+                                    <button th:attr="onclick='confirmMovieFromListRemoval(\'' + ${movie.getTitle()} +'\',\''+ ${movie.getMovieId()} + '\',\''+ ${selectedList} + '\');'"
                                             type="button" class="close text-danger mt-auto text-right" aria-label="Remove" data-toggle="tooltip" data-placement="bottom" title="Usuń z listy">
                                         <span aria-hidden="true">&times;</span>
                                     </button>

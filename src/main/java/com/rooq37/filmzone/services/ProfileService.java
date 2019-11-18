@@ -1,22 +1,19 @@
 package com.rooq37.filmzone.services;
 
 import com.rooq37.filmzone.activities.Activity;
-import com.rooq37.filmzone.commons.MovieListElement;
+import com.rooq37.filmzone.dtos.MovieSimpleDTO;
 import com.rooq37.filmzone.entities.CommentEntity;
 import com.rooq37.filmzone.entities.RatingEntity;
 import com.rooq37.filmzone.entities.UserEntity;
-import com.rooq37.filmzone.profiles.ProfileForm;
+import com.rooq37.filmzone.mappers.MovieSimpleMapper;
+import com.rooq37.filmzone.dtos.ProfileDTO;
 import com.rooq37.filmzone.repositories.RatingRepository;
 import com.rooq37.filmzone.repositories.UserRepository;
-import javafx.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,15 +24,13 @@ public class ProfileService {
     @Autowired
     private RatingRepository ratingRepository;
     @Autowired
-    private HelperService helperService;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private ActivityService activityService;
 
-    public ProfileForm getProfile(String userEmail){
+    public ProfileDTO getProfile(String userEmail){
         UserEntity user = userService.getUserByEmail(userEmail);
-        ProfileForm profile = getBasicProfile(user);
+        ProfileDTO profile = getBasicProfile(user);
 
         profile.setRatedMovies(getRatedMovies(user));
         profile.setFollowed(user.getFollowed().stream().map(this::getBasicProfile).collect(Collectors.toList()));
@@ -43,8 +38,8 @@ public class ProfileService {
         return profile;
     }
 
-    private ProfileForm getBasicProfile(UserEntity user){
-        ProfileForm profile = new ProfileForm();
+    private ProfileDTO getBasicProfile(UserEntity user){
+        ProfileDTO profile = new ProfileDTO();
         profile.setId(user.getId());
         profile.setNickname(user.getNickname());
         profile.setEmail(user.getEmail());
@@ -85,11 +80,11 @@ public class ProfileService {
         return false;
     }
 
-    private List<Pair<MovieListElement, Integer>> getRatedMovies(UserEntity user){
-        List<Pair<MovieListElement, Integer>> resultList = new ArrayList<>();
+    private List<AbstractMap.SimpleEntry<MovieSimpleDTO, Integer>> getRatedMovies(UserEntity user){
+        List<AbstractMap.SimpleEntry<MovieSimpleDTO, Integer>> resultList = new ArrayList<>();
 
         for(RatingEntity rating : user.getRatings())
-            resultList.add(new Pair<>(helperService.getMovieListElement(rating.getMovie()), rating.getValue()));
+            resultList.add(new AbstractMap.SimpleEntry<>(new MovieSimpleMapper(rating.getMovie()).getMovieSimpleDTO(), rating.getValue()));
 
         resultList.sort((o1, o2) -> -1 * Integer.compare(o1.getValue(), o2.getValue()));
         return resultList;

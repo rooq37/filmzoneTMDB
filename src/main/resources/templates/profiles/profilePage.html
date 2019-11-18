@@ -40,7 +40,7 @@
                 </form>
             </div>
         </div>
-        <div class="row">
+        <div class="row" th:if="${!isCurrentUserProfile}">
             <div class="col">
                 <span></span>
             </div>
@@ -86,7 +86,7 @@
                                     </div>
                                     <div class="card-body d-flex flex-column">
                                         <h7>
-                                            <a class="text-white" th:href="@{movie/{id} (id=${movie.getKey().getId()})}" th:text="${movie.getKey().getTitle()}">Title</a>
+                                            <a class="text-white" th:href="@{/movie/{id} (id=${movie.getKey().getMovieId()})}" th:text="${movie.getKey().getTitle()}">Title</a>
                                             <a data-toggle="tooltip" data-placement="bottom" th:title="'Ocena użytkownika ' + ${profile.getNickname()}" class="text-right"><span class="text-warning">★</span><span class="text-white" th:text="${movie.getValue()}">Rating</span></a>
                                         </h7>
                                     </div>
@@ -110,17 +110,14 @@
             <div class="tab-pane fade" id="activities" role="tabpanel" aria-labelledby="activities-tab">
 
                 <div th:id="'activity_' + ${activityStat.index}" class="card border-dark mb-2" th:each="activity : ${profile.getActivities().getPageList()}">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col text-left font-weight-light text-dark" th:text="${#dates.format(activity.getDate(), 'dd.MM.yyyy HH:mm')}">dd.MM.yyyy HH:mm</div>
-                        </div>
-                    </div>
                     <div class="card-body">
                         <div class="media">
-                            <img th:src="${activity.getCover().getSource()}" class="mr-3 img-thumbnail img-fluid" th:alt="${activity.getMovieTitle()}" style="height:150px;">
+                            <img th:src="${activity.getCover().getSource()}" th:alt="${activity.getMovieTitle()}" class="mr-3 img-fluid" style="height:100px;">
                             <div class="media-body">
-                                <h5 class="mt-0" ><a class="text-dark" th:text="${activity.getMovieTitle()}" th:href="@{movie/{id} (id=${activity.getMovieId()})}">Movie title</a></h5>
+                                <h5 class="mt-0" ><a th:text="${activity.getMovieTitle()}" th:href="@{/movie/{id} (id=${activity.getMovieId()})}" class="text-dark" >Movie title</a></h5>
                                 <span th:text="${activity.getContent()}">User rated the movie with 5</span>
+                                <br>
+                                <span><small th:text="${#dates.format(activity.getDate(), 'dd.MM.yyyy HH:mm')}" class="text-left font-weight-light text-dark">dd.MM.yyyy HH:mm</small></span>
                             </div>
                         </div>
                     </div>
@@ -144,7 +141,7 @@
                         <div class="card text-white bg-dark">
                             <div class="card-body">
                                 <h5 class="card-title text-warning" th:text="${followed.getNickname()}">Username</h5>
-                                <h6 title="Data rejestracji" class="card-subtitle mb-2 text-muted" th:text="${followed.getRegisterDate()}">15 lip 2019</h6>
+                                <h6 title="Data rejestracji" class="card-subtitle mb-2 text-muted" th:text="${#dates.format(followed.getRegisterDate(), 'dd MMM yyyy')}">15 lip 2019</h6>
                                 <small>
                                     Liczba
                                     <ul style="padding-inline-start: 20px !important;">
@@ -173,7 +170,7 @@
                         <div class="card text-white bg-dark">
                             <div class="card-body">
                                 <h5 class="card-title text-warning" th:text="${follower.getNickname()}">Username</h5>
-                                <h6 title="Data rejestracji" class="card-subtitle mb-2 text-muted" th:text="${follower.getRegisterDate()}">15 lip 2019</h6>
+                                <h6 title="Data rejestracji" class="card-subtitle mb-2 text-muted" th:text="${#dates.format(follower.getRegisterDate(), 'dd MMM yyyy')}">15 lip 2019</h6>
                                 <small>
                                     Liczba
                                     <ul style="padding-inline-start: 20px !important;">

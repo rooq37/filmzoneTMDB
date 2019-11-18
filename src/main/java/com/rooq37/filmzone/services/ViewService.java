@@ -1,8 +1,10 @@
 package com.rooq37.filmzone.services;
 
+import com.rooq37.filmzone.dtos.MovieSimpleDTO;
 import com.rooq37.filmzone.entities.MovieEntity;
 import com.rooq37.filmzone.entities.ViewEntity;
-import com.rooq37.filmzone.home.HomeForm;
+import com.rooq37.filmzone.dtos.HomeDTO;
+import com.rooq37.filmzone.mappers.MovieSimpleMapper;
 import com.rooq37.filmzone.repositories.MovieRepository;
 import com.rooq37.filmzone.repositories.RatingRepository;
 import com.rooq37.filmzone.repositories.UserRepository;
@@ -14,6 +16,8 @@ import java.util.*;
 
 @Service
 public class ViewService {
+
+    private static final int NUMBER_OF_MOVIES_IN_CAROUSEL = 5;
 
     @Autowired
     private ViewRepository viewRepository;
@@ -32,44 +36,37 @@ public class ViewService {
         viewRepository.save(viewEntity);
     }
 
-    public Map<MovieEntity, Integer> getMostPopularMoviesLastWeek(int numberOfMostPopularMovies){
-        Map<MovieEntity, Integer> movies = new HashMap<>();
+    private List<MovieSimpleDTO> getMostPopularMoviesLastWeek(){
+        Date date = getDateOneWeekAgo();
+        List<MovieSimpleDTO> mostPopularMovies = new ArrayList<>();
+        for(MovieEntity movie : movieRepository.findAll()){
+            MovieSimpleMapper mapper = new MovieSimpleMapper(movie);
+            MovieSimpleDTO movDTO = mapper.getMovieSimpleDTO();
+            movDTO.setNumberOfSearches(viewRepository.countByMovieAndDateAfter(movie, date));
+            mostPopularMovies.add(movDTO);
+        }
+
+        mostPopularMovies.sort(Comparator.comparingLong(MovieSimpleDTO::getNumberOfSearches).reversed());
+        return mostPopularMovies.subList(0, NUMBER_OF_MOVIES_IN_CAROUSEL);
+    }
+
+    public HomeDTO getHome(){
+        HomeDTO homeDTO = new HomeDTO();
+
+        homeDTO.setMostPopularMovies(getMostPopularMoviesLastWeek());
+        homeDTO.setNumberOfMoviesInDatabase(movieRepository.count());
+        homeDTO.setNumberOfRegisteredAccounts(userRepository.count());
+        homeDTO.setNumberOfActiveUsers(userRepository.count());
+        homeDTO.setNumberOfRatings(ratingRepository.count());
+        homeDTO.setNumberOfSearches(viewRepository.count());
 
         Date date = getDateOneWeekAgo();
 
-        for(MovieEntity movie : movieRepository.findAll())
-            movies.put(movie, viewRepository.countByMovieAndDateAfter(movie, date));
+        homeDTO.setNumberOfNewAccountsLastWeek(userRepository.countByRegisterDateAfter(date));
+        homeDTO.setNumberOfRatingsLastWeek(ratingRepository.countByDateAfter(date));
+        homeDTO.setNumberOfSearchesLastWeek(viewRepository.countByDateAfter(date));
 
-        return getMoviesMapSortedByValue(movies, numberOfMostPopularMovies);
-    }
-
-    private Map<MovieEntity, Integer> getMoviesMapSortedByValue(Map<MovieEntity, Integer> moviesMap, int maxSize){
-        List<Map.Entry<MovieEntity, Integer>> list = new ArrayList<>(moviesMap.entrySet());
-        list.sort(Map.Entry.comparingByValue());
-
-        Map<MovieEntity, Integer> resultMap = new HashMap<>();
-        for(int i = 0; i < maxSize && i < list.size(); i++)
-            resultMap.put(list.get(i).getKey(), list.get(i).getValue());
-
-        return resultMap;
-    }
-
-    public HomeForm getHome(){
-        HomeForm homeForm = new HomeForm();
-
-        homeForm.setNumberOfMoviesInDatabase(movieRepository.count());
-        homeForm.setNumberOfRegisteredAccounts(userRepository.count());
-        homeForm.setNumberOfActiveUsers(userRepository.count());
-        homeForm.setNumberOfRatings(ratingRepository.count());
-        homeForm.setNumberOfSearches(viewRepository.count());
-
-        Date date = getDateOneWeekAgo();
-
-        homeForm.setNumberOfNewAccountsLastWeek(userRepository.count());
-        homeForm.setNumberOfRatingsLastWeek(ratingRepository.countByDateAfter(date));
-        homeForm.setNumberOfSearchesLastWeek(viewRepository.countByDateAfter(date));
-
-        return homeForm;
+        return homeDTO;
     }
 
     private Date getDateOneWeekAgo(){
