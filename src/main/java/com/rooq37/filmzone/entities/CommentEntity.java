@@ -21,9 +21,8 @@ public class CommentEntity {
     @Column(name = "date")
     private Date date;
 
-    @ManyToOne
-    @JoinColumn(name = "id_movie")
-    private MovieEntity movie;
+    @Column(name = "id_tmdb_movie")
+    private Integer tmdbMovieId;
 
     public Long getId() {
         return id;
@@ -57,12 +56,12 @@ public class CommentEntity {
         this.date = date;
     }
 
-    public MovieEntity getMovie() {
-        return movie;
+    public Integer getTmdbMovieId() {
+        return tmdbMovieId;
     }
 
-    public void setMovie(MovieEntity movie) {
-        this.movie = movie;
+    public void setTmdbMovieId(Integer tmdbMovieId) {
+        this.tmdbMovieId = tmdbMovieId;
     }
 
 }

@@ -1,9 +1,10 @@
 package com.rooq37.filmzone.dtos;
 
+import info.movito.themoviedbapi.model.people.PersonCast;
+
 import java.util.List;
 
 public class MovieDetailsDTO extends MovieSimpleDTO {
-
 
     private int duration;
     private String director;
@@ -12,7 +13,7 @@ public class MovieDetailsDTO extends MovieSimpleDTO {
     private List<ImageDTO> pictures;
     private String trailerLink;
 
-    private List<CharacterDTO> characters;
+    private List<PersonCast> characters;
 
     public int getDuration() {
         return duration;
@@ -54,12 +55,16 @@ public class MovieDetailsDTO extends MovieSimpleDTO {
         this.trailerLink = trailerLink;
     }
 
-    public List<CharacterDTO> getCharacters() {
+    public List<PersonCast> getCharacters() {
         return characters;
     }
 
-    public void setCharacters(List<CharacterDTO> characters) {
+    public void setCharacters(List<PersonCast> characters) {
         this.characters = characters;
     }
 
+    @Override
+    public String getDescription() {
+        return description;
+    }
 }

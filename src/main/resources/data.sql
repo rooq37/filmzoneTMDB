@@ -1,0 +1,2 @@
+INSERT INTO USER VALUES (1, '', null, 'rooq37@email.pl', 'rooq37', '$2a$11$BPLSz.GDgMxAaEzp2kynNePS3UV2BVQtdN4yIrq3uRdz7PwGN5qm2', '2019-07-15 20:05:15', 'ADMIN');
+INSERT INTO USER VALUES (2, 'Złe zachowanie', '2019-11-13 00:00:00', 'test1@test.pl', 'test1', '$2a$11$BPLSz.GDgMxAaEzp2kynNePS3UV2BVQtdN4yIrq3uRdz7PwGN5qm2', '2019-10-31 18:47:15', 'USER');

@@ -11,9 +11,8 @@ public class ViewEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "id_movie")
-    private MovieEntity movie;
+    @Column(name = "id_tmdb_movie")
+    private int tmdbMovieId;
 
     @Column(name = "date")
     private Date date;
@@ -26,12 +25,12 @@ public class ViewEntity {
         this.id = id;
     }
 
-    public MovieEntity getMovie() {
-        return movie;
+    public int getTmdbMovieId() {
+        return tmdbMovieId;
     }
 
-    public void setMovie(MovieEntity movie) {
-        this.movie = movie;
+    public void setTmdbMovieId(int tmdbMovieId) {
+        this.tmdbMovieId = tmdbMovieId;
     }
 
     public Date getDate() {

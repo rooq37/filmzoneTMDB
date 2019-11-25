@@ -109,15 +109,15 @@
 
             <div class="tab-pane fade" id="activities" role="tabpanel" aria-labelledby="activities-tab">
 
-                <div th:id="'activity_' + ${activityStat.index}" class="card border-dark mb-2" th:each="activity : ${profile.getActivities().getPageList()}">
+                <div th:id="'activity_' + ${activityDTOStat.index}" class="card border-dark mb-2" th:each="activityDTO : ${profile.getActivities().getPageList()}">
                     <div class="card-body">
                         <div class="media">
-                            <img th:src="${activity.getCover().getSource()}" th:alt="${activity.getMovieTitle()}" class="mr-3 img-fluid" style="height:100px;">
+                            <img th:src="${activityDTO.getCover().getSource()}" th:alt="${activityDTO.getMovieTitle()}" class="mr-3 img-fluid" style="height:100px;">
                             <div class="media-body">
-                                <h5 class="mt-0" ><a th:text="${activity.getMovieTitle()}" th:href="@{/movie/{id} (id=${activity.getMovieId()})}" class="text-dark" >Movie title</a></h5>
-                                <span th:text="${activity.getContent()}">User rated the movie with 5</span>
+                                <h5 class="mt-0" ><a th:text="${activityDTO.getMovieTitle()}" th:href="@{/movie/{id} (id=${activityDTO.getMovieId()})}" class="text-dark" >Movie title</a></h5>
+                                <span th:text="${activityDTO.getContent()}">User rated the movie with 5</span>
                                 <br>
-                                <span><small th:text="${#dates.format(activity.getDate(), 'dd.MM.yyyy HH:mm')}" class="text-left font-weight-light text-dark">dd.MM.yyyy HH:mm</small></span>
+                                <span><small th:text="${#dates.format(activityDTO.getDate(), 'dd.MM.yyyy HH:mm')}" class="text-left font-weight-light text-dark">dd.MM.yyyy HH:mm</small></span>
                             </div>
                         </div>
                     </div>

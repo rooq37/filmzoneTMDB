@@ -24,8 +24,6 @@ public class ViewServiceTest {
     @Test
     public void getHome() {
         HomeDTO homeDTO = viewService.getHome();
-        assertThat(homeDTO.getNumberOfActiveUsers()).isEqualTo(1L);
-        assertThat(homeDTO.getNumberOfMoviesInDatabase()).isEqualTo(5L);
         assertThat(homeDTO.getNumberOfNewAccountsLastWeek()).isEqualTo(1L);
         assertThat(homeDTO.getNumberOfRatings()).isEqualTo(5L);
         assertThat(homeDTO.getNumberOfRatingsLastWeek()).isEqualTo(0L);

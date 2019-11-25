@@ -13,7 +13,7 @@ Feature: Filmy
     Examples:
       | Lata_produkcji_od | Lata_produkcji_do | Ocena_od | Ocena_do | Liczba_wyników | Tytul                                         |
       | 2000              | 2001              | 9        | 10       | 1              | Władca Pierścieni: Drużyna Pierścienia (2001) |
-      | 1900              | 2019              | 5        | 10       | 5              | Władca Pierścieni: Drużyna Pierścienia (2001) |
+      | 1900              | 2019              | 5        | 10       | 11             | Władca Pierścieni: Drużyna Pierścienia (2001) |
       | 2000              | 2002              | 9        | 9        | 1              | Władca Pierścieni: Drużyna Pierścienia (2001) |
       | 1972              | 1972              | 1        | 10       | 1              | Ojciec chrzestny (1972)                       |
       | 2001              | 2001              | 9        | 9        | 1              | Władca Pierścieni: Drużyna Pierścienia (2001) |

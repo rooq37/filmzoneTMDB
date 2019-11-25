@@ -1,15 +1,18 @@
 package com.rooq37.filmzone.services;
 
-import com.rooq37.filmzone.activities.ActivitiesForm;
-import com.rooq37.filmzone.activities.Activity;
+import com.rooq37.filmzone.dtos.ActivitiesDTO;
+import com.rooq37.filmzone.dtos.ActivityDTO;
+import com.rooq37.filmzone.dtos.ImageDTO;
 import com.rooq37.filmzone.entities.CommentEntity;
 import com.rooq37.filmzone.entities.RatingEntity;
 import com.rooq37.filmzone.entities.UserEntity;
+import info.movito.themoviedbapi.model.MovieDb;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,13 +20,13 @@ import java.util.stream.Collectors;
 public class ActivityService {
 
     @Autowired
-    private HelperService helperService;
-    @Autowired
     private UserService userService;
+    @Autowired
+    private HelperService helperService;
 
-    public ActivitiesForm getActivities(String currentUserEmail, int year){
+    public ActivitiesDTO getActivities(String currentUserEmail, int year){
         UserEntity currentUser = userService.getUserByEmail(currentUserEmail);
-        List<Activity> activities = new ArrayList<>();
+        List<ActivityDTO> activities = new ArrayList<>();
         Calendar cal = Calendar.getInstance();
 
         for(UserEntity followed : currentUser.getFollowed()){
@@ -39,37 +42,39 @@ public class ActivityService {
         return mapToActivitiesForm(activities);
     }
 
-    private ActivitiesForm mapToActivitiesForm(List<Activity> activities){
-        ActivitiesForm activitiesForm = new ActivitiesForm();
+    private ActivitiesDTO mapToActivitiesForm(List<ActivityDTO> activities){
+        ActivitiesDTO activitiesDTO = new ActivitiesDTO();
         Calendar cal = Calendar.getInstance();
-        for(Activity activity : activities){
-            cal.setTime(activity.getDate());
-            activitiesForm.getMonthByNumber(cal.get(Calendar.MONTH) + 1).add(activity);
+        for(ActivityDTO activityDTO : activities){
+            cal.setTime(activityDTO.getDate());
+            activitiesDTO.getMonthByNumber(cal.get(Calendar.MONTH) + 1).add(activityDTO);
         }
-        activitiesForm.sortByDate();
-        return activitiesForm;
+        activitiesDTO.sortByDate();
+        return activitiesDTO;
     }
 
-    public Activity getCommentAsActivity(CommentEntity comment){
-        Activity activity = new Activity();
-        activity.setDate(comment.getDate());
-        activity.setCover(helperService.getCover(comment.getMovie()));
-        activity.setMovieTitle(comment.getMovie().getTitle());
-        activity.setMovieId(comment.getMovie().getId());
+    public ActivityDTO getCommentAsActivity(CommentEntity comment){
+        ActivityDTO activityDTO = getActivity(comment.getTmdbMovieId(), comment.getDate());
         String content = "Użytkownik " + comment.getUser().getNickname() + " dodał komentarz pod filmem: " + comment.getContent();
-        activity.setContent(content);
-        return activity;
+        activityDTO.setContent(content);
+        return activityDTO;
     }
 
-    public Activity getRatingAsActivity(RatingEntity rating){
-        Activity activity = new Activity();
-        activity.setDate(rating.getDate());
-        activity.setCover(helperService.getCover(rating.getMovie()));
-        activity.setMovieTitle(rating.getMovie().getTitle());
-        activity.setMovieId(rating.getMovie().getId());
+    public ActivityDTO getRatingAsActivity(RatingEntity rating){
+        ActivityDTO activityDTO = getActivity(rating.getTmdbMovieId(), rating.getDate());
         String content = "Użytkownik " + rating.getUser().getNickname() + " ocenił film na ocenę " + rating.getValue();
-        activity.setContent(content);
-        return activity;
+        activityDTO.setContent(content);
+        return activityDTO;
+    }
+
+    private ActivityDTO getActivity(Integer tmdbMovieId, Date date) {
+        MovieDb movie = helperService.getBasicMovieDb(tmdbMovieId);
+        ActivityDTO activityDTO = new ActivityDTO();
+        activityDTO.setDate(date);
+        activityDTO.setCover(new ImageDTO(movie.getTitle(), helperService.getBasicImageUrl() + movie.getPosterPath(), "TMDB"));
+        activityDTO.setMovieTitle(movie.getTitle());
+        activityDTO.setMovieId(movie.getId());
+        return activityDTO;
     }
 
 }

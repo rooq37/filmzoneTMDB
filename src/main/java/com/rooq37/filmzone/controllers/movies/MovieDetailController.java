@@ -33,7 +33,7 @@ public class MovieDetailController {
     @RequestMapping(value = "/movie/{id}", method = RequestMethod.GET)
     public String displayMovie(Principal principal,
                                Model model,
-                               @PathVariable Long id,
+                               @PathVariable int id,
                                @RequestParam(value = "page", defaultValue = "1") Integer page,
                                @RequestParam(value = "size", defaultValue = "10") Integer size,
                                @RequestParam(value = "sort", defaultValue = "date:DESC") String sort) {
@@ -48,7 +48,8 @@ public class MovieDetailController {
             model.addAttribute("userRating", movieService.getMovieRatingByUser(id, principal.getName()));
             model.addAttribute("myMovies", favouriteListService.getMyMovies(id, principal.getName()));
         }
-        model.addAttribute("movieDetailsDTO", movieService.getMovieDetailsDTO(id));
+        model.addAttribute("basicImgUrl", movieService.getBasicImageUrl());
+        model.addAttribute("movieDetailsDTO", movieService.getMovieDetails(id));
         model.addAttribute("commentPage", commentPage);
 
         return "movies/movieDetailPage";
@@ -57,13 +58,7 @@ public class MovieDetailController {
     @RequestMapping(value = "/rateMovie", method = RequestMethod.POST)
     public String rateMovie(Principal principal, @RequestParam(value = "rating") String rating, @RequestParam(value = "rating_movieId") String movieId){
 
-        if(rating.equals("0")){
-            favouriteListService.createFavouriteMovieList(principal.getName(), I_WANT_TO_WATCH_LIST);
-            favouriteListService.addMovieToFavouriteList(Long.valueOf(movieId), principal.getName(), I_WANT_TO_WATCH_LIST);
-        }else{
-            favouriteListService.removeMovieFromList(principal.getName(), I_WANT_TO_WATCH_LIST, Long.valueOf(movieId));
-        }
-        movieService.rateMovie(Long.valueOf(movieId), principal.getName(), Integer.valueOf(rating));
+        movieService.rateMovie(Integer.valueOf(movieId), principal.getName(), Integer.valueOf(rating));
 
         return "redirect:/movie/" + movieId;
     }
@@ -71,7 +66,7 @@ public class MovieDetailController {
     @RequestMapping(value = "/addCommentToMovie", method = RequestMethod.POST)
     public String addCommentToMovie(Principal principal, @RequestParam(value = "comment_content") String content, @RequestParam(value = "comment_movieId") String movieId){
 
-        movieService.addCommentToMovie(Long.valueOf(movieId), principal.getName(), content);
+        movieService.addCommentToMovie(Integer.valueOf(movieId), principal.getName(), content);
         return "redirect:/movie/" + movieId + "#comments";
     }
 
@@ -88,10 +83,10 @@ public class MovieDetailController {
                 notificationService.addErrorMessage(message);
                 return "redirect:/movie/" + movieId;
             }else{
-                favouriteListService.addMovieToFavouriteList(Long.valueOf(movieId), principal.getName(), newListName);
+                favouriteListService.addMovieToFavouriteList(Integer.valueOf(movieId), principal.getName(), newListName);
             }
         }else if(action.equals("add")){
-            favouriteListService.addMovieToFavouriteList(Long.valueOf(movieId), principal.getName(), selectedList);
+            favouriteListService.addMovieToFavouriteList(Integer.valueOf(movieId), principal.getName(), selectedList);
         }
 
         return "redirect:/movie/" + movieId + "#mymovies";

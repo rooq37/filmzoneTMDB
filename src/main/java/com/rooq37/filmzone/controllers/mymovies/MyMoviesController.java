@@ -64,7 +64,7 @@ public class MyMoviesController {
                                 @RequestParam(value = "listName") String listName,
                                 @RequestParam(value = "movieId") String movieId){
 
-        notificationService.addInfoMessage(favouriteListService.removeMovieFromList(principal.getName(), listName, Long.valueOf(movieId)));
+        notificationService.addInfoMessage(favouriteListService.removeMovieFromList(principal.getName(), listName, Integer.valueOf(movieId)));
         return "redirect:/myMovies?listName=" + listName;
     }
 

@@ -1,14 +1,13 @@
 package com.rooq37.filmzone.services;
 
 import com.rooq37.filmzone.dtos.MovieSimpleDTO;
-import com.rooq37.filmzone.entities.MovieEntity;
 import com.rooq37.filmzone.entities.ViewEntity;
 import com.rooq37.filmzone.dtos.HomeDTO;
-import com.rooq37.filmzone.mappers.MovieSimpleMapper;
-import com.rooq37.filmzone.repositories.MovieRepository;
 import com.rooq37.filmzone.repositories.RatingRepository;
 import com.rooq37.filmzone.repositories.UserRepository;
 import com.rooq37.filmzone.repositories.ViewRepository;
+import info.movito.themoviedbapi.TmdbApi;
+import info.movito.themoviedbapi.TmdbMovies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,46 +16,48 @@ import java.util.*;
 @Service
 public class ViewService {
 
+    private static final String API_KEY = "5a46d5b61d76c153823d4be68aed3798";
+
     private static final int NUMBER_OF_MOVIES_IN_CAROUSEL = 5;
 
     @Autowired
     private ViewRepository viewRepository;
     @Autowired
-    private MovieRepository movieRepository;
-    @Autowired
     private UserRepository userRepository;
     @Autowired
     private RatingRepository ratingRepository;
+    @Autowired
+    private HelperService helperService;
 
-    public void saveViewLog(Long movieId){
-        MovieEntity movieEntity = movieRepository.findMovieEntityById(movieId);
+    public void saveViewLog(int tmdbMovieId){
         ViewEntity viewEntity = new ViewEntity();
-        viewEntity.setMovie(movieEntity);
+        viewEntity.setTmdbMovieId(tmdbMovieId);
         viewEntity.setDate(new Date());
         viewRepository.save(viewEntity);
     }
 
     private List<MovieSimpleDTO> getMostPopularMoviesLastWeek(){
         Date date = getDateOneWeekAgo();
+        TmdbApi api = new TmdbApi(API_KEY);
+        TmdbMovies movies = api.getMovies();
         List<MovieSimpleDTO> mostPopularMovies = new ArrayList<>();
-        for(MovieEntity movie : movieRepository.findAll()){
-            MovieSimpleMapper mapper = new MovieSimpleMapper(movie);
-            MovieSimpleDTO movDTO = mapper.getMovieSimpleDTO();
-            movDTO.setNumberOfSearches(viewRepository.countByMovieAndDateAfter(movie, date));
+        List<Integer> mostSearchedIds = viewRepository.findMostSearchedMovies(date);
+        int sublistMaxSize = Math.min(NUMBER_OF_MOVIES_IN_CAROUSEL, mostSearchedIds.size());
+        for(Integer id : mostSearchedIds.subList(0, sublistMaxSize)){
+            MovieSimpleDTO movDTO = helperService.getMovieSimpleDTO(id);
+            movDTO.setFzNumberOfSearches(viewRepository.countByTmdbMovieIdAndDateAfter(id, date));
             mostPopularMovies.add(movDTO);
         }
 
-        mostPopularMovies.sort(Comparator.comparingLong(MovieSimpleDTO::getNumberOfSearches).reversed());
-        return mostPopularMovies.subList(0, NUMBER_OF_MOVIES_IN_CAROUSEL);
+        return mostPopularMovies;
     }
 
     public HomeDTO getHome(){
         HomeDTO homeDTO = new HomeDTO();
 
         homeDTO.setMostPopularMovies(getMostPopularMoviesLastWeek());
-        homeDTO.setNumberOfMoviesInDatabase(movieRepository.count());
+
         homeDTO.setNumberOfRegisteredAccounts(userRepository.count());
-        homeDTO.setNumberOfActiveUsers(userRepository.count());
         homeDTO.setNumberOfRatings(ratingRepository.count());
         homeDTO.setNumberOfSearches(viewRepository.count());
 

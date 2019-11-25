@@ -11,9 +11,8 @@ public class RatingEntity{
     @EmbeddedId
     private RatingPk ratingPk;
 
-    @ManyToOne
-    @JoinColumn(name = "id_movie", insertable = false, updatable = false)
-    private MovieEntity movie;
+    @Column(name = "id_tmdb_movie", insertable = false, updatable = false)
+    private Integer tmdbMovieId;
 
     @ManyToOne
     @JoinColumn(name = "id_user", insertable = false, updatable = false)
@@ -30,7 +29,7 @@ public class RatingEntity{
         if (getRatingPk() == null) {
             RatingPk pk = new RatingPk();
             pk.setUserId(getUser().getId());
-            pk.setMovieId(getMovie().getId());
+            pk.setMovieId(tmdbMovieId);
             setRatingPk(pk);
         }
     }
@@ -43,12 +42,12 @@ public class RatingEntity{
         this.ratingPk = ratingPk;
     }
 
-    public MovieEntity getMovie() {
-        return movie;
+    public Integer getTmdbMovieId() {
+        return tmdbMovieId;
     }
 
-    public void setMovie(MovieEntity movie) {
-        this.movie = movie;
+    public void setTmdbMovieId(Integer tmdbMovieId) {
+        this.tmdbMovieId = tmdbMovieId;
     }
 
     public UserEntity getUser() {

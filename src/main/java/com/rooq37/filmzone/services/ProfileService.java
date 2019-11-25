@@ -1,6 +1,6 @@
 package com.rooq37.filmzone.services;
 
-import com.rooq37.filmzone.activities.Activity;
+import com.rooq37.filmzone.dtos.ActivityDTO;
 import com.rooq37.filmzone.dtos.MovieSimpleDTO;
 import com.rooq37.filmzone.entities.CommentEntity;
 import com.rooq37.filmzone.entities.RatingEntity;
@@ -27,6 +27,8 @@ public class ProfileService {
     private UserRepository userRepository;
     @Autowired
     private ActivityService activityService;
+    @Autowired
+    private HelperService helperService;
 
     public ProfileDTO getProfile(String userEmail){
         UserEntity user = userService.getUserByEmail(userEmail);
@@ -84,16 +86,17 @@ public class ProfileService {
         List<AbstractMap.SimpleEntry<MovieSimpleDTO, Integer>> resultList = new ArrayList<>();
 
         for(RatingEntity rating : user.getRatings())
-            resultList.add(new AbstractMap.SimpleEntry<>(new MovieSimpleMapper(rating.getMovie()).getMovieSimpleDTO(), rating.getValue()));
+            if(rating.getValue() > 0)
+                resultList.add(new AbstractMap.SimpleEntry<>(new MovieSimpleMapper(helperService.getBasicMovieDb(rating.getTmdbMovieId())).getMovieSimpleDTO(), rating.getValue()));
 
         resultList.sort((o1, o2) -> -1 * Integer.compare(o1.getValue(), o2.getValue()));
         return resultList;
     }
 
-    public PagedListHolder<Activity> getActivities(String userEmail, int pageSize){
+    public PagedListHolder<ActivityDTO> getActivities(String userEmail, int pageSize){
         UserEntity user = userService.getUserByEmail(userEmail);
 
-        List<Activity> activities = new ArrayList<>();
+        List<ActivityDTO> activities = new ArrayList<>();
 
         for(CommentEntity comment : user.getComments())
             activities.add(activityService.getCommentAsActivity(comment));
@@ -101,9 +104,9 @@ public class ProfileService {
         for(RatingEntity rating : user.getRatings())
             activities.add(activityService.getRatingAsActivity(rating));
 
-        activities.sort(Activity.dateComparator.reversed());
+        activities.sort(ActivityDTO.dateComparator.reversed());
 
-        PagedListHolder<Activity> pagedListHolder = new PagedListHolder<>(activities);
+        PagedListHolder<ActivityDTO> pagedListHolder = new PagedListHolder<>(activities);
         pagedListHolder.setPageSize(pageSize);
         pagedListHolder.setPage(0);
 

@@ -1,91 +1,73 @@
 package com.rooq37.filmzone.mappers;
 
-import com.rooq37.filmzone.dtos.CharacterDTO;
 import com.rooq37.filmzone.dtos.ImageDTO;
-import com.rooq37.filmzone.dtos.PersonDTO;
-import com.rooq37.filmzone.entities.*;
+import info.movito.themoviedbapi.model.*;
+import info.movito.themoviedbapi.model.core.NamedIdElement;
+import info.movito.themoviedbapi.model.people.PersonCast;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class MovieMapper {
 
-    private static final String MEDIA_TYPE_COVER = "COVER";
-    private static final String MEDIA_TYPE_PICTURE = "PICTURE";
-    private static final String MEDIA_TYPE_TRAILER = "TRAILER";
+    private static final String BASIC_YOUTUBE_URL = "https://www.youtube.com/embed/";
+    private static final String BASIC_URL = "http://image.tmdb.org/t/p/";
+    private static final String BASIC_IMG_SIZE = "w500";
+    private static final String ORIGINAL_IMG_SIZE = "original";
+    private static final String BASIC_SOURCE = "TMDB";
+
+    private static final String JOB_TYPE_DIRECTOR = "Director";
+    private static final String JOB_TYPE_SCENARIO = "Screenplay";
 
     private static final String DEFAULT_COVER_PATH = "../images/filmzone_default.png";
     private static final String DEFAULT_COVER_AUTHOR = "Filmzone";
 
-    protected static final String MOVIE_PERSON_TYPE_DIRECTOR = "DIRECTOR";
-    protected static final String MOVIE_PERSON_TYPE_SCENARIO = "SCENARIO";
-    protected static final String MOVIE_PERSON_TYPE_ACTOR = "ACTOR";
+    protected MovieDb movie;
 
-    //protected static final String PICTURES_PATH = "../images/";
-    protected static final String PICTURES_PATH = "../movie_media/";
-
-    protected MovieEntity movieEntity;
-
-    public MovieMapper(MovieEntity movieEntity){
-        this.movieEntity = movieEntity;
+    public MovieMapper(MovieDb movie){
+        this.movie = movie;
     }
 
     protected ImageDTO getCover(){
-        List<MediaEntity> covers = movieEntity.getMedia().stream()
-                .filter(mediaEntity -> mediaEntity.getType().equals(MEDIA_TYPE_COVER)).collect(Collectors.toList());
-        if(covers.isEmpty()){
-            return new ImageDTO(movieEntity.getTitle(), DEFAULT_COVER_PATH, DEFAULT_COVER_AUTHOR) ;
+        String coverPath = movie.getPosterPath();
+        if(coverPath == null || coverPath.isEmpty()){
+            return new ImageDTO(movie.getTitle(), DEFAULT_COVER_PATH, DEFAULT_COVER_AUTHOR) ;
         }else{
-            MediaEntity cover = covers.get(0);
-            return new ImageDTO(movieEntity.getTitle(), PICTURES_PATH + cover.getValue(), cover.getAuthor());
+            return new ImageDTO(movie.getTitle(), BASIC_URL + BASIC_IMG_SIZE + coverPath, BASIC_SOURCE);
         }
     }
 
     protected List<String> getCategories(){
-        return movieEntity.getCategories().stream().map(CategoryEntity::getName).collect(Collectors.toList());
+        return movie.getGenres().stream().map(NamedIdElement::getName).collect(Collectors.toList());
     }
 
     protected List<String> getCountries(){
-        return movieEntity.getCountries().stream().map(CountryEntity::getName).collect(Collectors.toList());
+        return movie.getProductionCountries().stream().map(ProductionCountry::getName).collect(Collectors.toList());
     }
 
-    protected List<PersonDTO> getDirectors(){
-        return movieEntity.getPeople().stream()
-                .filter(moviePersonEntity -> moviePersonEntity.getType().equals(MOVIE_PERSON_TYPE_DIRECTOR))
-                .map(moviePersonEntity -> new PersonDTO(moviePersonEntity.getPerson().getName(), moviePersonEntity.getPerson().getSurname()))
-                .collect(Collectors.toList());
+    protected List<String> getDirectors(){
+        return movie.getCrew().stream().filter(personCrew -> personCrew.getJob().equals(JOB_TYPE_DIRECTOR)).map(NamedIdElement::getName).collect(Collectors.toList());
     }
 
-    protected List<PersonDTO> getScenarios(){
-        return movieEntity.getPeople().stream()
-                .filter(moviePersonEntity -> moviePersonEntity.getType().equals(MOVIE_PERSON_TYPE_SCENARIO))
-                .map(moviePersonEntity -> new PersonDTO(moviePersonEntity.getPerson().getName(), moviePersonEntity.getPerson().getSurname()))
-                .collect(Collectors.toList());
+    protected List<String> getScenarios(){
+        return movie.getCrew().stream().filter(personCrew -> personCrew.getJob().equals(JOB_TYPE_SCENARIO)).map(NamedIdElement::getName).collect(Collectors.toList());
     }
 
     protected List<ImageDTO> getPictures(){
-        return  movieEntity.getMedia().stream()
-                .filter(mediaEntity -> mediaEntity.getType().equals(MEDIA_TYPE_PICTURE)).map(mediaEntity ->
-                        new ImageDTO(movieEntity.getTitle(), PICTURES_PATH + mediaEntity.getValue(), mediaEntity.getAuthor()))
+        return movie.getImages(ArtworkType.BACKDROP).stream()
+                .map(artwork -> new ImageDTO(movie.getTitle(), BASIC_URL + ORIGINAL_IMG_SIZE + artwork.getFilePath(), BASIC_SOURCE))
                 .collect(Collectors.toList());
     }
 
     protected String getTrailerUrl(){
-        List<MediaEntity> trailers = movieEntity.getMedia().stream()
-                .filter(mediaEntity -> mediaEntity.getType().equals(MEDIA_TYPE_TRAILER)).collect(Collectors.toList());
-        if(trailers.isEmpty()){
-            return "";
-        }else{
-            MediaEntity trailer = trailers.get(0);
-            return trailer.getValue();
-        }
+        List<Video> youtubeVideos = movie.getVideos().stream()
+                .filter(video -> video.getSite().equals("YouTube")).collect(Collectors.toList());
+        if(youtubeVideos.size() > 0) return BASIC_YOUTUBE_URL + youtubeVideos.get(0).getKey();
+        else return "";
     }
 
-    protected List<CharacterDTO> getCharacters(){
-        return movieEntity.getPeople().stream()
-                .filter(moviePersonEntity -> moviePersonEntity.getType().equals(MOVIE_PERSON_TYPE_ACTOR))
-                .map(moviePersonEntity -> new CharacterDTO(new PersonDTO(moviePersonEntity.getPerson().getName(),
-                        moviePersonEntity.getPerson().getSurname()), moviePersonEntity.getRole())).collect(Collectors.toList());
+    protected List<PersonCast> getCharacters(){
+        return movie.getCast();
     }
 
 }

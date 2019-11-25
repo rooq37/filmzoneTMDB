@@ -24,12 +24,15 @@
                                     <h7>
                                         <a href="#" class="badge badge-pill badge-dark" th:each="category : ${movie.getCategories()}" th:text="'#' + ${category}">#category</a>
                                     </h7>
-                                    <p class="card-text" th:text="${movie.getDescription()}">Description</p>
-                                    <ul>
-                                        <li class="font-weight-bold" th:text="'Liczba wyszukiwań: ' + ${movie.getNumberOfSearches()}">Number of searches</li>
-                                        <li class="font-weight-bold" th:text="'Średnia ocena: ' + ${movie.getAvgUsersRating()}">Average★</li>
-                                        <li class="font-weight-bold" th:text="'' + ${movie.getNumberOfPeopleWhoWatched()} + ' użytkowników oceniło ten film'">Number of people who watched</li>
-                                        <li class="font-weight-bold" th:text="'' + ${movie.getNumberOfPeopleWhoWantToWatch()} + ' chce go zobaczyć'">Number of people who want to watch</li>
+                                    <p class="card-text" th:text="${movie.getDescription().isEmpty()} ? 'Ten film nie ma jeszcze opisu...' : ${movie.getDescription()}">Description</p>
+                                    <ul class="list-inline">
+                                        <li class="font-weight-bold list-inline-item" th:text="'⦿ Średnia ocena TMDB: ' + ${movie.getTmdbVoteAvg()}">Tmdb vote average</li>
+                                        <li class="font-weight-bold list-inline-item" th:text="'⦿ Ocen w TMDB: ' + ${movie.getTmdbVoteCount()}">Tmdb vote count</li>
+                                    </ul>
+                                    <ul class="list-inline">
+                                        <li class="font-weight-bold list-inline-item" th:text="'⦿ Średnia ocena Filmzone: ' + ${movie.getFzVoteAvg()}">Filmzone vote average</li>
+                                        <li class="font-weight-bold list-inline-item" th:text="'⦿ Ocen w Filmzone: ' + ${movie.getFzVoteCount()}">Filmzone vote count</li>
+                                        <li class="font-weight-bold list-inline-item" th:text="'⦿ Wyszukań w Filmzone: ' + ${movie.getFzNumberOfSearches()}">Number of searches</li>
                                     </ul>
                                 </div>
                             </div>
@@ -39,54 +42,38 @@
             </div>
         </div>
     </div>
+
     <div class="jumbotron">
         <h2>Statystyki ogólne</h2>
         <hr class="my-4">
         <table class="table">
+            <thead>
+                <tr>
+                    <th scope="row">Nazwa statystyki</th>
+                    <th class="text-right">Ostatni tydzień</th>
+                    <th class="text-right">W sumie</th>
+                </tr>
+            </thead>
             <tbody>
             <tr>
-                <th scope="row">Filmy w bazie danych</th>
-                <td class="text-right" th:text="${homeView.getNumberOfMoviesInDatabase()}">number</td>
-            </tr>
-            <tr>
-                <th scope="row">Utworzone konta</th>
+                <td scope="row">Utworzone konta</td>
+                <td class="text-right" th:text="${homeView.getNumberOfNewAccountsLastWeek()}">number</td>
                 <td class="text-right" th:text="${homeView.getNumberOfRegisteredAccounts()}">number</td>
             </tr>
             <tr>
-                <th scope="row">Aktywni użytkownicy (zalogowani w ciągu ostatniego tygodnia)</th>
-                <td class="text-right" th:text="${homeView.getNumberOfActiveUsers()}">number</td>
-            </tr>
-            <tr>
-                <th scope="row">Liczba ocen filmów</th>
+                <td scope="row">Liczba ocen filmów</td>
+                <td class="text-right" th:text="${homeView.getNumberOfRatingsLastWeek()}">number</td>
                 <td class="text-right" th:text="${homeView.getNumberOfRatings()}">number</td>
             </tr>
             <tr>
-                <th scope="row">Liczba wyszukiwań filmów</th>
+                <td scope="row">Liczba wyszukiwań filmów</td>
+                <td class="text-right" th:text="${homeView.getNumberOfSearchesLastWeek()}">number</td>
                 <td class="text-right" th:text="${homeView.getNumberOfSearches()}">number</td>
             </tr>
             </tbody>
         </table>
     </div>
-    <div class="jumbotron">
-        <h2>Statystyki ostatniego tygodnia</h2>
-        <hr class="my-4">
-        <table class="table">
-            <tbody>
-            <tr>
-                <th scope="row">Nowe konta</th>
-                <td class="text-right" th:text="${homeView.getNumberOfNewAccountsLastWeek()}">number</td>
-            </tr>
-            <tr>
-                <th scope="row">Liczba ocen filmów</th>
-                <td class="text-right" th:text="${homeView.getNumberOfRatingsLastWeek()}">number</td>
-            </tr>
-            <tr>
-                <th scope="row">Liczba wyszukiwań filmów</th>
-                <td class="text-right" th:text="${homeView.getNumberOfSearchesLastWeek()}">number</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
+
 </main>
 </body>
 <footer th:replace="fragments/footer :: footer"></footer>

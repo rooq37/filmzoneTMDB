@@ -6,12 +6,12 @@
 <main role="main" class="container">
 
     <form th:action="@{/movies}" method="get" th:object="${moviesFilter}">
-        <input th:field="${moviesFilter.name}" hidden>
-        <div class="jumbotron">
+        <input name="searchedMovieName" th:value="${movieName}" hidden>
+        <div class="jumbotron" th:if="${movieName.isEmpty()}">
             <div class="row">
                 <div class="col-sm">
                     <div class="form-group">
-                        <label for="years_filter">Lata produkcji</label>
+                        <label for="years_filter">Rok produkcji</label>
                         <div class="input-group" id="years_filter">
                             <input type="number" class="form-control border-dark" placeholder="Od" th:field="${moviesFilter.minYear}">
                             <div class="input-group-append">
@@ -23,15 +23,15 @@
                 </div>
                 <div class="col-sm">
                     <div class="form-group">
-                        <label for="categories_filter">Kategorie</label>
+                        <label for="categories_filter">Kategoria</label>
                         <div class="input-group" id="categories_filter">
                             <input type="text" id="categories_input" class="form-control border-dark bg-white" th:field="${moviesFilter.selectedCategories}" readonly>
                             <div class="input-group-append">
                                 <button class="btn btn-outline-dark dropdown-toggle bg-dark text-white" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                                 <div class="dropdown-menu dropdown-menu-right px-3">
                                     <div class="form-check" th:each="category : ${moviesFilter.possibleCategories}">
-                                        <input class="form-check-input" th:value="${category}" name="category" type="checkbox" th:id="'cat_' + ${categoryStat.index}" onclick="getCategories()">
-                                        <label class="form-check-label" th:for="'cat_' + ${categoryStat.index}" th:text="${category}">Category name</label>
+                                        <input class="form-check-input" th:value="${category.getName()}" name="category" type="checkbox" th:id="'cat_' + ${categoryStat.index}" onclick="getCategories()">
+                                        <label class="form-check-label" th:for="'cat_' + ${categoryStat.index}" th:text="${category.getName()}">Category name</label>
                                     </div>
                                 </div>
                             </div>
@@ -40,30 +40,34 @@
                 </div>
                 <div class="col-sm">
                     <div class="form-group">
-                        <label for="country_filter">Kraje produkcji</label>
-                        <div class="input-group" id="country_filter">
-                            <input type="text" id="countries_input" class="form-control border-dark bg-white" th:field="${moviesFilter.selectedCountries}" readonly>
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-dark dropdown-toggle bg-dark text-white" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                                <div class="dropdown-menu dropdown-menu-right px-3">
-                                    <div class="form-check" th:each="country : ${moviesFilter.possibleCountries}">
-                                        <input class="form-check-input" th:value="${country}" name="country" type="checkbox" th:id="'country_' + ${countryStat.index}" onclick="getCountries()">
-                                        <label class="form-check-label" th:for="'country_' + ${countryStat.index}" th:text="${country}">Country name</label>
-                                    </div>
-                                </div>
-                            </div>
+                        <label for="vote_count_filter">Liczba ocen w TMDB</label>
+                        <div class="input-group" id="vote_count_filter">
+                            <select class="custom-select form-control border-dark bg-white" th:field="${moviesFilter.minVoteCount}">
+                                <option value="0">Dowolna</option>
+                                <option value="100">Powyżej 100</option>
+                                <option value="500">Powyżej 500</option>
+                                <option value="1000">Powyżej 1000</option>
+                                <option value="5000">Powyżej 5000</option>
+                            </select>
                         </div>
                     </div>
                 </div>
                 <div class="col-sm">
                     <div class="form-group">
-                        <label for="rate_filter">Ocena</label>
-                        <div class="input-group" id="rate_filter">
-                            <input type="number" max="10" min="0" class="form-control border-dark" placeholder="Od" th:field="${moviesFilter.minRate}">
-                            <div class="input-group-append">
-                                <span class="input-group-text bg-dark text-white border-dark"> - </span>
-                            </div>
-                            <input type="number" max="10" min="1" class="form-control border-dark" placeholder="Do" th:field="${moviesFilter.maxRate}">
+                        <label for="vote_avg_filter">Średnia ocen w TMDB</label>
+                        <div class="input-group" id="vote_avg_filter">
+                            <select class="custom-select form-control border-dark bg-white"th:field="${moviesFilter.minRate}">
+                                <option value="0">Dowolna</option>
+                                <option value="1">Powyżej 1</option>
+                                <option value="2">Powyżej 2</option>
+                                <option value="3">Powyżej 3</option>
+                                <option value="4">Powyżej 4</option>
+                                <option value="5">Powyżej 5</option>
+                                <option value="6">Powyżej 6</option>
+                                <option value="7">Powyżej 7</option>
+                                <option value="8">Powyżej 8</option>
+                                <option value="9">Powyżej 9</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -73,84 +77,74 @@
             </div>
         </div>
 
-        <div class="jumbotron pb-3 pt-4" id="results">
+        <div class="jumbotron pb-3 pt-4" id="results" th:object="${moviesPage}">
 
             <div class="row pb-4">
-                <div class="col" th:if="${moviesPage.getTotalElements()} > 0">
+                <div class="col" th:if="${moviesPage.getTotalResults()} > 0">
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <button class="btn btn-outline-dark bg-dark text-white px-4" type="submit">Sortuj</button>
                         </div>
-                        <select class="custom-select border-dark" th:name="sort">
-                            <option value="averageUsersRating:DESC" th:selected="${#httpServletRequest.getParameter('sort') == 'averageUsersRating:DESC'}">Wg. oceny malejąco</option>
-                            <option value="averageUsersRating:ASC" th:selected="${#httpServletRequest.getParameter('sort') == 'averageUsersRating:ASC'}">Wg. oceny rosnąco</option>
-                            <option value="title:DESC" th:selected="${#httpServletRequest.getParameter('sort') == 'title:DESC'}">Wg. nazwy malejąco</option>
-                            <option value="title:ASC" th:selected="${#httpServletRequest.getParameter('sort') == 'title:ASC'}">Wg. nazwy rosnąco</option>
-                            <option value="year:DESC" th:selected="${#httpServletRequest.getParameter('sort') == 'year:DESC'}">Wg. roku malejąco</option>
-                            <option value="year:ASC" th:selected="${#httpServletRequest.getParameter('sort') == 'year:ASC'}">Wg. roku rosnąco</option>
-                            <option value="numberOfRatings:DESC" th:selected="${#httpServletRequest.getParameter('sort') == 'numberOfRatings:DESC'}">Wg. liczby ocen malejąco</option>
-                            <option value="numberOfRatings:ASC" th:selected="${#httpServletRequest.getParameter('sort') == 'numberOfRatings:ASC'}">Wg. liczby ocen rosnąco</option>
+                        <select class="custom-select border-dark" th:field="${moviesFilter.sortBy}">
+                            <option value="vote_average.desc">Wg. oceny malejąco</option>
+                            <option value="vote_average.asc">Wg. oceny rosnąco</option>
+                            <option value="primary_release_date.desc">Wg. roku malejąco</option>
+                            <option value="primary_release_date.asc">Wg. roku rosnąco</option>
+                            <option value="vote_count.desc">Wg. liczby ocen malejąco</option>
+                            <option value="vote_count.asc">Wg. liczby ocen rosnąco</option>
                         </select>
                     </div>
                 </div>
-                <div class="col text-center">
+                <div class="col"></div>
+                <div class="col text-right">
                     <h4>
-                        <span class="badge bg-dark text-white py-2">Liczba wyników <span class="badge badge-light" id="movies:numberOfElements" th:text="${moviesPage.getTotalElements()}">num</span></span>
+                        <span class="badge bg-dark text-white py-2">Liczba wyników <span class="badge badge-light" id="movies:numberOfElements" th:text="${moviesPage.getTotalResults()}">num</span></span>
                     </h4>
-                </div>
-                <div class="col" th:if="${moviesPage.getTotalElements()} > 0">
-                    <div class="input-group">
-                        <select class="custom-select border-dark" th:name="size" th:field="${moviesPage.size}">
-                            <option value="10">10 wyników na strone</option>
-                            <option value="20">20 wyników na strone</option>
-                            <option value="50">50 wyników na strone</option>
-                        </select>
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-dark bg-dark text-white px-4" type="submit">Pokaż</button>
-                        </div>
-                    </div>
                 </div>
             </div>
 
-            <div class="card mb-3 border-dark" th:each="movie : ${moviesPage.getContent()}">
+            <div class="card mb-3 border-dark" th:each="movie : ${moviesPage.getResults()}">
                 <div class="row no-gutters">
                     <div class="col-md-2">
-                        <img th:src="${movie.getCover().getSource()}" class="card-img" th:alt="${movie.getTitle()}" th:title="'© ' + ${movie.getCover().getAuthor()}">
+                        <img th:src="${movie.getCover().getSource()}" class="card-img" th:alt="${movie.getCover().getName()}">
                     </div>
                     <div class="col-md-10">
                         <div class="card-body">
                             <h3 class="card-title"><a class="text-dark" th:href="@{/movie/{id} (id=${movie.getMovieId()})}" th:text="${movie.getTitle()} + ' (' + ${movie.getYear()} + ')'">Title</a></h3>
                             <h7>
-                                <a href="#" class="badge badge-pill badge-dark" th:each="category : ${movie.getCategories()}" th:text="'#' + ${category}">category</a>
+                                <a href="#" class="badge badge-pill badge-dark" th:each="category : ${movie.getCategories()}" th:text="'#' + ${category}">#category</a>
                             </h7>
-                            <p></p>
-                            <p class="card-text" th:text="${movie.getDescription().isEmpty()} ? 'Ten film nie ma jeszcze opisu...' : ${movie.getDescription()}">description</p>
+                            <p class="card-text" th:text="${movie.getDescription().isEmpty()} ? 'Ten film nie ma jeszcze opisu...' : ${movie.getDescription()}">Description</p>
                             <ul class="list-inline">
-                                <li class="list-inline-item font-weight-bold" th:text="'⦿ Średnia ocena: ' + ${movie.getAvgUsersRating()}">Average★</li>
-                                <li class="list-inline-item font-weight-bold" th:text="'⦿ ' + ${movie.getNumberOfPeopleWhoWatched()} + ' użytkowników oceniło ten film'">Number of people who watched</li>
-                                <li class="list-inline-item font-weight-bold" th:text="'⦿ ' + ${movie.getNumberOfPeopleWhoWantToWatch()} + ' chce go zobaczyć'">Number of people who want to watch</li>
+                                <li class="font-weight-bold list-inline-item" th:text="'⦿ Średnia ocena TMDB: ' + ${movie.getTmdbVoteAvg()}">Tmdb vote average</li>
+                                <li class="font-weight-bold list-inline-item" th:text="'⦿ Ocen w TMDB: ' + ${movie.getTmdbVoteCount()}">Tmdb vote count</li>
+                            </ul>
+                            <ul class="list-inline">
+                                <li class="font-weight-bold list-inline-item" th:text="'⦿ Średnia ocena Filmzone: ' + ${movie.getFzVoteAvg()}">Filmzone vote average</li>
+                                <li class="font-weight-bold list-inline-item" th:text="'⦿ Ocen w Filmzone: ' + ${movie.getFzVoteCount()}">Filmzone vote count</li>
+                                <li class="font-weight-bold list-inline-item" th:text="'⦿ Wyszukań w Filmzone: ' + ${movie.getFzNumberOfSearches()}">Number of searches</li>
                             </ul>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <nav class="pt-3" th:if="${moviesPage.getTotalElements()} > 0">
+            <nav class="pt-3" th:if="${moviesPage.getTotalPages()} > 1">
                 <ul class="pagination justify-content-center">
-                    <li class="page-item" th:classappend="${moviesPage.first}? disabled">
-                        <a class="page-link border-dark text-dark" th:href="@{/movies#results (size=${moviesPage.size}, page=1, sort=${#httpServletRequest.getParameter('sort')})}">|<</a>
+                    <li class="page-item" th:classappend="${moviesPage.getPage() == 1}? disabled">
+                        <button name="page" type="submit" class="page-link border-dark text-dark" th:value="1">|<</button>
                     </li>
-                    <li class="page-item" th:classappend="${!moviesPage.hasPrevious()}? disabled">
-                        <a class="page-link border-dark text-dark" th:href="@{/movies#results (size=${moviesPage.size}, page=${moviesPage.getNumber()}, sort=${#httpServletRequest.getParameter('sort')})}"><</a>
+                    <li class="page-item" th:classappend="${moviesPage.getPage() == 1}? disabled">
+                        <button name="page" class="page-link border-dark text-dark" th:value="${moviesPage.getPage() - 1}"><</button>
                     </li>
                     <li class="page-item disabled">
-                        <a class="page-link border-dark bg-dark text-white" th:text="${moviesPage.getNumber()+1} + ' z ' + ${moviesPage.getTotalPages()}">current page</a>
+                        <a class="page-link border-dark bg-dark text-white" th:text="${moviesPage.getPage()} + ' z ' + ${moviesPage.getTotalPages()}">current page</a>
                     </li>
-                    <li class="page-item" th:classappend="${!moviesPage.hasNext()}? disabled">
-                        <a class="page-link border-dark text-dark" th:href="@{/movies#results (size=${moviesPage.size}, page=${moviesPage.getNumber()+2}, sort=${#httpServletRequest.getParameter('sort')})}">></a>
+                    <li class="page-item" th:classappend="${moviesPage.getPage() >= moviesPage.getTotalPages()}? disabled">
+                        <button name="page" class="page-link border-dark text-dark" th:value="${moviesPage.getPage() + 1}">></button>
                     </li>
-                    <li class="page-item" th:classappend="${moviesPage.last}? disabled">
-                        <a class="page-link border-dark text-dark" th:href="@{/movies#results (size=${moviesPage.size}, page=${moviesPage.getTotalPages()}, sort=${#httpServletRequest.getParameter('sort')})}">>|</a>
+                    <li class="page-item" th:classappend="${moviesPage.getPage() == moviesPage.getTotalPages()}? disabled">
+                        <button name="page" class="page-link border-dark text-dark" th:value="${moviesPage.getTotalPages()}">>|</button>
                     </li>
                 </ul>
             </nav>

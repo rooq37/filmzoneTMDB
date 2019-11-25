@@ -5,24 +5,25 @@ import java.util.List;
 
 public class MovieSimpleDTO {
 
-    private Long movieId;
+    private int movieId;
     private String title;
     private ImageDTO cover;
     private List<String> categories;
     private String country;
-    private String description;
-    private int year;
+    protected String description;
+    private String releaseDate;
 
-    private String avgUsersRating;
-    private String numberOfPeopleWhoWatched;
-    private String numberOfPeopleWhoWantToWatch;
-    private long numberOfSearches;
+    private double tmdbVoteAvg;
+    private long tmdbVoteCount;
+    private long fzNumberOfSearches;
+    private double fzVoteAvg;
+    private long fzVoteCount;
 
-    public Long getMovieId() {
+    public int getMovieId() {
         return movieId;
     }
 
-    public void setMovieId(Long movieId) {
+    public void setMovieId(int movieId) {
         this.movieId = movieId;
     }
 
@@ -59,51 +60,63 @@ public class MovieSimpleDTO {
     }
 
     public String getDescription() {
-        return description;
+        if(description.length() > 200) return description.substring(0, 200) + "...";
+        else return description;
     }
 
     public void setDescription(String description) {
         this.description = description;
     }
 
-    public int getYear() {
-        return year;
+    public String getYear(){
+        return releaseDate.substring(0,4);
     }
 
-    public void setYear(int year) {
-        this.year = year;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public String getAvgUsersRating() {
-        return avgUsersRating;
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
     }
 
-    public void setAvgUsersRating(String avgUsersRating) {
-        this.avgUsersRating = avgUsersRating;
+    public String getTmdbVoteAvg() {
+        return String.format("%.2f", tmdbVoteAvg);
     }
 
-    public String getNumberOfPeopleWhoWatched() {
-        return numberOfPeopleWhoWatched;
+    public void setTmdbVoteAvg(double tmdbVoteAvg) {
+        this.tmdbVoteAvg = tmdbVoteAvg;
     }
 
-    public void setNumberOfPeopleWhoWatched(String numberOfPeopleWhoWatched) {
-        this.numberOfPeopleWhoWatched = numberOfPeopleWhoWatched;
+    public String getTmdbVoteCount() {
+        return String.format("%,d", tmdbVoteCount);
     }
 
-    public String getNumberOfPeopleWhoWantToWatch() {
-        return numberOfPeopleWhoWantToWatch;
+    public void setTmdbVoteCount(long tmdbVoteCount) {
+        this.tmdbVoteCount = tmdbVoteCount;
     }
 
-    public void setNumberOfPeopleWhoWantToWatch(String numberOfPeopleWhoWantToWatch) {
-        this.numberOfPeopleWhoWantToWatch = numberOfPeopleWhoWantToWatch;
+    public String getFzNumberOfSearches() {
+        return String.format("%,d", fzNumberOfSearches);
     }
 
-    public long getNumberOfSearches() {
-        return numberOfSearches;
+    public void setFzNumberOfSearches(long fzNumberOfSearches) {
+        this.fzNumberOfSearches = fzNumberOfSearches;
     }
 
-    public void setNumberOfSearches(long numberOfSearches) {
-        this.numberOfSearches = numberOfSearches;
+    public String getFzVoteAvg() {
+        return String.format("%.2f", fzVoteAvg);
     }
 
+    public void setFzVoteAvg(double fzVoteAvg) {
+        this.fzVoteAvg = fzVoteAvg;
+    }
+
+    public String getFzVoteCount() {
+        return String.format("%,d", fzVoteCount);
+    }
+
+    public void setFzVoteCount(long fzVoteCount) {
+        this.fzVoteCount = fzVoteCount;
+    }
 }

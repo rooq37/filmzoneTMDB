@@ -1,15 +1,12 @@
 package com.rooq37.filmzone.services;
 
-import com.rooq37.filmzone.controllers.movies.MovieDetailController;
 import com.rooq37.filmzone.dtos.MovieSimpleDTO;
 import com.rooq37.filmzone.entities.FavouriteListEntity;
-import com.rooq37.filmzone.entities.MovieEntity;
-import com.rooq37.filmzone.entities.RatingEntity;
-import com.rooq37.filmzone.mappers.MovieSimpleMapper;
 import com.rooq37.filmzone.dtos.MyMoviesDTO;
+import com.rooq37.filmzone.mappers.MovieSimpleMapper;
 import com.rooq37.filmzone.repositories.FavouriteListRepository;
-import com.rooq37.filmzone.repositories.MovieRepository;
-import com.rooq37.filmzone.repositories.RatingRepository;
+import info.movito.themoviedbapi.TmdbApi;
+import info.movito.themoviedbapi.TmdbMovies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Service;
@@ -21,14 +18,12 @@ import java.util.stream.Collectors;
 @Service
 public class FavouriteListService {
 
+    private static final String API_KEY = "5a46d5b61d76c153823d4be68aed3798";
+
     @Autowired
     private FavouriteListRepository favouriteListRepository;
     @Autowired
     private UserService userService;
-    @Autowired
-    private MovieRepository movieRepository;
-    @Autowired
-    private RatingRepository ratingRepository;
 
     public List<String> getUserAllLists(String userEmail){
         return favouriteListRepository.findFavouriteListEntitiesByUser_Email(userEmail)
@@ -44,21 +39,21 @@ public class FavouriteListService {
         FavouriteListEntity fle = new FavouriteListEntity();
         fle.setUser(userService.getUserByEmail(userEmail));
         fle.setName(listName);
-        fle.setMovies(new HashSet<>());
         favouriteListRepository.save(fle);
         return null;
     }
 
-    public void addMovieToFavouriteList(Long movieId, String userEmail, String listName){
+    public void addMovieToFavouriteList(int tmdbMovieId, String userEmail, String listName){
         FavouriteListEntity fle = favouriteListRepository.findFavouriteListEntityByNameAndUser_Email(listName, userEmail);
-        fle.getMovies().add(movieRepository.findMovieEntityById(movieId));
+        fle.getTmdbMovieIds().add(tmdbMovieId);
         favouriteListRepository.save(fle);
     }
 
-    public MyMoviesDTO getMyMovies(Long movieId, String userEmail){
-        MovieEntity movieEntity = movieRepository.findMovieEntityById(movieId);
-        List<String> listsContainMovie = movieEntity.getFavouriteLists()
-                .stream().map(FavouriteListEntity::getName).collect(Collectors.toList());
+    public MyMoviesDTO getMyMovies(int movieId, String userEmail){
+        List<String> listsContainMovie = favouriteListRepository.findFavouriteListEntitiesByUser_Email(userEmail)
+                .stream().filter(favouriteListEntity -> favouriteListEntity.getTmdbMovieIds().contains(movieId))
+                .map(FavouriteListEntity::getName).collect(Collectors.toList());
+
         List<String> availableLists = getUserAllLists(userEmail);
         availableLists.removeAll(listsContainMovie);
         return new MyMoviesDTO(listsContainMovie, availableLists);
@@ -67,10 +62,12 @@ public class FavouriteListService {
     public PagedListHolder<MovieSimpleDTO> getFavouriteList(int currentPage, int pageSize, String userEmail, String listName) {
         if(listName.equals("-1")) return new PagedListHolder<>(Collections.emptyList());
 
+        TmdbApi api = new TmdbApi(API_KEY);
+        TmdbMovies movies = api.getMovies();
+
         FavouriteListEntity fle = favouriteListRepository.findFavouriteListEntityByNameAndUser_Email(listName, userEmail);
-        List<MovieSimpleDTO> list = (fle != null) ? fle.getMovies().stream().map(movieEntity ->
-                new MovieSimpleMapper(movieEntity).getMovieSimpleDTO()).collect(Collectors.toList()) : Collections.emptyList();
-        list.sort(Comparator.comparingLong(MovieSimpleDTO::getMovieId));
+        List<MovieSimpleDTO> list = (fle != null) ? fle.getTmdbMovieIds().stream().map(movieId ->
+                new MovieSimpleMapper(movies.getMovie(movieId, "pl")).getMovieSimpleDTO()).collect(Collectors.toList()) : Collections.emptyList();
 
         PagedListHolder<MovieSimpleDTO> pagedListHolder = new PagedListHolder<>(list);
         pagedListHolder.setPageSize(pageSize);
@@ -80,17 +77,14 @@ public class FavouriteListService {
     }
 
     @Transactional
-    public String removeMovieFromList(String userEmail, String listName, Long movieId){
+    public String removeMovieFromList(String userEmail, String listName, int movieId){
         FavouriteListEntity fle = favouriteListRepository.findFavouriteListEntityByNameAndUser_Email(listName, userEmail);
         if(fle != null){
-            MovieEntity movie = movieRepository.findMovieEntityById(movieId);
-            fle.getMovies().remove(movie);
+            fle.getTmdbMovieIds().remove(new Integer(movieId));
             favouriteListRepository.save(fle);
-            if(listName.equals(MovieDetailController.I_WANT_TO_WATCH_LIST)){
-                RatingEntity rating = ratingRepository.findByUser_EmailAndMovie_Id(userEmail, movieId);
-                if(rating != null) ratingRepository.delete(rating);
-            }
-            return "Pomyślnie usunięto film o nazwie " + movie.getTitle() + " z listy o nazwie " + listName + ".";
+            TmdbApi api = new TmdbApi(API_KEY);
+            TmdbMovies movies = api.getMovies();
+            return "Pomyślnie usunięto film o nazwie " + movies.getMovie(movieId, "pl").getTitle() + " z listy o nazwie " + listName + ".";
         }else{
             return "Lista o nazwie " + listName + " nie istnieje.";
         }

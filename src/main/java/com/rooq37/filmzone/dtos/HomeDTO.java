@@ -6,9 +6,7 @@ public class HomeDTO {
 
     private List<MovieSimpleDTO> mostPopularMovies;
 
-    private long numberOfMoviesInDatabase;
     private long numberOfRegisteredAccounts;
-    private long numberOfActiveUsers;
     private long numberOfRatings;
     private long numberOfSearches;
 
@@ -24,28 +22,12 @@ public class HomeDTO {
         this.mostPopularMovies = mostPopularMovies;
     }
 
-    public long getNumberOfMoviesInDatabase() {
-        return numberOfMoviesInDatabase;
-    }
-
-    public void setNumberOfMoviesInDatabase(long numberOfMoviesInDatabase) {
-        this.numberOfMoviesInDatabase = numberOfMoviesInDatabase;
-    }
-
     public long getNumberOfRegisteredAccounts() {
         return numberOfRegisteredAccounts;
     }
 
     public void setNumberOfRegisteredAccounts(long numberOfRegisteredAccounts) {
         this.numberOfRegisteredAccounts = numberOfRegisteredAccounts;
-    }
-
-    public long getNumberOfActiveUsers() {
-        return numberOfActiveUsers;
-    }
-
-    public void setNumberOfActiveUsers(long numberOfActiveUsers) {
-        this.numberOfActiveUsers = numberOfActiveUsers;
     }
 
     public long getNumberOfRatings() {

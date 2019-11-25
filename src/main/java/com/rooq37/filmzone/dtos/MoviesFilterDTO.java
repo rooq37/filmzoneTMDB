@@ -1,15 +1,11 @@
 package com.rooq37.filmzone.dtos;
 
-import com.rooq37.filmzone.entities.CategoryEntity;
-import com.rooq37.filmzone.entities.CountryEntity;
-import com.rooq37.filmzone.entities.MovieEntity;
-import org.springframework.data.jpa.domain.Specification;
-
-import javax.persistence.criteria.*;
+import info.movito.themoviedbapi.model.Discover;
+import info.movito.themoviedbapi.model.Genre;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MoviesFilterDTO {
 
@@ -19,11 +15,10 @@ public class MoviesFilterDTO {
     private int minYear = 1900;
     private int maxYear = 2020;
     private String selectedCategories;
-    private List<String> possibleCategories;
-    private String selectedCountries;
-    private List<String> possibleCountries;
+    private List<Genre> possibleCategories;
+    private int minVoteCount = 500;
     private int minRate = 0;
-    private int maxRate = 10;
+    private String sortBy = "vote_average.desc";
 
     public String getName() {
         return name;
@@ -53,42 +48,34 @@ public class MoviesFilterDTO {
         return selectedCategories;
     }
 
-    private List<String> getSelectedCategoriesAsList(){
-        if(selectedCategories == null || selectedCategories.isEmpty()) return new ArrayList<>();
-        return new ArrayList<>(Arrays.asList(selectedCategories.split(DELIMITER)));
+    private String getSelectedCategoriesIds(){
+        if(selectedCategories == null || selectedCategories.isEmpty()) return "";
+        List<String> ids = new ArrayList<>();
+        for(Genre genre : possibleCategories){
+            if(selectedCategories.contains(genre.getName()))
+                ids.add(String.valueOf(genre.getId()));
+        }
+        return ids.stream().collect(Collectors.joining(DELIMITER));
     }
 
     public void setSelectedCategories(String selectedCategories) {
         this.selectedCategories = selectedCategories;
     }
 
-    public List<String> getPossibleCategories() {
+    public List<Genre> getPossibleCategories() {
         return possibleCategories;
     }
 
-    public void setPossibleCategories(List<String> possibleCategories) {
+    public void setPossibleCategories(List<Genre> possibleCategories) {
         this.possibleCategories = possibleCategories;
     }
 
-    public String getSelectedCountries() {
-        return selectedCountries;
+    public int getMinVoteCount() {
+        return minVoteCount;
     }
 
-    private List<String> getSelectedCountriesAsList(){
-        if(selectedCountries == null || selectedCountries.isEmpty()) return new ArrayList<>();
-        return new ArrayList<>(Arrays.asList(selectedCountries.split(DELIMITER)));
-    }
-
-    public void setSelectedCountries(String selectedCountries) {
-        this.selectedCountries = selectedCountries;
-    }
-
-    public List<String> getPossibleCountries() {
-        return possibleCountries;
-    }
-
-    public void setPossibleCountries(List<String> possibleCountries) {
-        this.possibleCountries = possibleCountries;
+    public void setMinVoteCount(int minVoteCount) {
+        this.minVoteCount = minVoteCount;
     }
 
     public int getMinRate() {
@@ -99,79 +86,25 @@ public class MoviesFilterDTO {
         this.minRate = minRate;
     }
 
-    public int getMaxRate() {
-        return maxRate;
+    public String getSortBy() {
+        return sortBy;
     }
 
-    public void setMaxRate(int maxRate) {
-        this.maxRate = maxRate;
+    public void setSortBy(String sortBy) {
+        this.sortBy = sortBy;
     }
 
-    public boolean checkIfCategoriesMatchFilter(List<String> movieCategories){
-        for(String selectedCategory : getSelectedCategoriesAsList()){
-            if(!movieCategories.contains(selectedCategory)) return false;
-        }
-        return true;
-    }
-
-    public boolean checkIfCountriesMatchFilter(List<String> movieCountries){
-        for(String selectedCountry : getSelectedCountriesAsList()){
-            if(!movieCountries.contains(selectedCountry)) return false;
-        }
-        return true;
-    }
-
-    private Predicate getCategoriesPredicate(Root<MovieEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder){
-        Predicate[] predicates = new Predicate[getSelectedCategoriesAsList().size()];
-        for(int i = 0; i < getSelectedCategoriesAsList().size(); i++){
-            Subquery<CategoryEntity> categorySubquery = criteriaQuery.subquery(CategoryEntity.class);
-            Root<CategoryEntity> categoryRoot = categorySubquery.from(CategoryEntity.class);
-            Expression<Collection<MovieEntity>> moviesCollection = categoryRoot.get("movies");
-
-            categorySubquery
-                    .select(categoryRoot)
-                    .where(criteriaBuilder.and(criteriaBuilder.equal(categoryRoot.get("name"), getSelectedCategoriesAsList().get(i)), criteriaBuilder.isMember(root, moviesCollection)));
-            predicates[i] = criteriaBuilder.exists(categorySubquery);
-        }
-        return criteriaBuilder.and(predicates);
-    }
-
-    private Predicate getCountriesPredicate(Root<MovieEntity> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder){
-        Predicate[] predicates = new Predicate[getSelectedCountriesAsList().size()];
-        for(int i = 0; i < getSelectedCountriesAsList().size(); i++){
-            Subquery<CountryEntity> countrySubquery = criteriaQuery.subquery(CountryEntity.class);
-            Root<CountryEntity> countryRoot = countrySubquery.from(CountryEntity.class);
-            Expression<Collection<MovieEntity>> moviesCollection = countryRoot.get("movies");
-
-            countrySubquery
-                    .select(countryRoot)
-                    .where(criteriaBuilder.and(criteriaBuilder.equal(countryRoot.get("name"), getSelectedCountriesAsList().get(i)), criteriaBuilder.isMember(root, moviesCollection)));
-            predicates[i] = criteriaBuilder.exists(countrySubquery);
-        }
-        return criteriaBuilder.and(predicates);
-    }
-
-    public Specification<MovieEntity> movieMatchesFilter() {
-        return (Specification<MovieEntity>) (root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.and(
-                criteriaBuilder.between(root.get("year"), minYear, maxYear),
-                criteriaBuilder.or(
-                        criteriaBuilder.between(root.get("averageUsersRating"), minRate, maxRate),
-                        criteriaBuilder.isNull(root.get("averageUsersRating"))
-                ),
-                getCategoriesPredicate(root, criteriaQuery, criteriaBuilder),
-                getCountriesPredicate(root, criteriaQuery, criteriaBuilder),
-                criteriaBuilder.or(
-                        criteriaBuilder.like(
-                                criteriaBuilder.lower(
-                                        root.get(
-                                                root.getModel().getDeclaredSingularAttribute("title", String.class)
-                                        )
-                                ), criteriaBuilder.lower(criteriaBuilder.literal("%" + name + "%")
-                                )
-                        ),
-                        criteriaBuilder.equal(criteriaBuilder.literal(name), "")
-                )
-        );
+    public Discover getDiscover(){
+        Discover discover = new Discover()
+                .language("pl")
+                .includeAdult(false)
+                .withGenres(getSelectedCategoriesIds())
+                .sortBy(sortBy)
+                .voteAverageGte(minRate)
+                .voteCountGte(minVoteCount);
+        discover.getParams().put("primary_release_date.gte", minYear + "-01-01");
+        discover.getParams().put("primary_release_date.lte", maxYear + "-12-31");
+        return discover;
     }
 
 }

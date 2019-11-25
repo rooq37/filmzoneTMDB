@@ -1,6 +1,5 @@
 package com.rooq37.filmzone.dtos;
 
-import com.rooq37.filmzone.activities.Activity;
 import org.springframework.beans.support.PagedListHolder;
 
 import java.util.AbstractMap;
@@ -16,7 +15,7 @@ public class ProfileDTO {
     private int numberOfRatedMovies;
     private int numberOfComments;
     private List<AbstractMap.SimpleEntry<MovieSimpleDTO, Integer>> ratedMovies;
-    private PagedListHolder<Activity> activities;
+    private PagedListHolder<ActivityDTO> activities;
     private List<ProfileDTO> followed;
     private List<ProfileDTO> followers;
 
@@ -76,11 +75,11 @@ public class ProfileDTO {
         this.ratedMovies = ratedMovies;
     }
 
-    public PagedListHolder<Activity> getActivities() {
+    public PagedListHolder<ActivityDTO> getActivities() {
         return activities;
     }
 
-    public void setActivities(PagedListHolder<Activity> activities) {
+    public void setActivities(PagedListHolder<ActivityDTO> activities) {
         this.activities = activities;
     }
 

@@ -1,6 +1,6 @@
 package com.rooq37.filmzone.controllers.profiles;
 
-import com.rooq37.filmzone.activities.Activity;
+import com.rooq37.filmzone.dtos.ActivityDTO;
 import com.rooq37.filmzone.dtos.ProfileDTO;
 import com.rooq37.filmzone.entities.UserEntity;
 import com.rooq37.filmzone.notifications.NotificationService;
@@ -36,7 +36,7 @@ public class ProfileController {
                                    @RequestParam(value = "desiredPageSize", defaultValue = "10") int desiredPageSize) {
 
         ProfileDTO profile = profileService.getProfile(principal.getName());
-        PagedListHolder<Activity> activities = profileService.getActivities(principal.getName(), desiredPageSize);
+        PagedListHolder<ActivityDTO> activities = profileService.getActivities(principal.getName(), desiredPageSize);
         profile.setActivities(activities);
 
         String anchor = (desiredPageSize == 10) ? "" : "#activity_" + (activities.getPageSize() - 11);
@@ -55,7 +55,7 @@ public class ProfileController {
 
         String userEmail = userService.getUserEmailById(id);
         ProfileDTO profile = profileService.getProfile(userEmail);
-        PagedListHolder<Activity> activities = profileService.getActivities(userEmail, desiredPageSize);
+        PagedListHolder<ActivityDTO> activities = profileService.getActivities(userEmail, desiredPageSize);
         profile.setActivities(activities);
 
         String anchor = (desiredPageSize == 10) ? "" : "#activity_" + (activities.getPageSize() - 11);

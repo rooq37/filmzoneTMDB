@@ -7,18 +7,18 @@ import java.io.Serializable;
 @Embeddable
 public class RatingPk implements Serializable {
 
-    @Column(name = "id_movie")
-    private Long movieId;
+    @Column(name = "id_tmdb_movie")
+    private int movieId;
     @Column(name = "id_user")
     private Long userId;
 
     public RatingPk() { }
 
-    public Long getMovieId() {
+    public int getMovieId() {
         return movieId;
     }
 
-    public void setMovieId(Long movieId) {
+    public void setMovieId(int movieId) {
         this.movieId = movieId;
     }
 

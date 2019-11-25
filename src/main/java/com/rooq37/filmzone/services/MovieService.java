@@ -3,100 +3,107 @@ package com.rooq37.filmzone.services;
 import com.rooq37.filmzone.dtos.*;
 import com.rooq37.filmzone.entities.*;
 import com.rooq37.filmzone.mappers.MovieDetailsMapper;
-import com.rooq37.filmzone.mappers.MovieEditMapper;
-import com.rooq37.filmzone.mappers.MovieSimpleMapper;
-import com.rooq37.filmzone.dtos.EditMovieDTO;
-import com.rooq37.filmzone.dtos.ImageFileDTO;
 import com.rooq37.filmzone.dtos.MoviesFilterDTO;
+import com.rooq37.filmzone.mappers.MovieSimpleMapper;
 import com.rooq37.filmzone.repositories.*;
+import info.movito.themoviedbapi.*;
+import info.movito.themoviedbapi.model.*;
+import info.movito.themoviedbapi.model.core.MovieResultsPage;
+import info.movito.themoviedbapi.model.core.ResultsPage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @Service
 public class MovieService {
 
-    @Autowired
-    private HelperService helperService;
+    private static final String API_KEY = "5a46d5b61d76c153823d4be68aed3798";
+
     @Autowired
     private CommentRepository commentRepository;
-    @Autowired
-    private MoviePersonRepository moviePersonRepository;
-    @Autowired
-    private MovieRepository movieRepository;
     @Autowired
     private RatingRepository ratingRepository;
     @Autowired
     private UserService userService;
     @Autowired
-    private MediaRepository mediaRepository;
-    @Autowired
-    private FileSaverService fileSaverService;
+    private HelperService helperService;
 
-    public MovieDetailsDTO getMovieDetailsDTO(Long movieId){
-        MovieEntity movieEntity = movieRepository.findMovieEntityById(movieId);
-        MovieDetailsMapper movieDetailsMapper = new MovieDetailsMapper(movieEntity);
-        return movieDetailsMapper.getMovieDetailsDTO();
+    public Page<CommentEntity> getMovieComments(int tmdbMovieId, Pageable pageable) {
+        return commentRepository.findAllByTmdbMovieId(tmdbMovieId, pageable);
     }
 
-    private List<MoviePersonEntity> getDirectors(MovieEntity movieEntity){
-        return moviePersonRepository.findAllByMovieAndType(movieEntity, "DIRECTOR");
+    public String getBasicImageUrl(){
+        TmdbApi api = new TmdbApi(API_KEY);
+        return api.getConfiguration().getBaseUrl() + "w500/";
     }
 
-    private List<MoviePersonEntity> getScenarioAuthors(MovieEntity movieEntity){
-        return  moviePersonRepository.findAllByMovieAndType(movieEntity, "SCENARIO");
+    public List<Genre> getAllPossibleCategories(){
+        TmdbApi api = new TmdbApi(API_KEY);
+        return api.getGenre().getGenreList("pl");
     }
 
-    private List<MoviePersonEntity> getCharacters(MovieEntity movieEntity){
-        return  moviePersonRepository.findAllByMovieAndType(movieEntity, "ACTOR");
+    private ResultsPage<MovieSimpleDTO> mapMovieResultsPageToDTOPage(MovieResultsPage movieResultsPage){
+        TmdbApi api = new TmdbApi(API_KEY);
+        ResultsPage<MovieSimpleDTO> movieSimplePage = new ResultsPage<>();
+        movieSimplePage.setResults(new ArrayList<>());
+        movieSimplePage.setPage(movieResultsPage.getPage());
+        movieSimplePage.setTotalPages(movieResultsPage.getTotalPages());
+        movieSimplePage.setTotalResults(movieResultsPage.getTotalResults());
+        for(MovieDb movie : movieResultsPage){
+            movie.setGenres(api.getMovies().getMovie(movie.getId(), "pl").getGenres());
+            MovieSimpleMapper mapper = new MovieSimpleMapper(movie);
+            movieSimplePage.getResults().add(mapper.getMovieSimpleDTO());
+        }
+        return movieSimplePage;
     }
 
-    private String getTrailerLink(MovieEntity movie){
-        List<MediaEntity> trailers = mediaRepository.findAllByMovieEqualsAndType(movie, "TRAILER");
-        return !trailers.isEmpty() ? trailers.get(0).getValue() : "";
+    public ResultsPage<MovieSimpleDTO> getMovieResultsPageByName(String name, int pageNumber){
+        TmdbApi api = new TmdbApi(API_KEY);
+        TmdbSearch search = api.getSearch();
+        MovieResultsPage movieResultsPage = search.searchMovie(name, null, "pl", false, pageNumber);
+        return mapMovieResultsPageToDTOPage(movieResultsPage);
     }
 
-    public Page<CommentEntity> getMovieComments(Long id, Pageable pageable) {
-        MovieEntity movie = movieRepository.findById(id).get();
-        Pageable paging = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), pageable.getSort());
-
-        return commentRepository.findAllByMovie(movie, paging);
+    public ResultsPage<MovieSimpleDTO> getMovieResultsPage(MoviesFilterDTO moviesFilterDTO, int pageNumber){
+        TmdbApi api = new TmdbApi(API_KEY);
+        TmdbDiscover discover = api.getDiscover();
+        MovieResultsPage movieResultsPage = discover.getDiscover(moviesFilterDTO.getDiscover().page(pageNumber));
+        return mapMovieResultsPageToDTOPage(movieResultsPage);
     }
 
-    public Page<MovieSimpleDTO> getMovieSimplePage(Pageable pageable){
-        Page<MovieEntity> movieEntityPage = movieRepository.findAll(pageable);
-
-        return movieEntityPage.map(movieEntity -> {
-            MovieSimpleMapper mapper = new MovieSimpleMapper(movieEntity);
-            return mapper.getMovieSimpleDTO();
-        });
+    public MovieDetailsDTO getMovieDetails(int tmdbId){
+        TmdbApi api = new TmdbApi(API_KEY);
+        TmdbMovies movies = api.getMovies();
+        MovieDb moviePL = movies.getMovie(tmdbId, "pl", TmdbMovies.MovieMethod.credits, TmdbMovies.MovieMethod.images, TmdbMovies.MovieMethod.videos);
+        MovieDb movieUNIVERSAL = movies.getMovie(tmdbId, "null", TmdbMovies.MovieMethod.images);
+        MovieDb movieEN = movies.getMovie(tmdbId, "en", TmdbMovies.MovieMethod.videos);
+        MovieImages backdrops = new MovieImages();
+        backdrops.setBackdrops(movieUNIVERSAL.getImages(ArtworkType.BACKDROP));
+        moviePL.setImages(backdrops);
+        moviePL.getVideos().addAll(movieEN.getVideos());
+        MovieDetailsMapper mdp = new MovieDetailsMapper(moviePL);
+        MovieDetailsDTO dto = mdp.getMovieDetailsDTO();
+        dto.setFzVoteAvg(helperService.getFzVoteAvg(tmdbId));
+        dto.setFzVoteCount(helperService.getFzVoteCount(tmdbId));
+        return dto;
     }
 
-    public Page<MovieSimpleDTO> getMovieSimplePage(Pageable pageable, MoviesFilterDTO moviesFilter){
-        Page<MovieEntity> movieEntityPage = movieRepository.findAll(moviesFilter.movieMatchesFilter(), pageable);
-
-        return movieEntityPage.map(movieEntity -> {
-            MovieSimpleMapper mapper = new MovieSimpleMapper(movieEntity);
-            return mapper.getMovieSimpleDTO();
-        });
-    }
-
-    public SingleUserRatingDTO getMovieRatingByUser(Long movieId, String userEmail){
-        RatingEntity userRating = ratingRepository.findByUser_EmailAndMovie_Id(userEmail, movieId);
+    public SingleUserRatingDTO getMovieRatingByUser(int movieId, String userEmail){
+        RatingEntity userRating = ratingRepository.findByUser_EmailAndTmdbMovieId(userEmail, movieId);
         return (userRating != null) ?
                 new SingleUserRatingDTO(true, userRating.getValue()) : new SingleUserRatingDTO(false);
     }
 
-    public void rateMovie(Long movieId, String userEmail, int newRating){
-        RatingEntity userRating = ratingRepository.findByUser_EmailAndMovie_Id(userEmail, movieId);
+    public void rateMovie(int movieId, String userEmail, int newRating){
+        RatingEntity userRating = ratingRepository.findByUser_EmailAndTmdbMovieId(userEmail, movieId);
         if(userRating == null){
             userRating = new RatingEntity();
-            userRating.setMovie(movieRepository.findMovieEntityById(movieId));
+            userRating.setTmdbMovieId(movieId);
             userRating.setUser(userService.getUserByEmail(userEmail));
         }
         userRating.setDate(new Date());
@@ -104,9 +111,9 @@ public class MovieService {
         ratingRepository.save(userRating);
     }
 
-    public void addCommentToMovie(Long movieId, String userEmail, String content){
+    public void addCommentToMovie(int movieId, String userEmail, String content){
         CommentEntity commentEntity = new CommentEntity();
-        commentEntity.setMovie(movieRepository.findMovieEntityById(movieId));
+        commentEntity.setTmdbMovieId(movieId);
         commentEntity.setUser(userService.getUserByEmail(userEmail));
         commentEntity.setContent(content);
         commentEntity.setDate(new Date());
@@ -116,70 +123,6 @@ public class MovieService {
     @Transactional
     public void removeComment(Long commentId){
         commentRepository.deleteById(commentId);
-    }
-
-    public EditMovieDTO getEditMovieForm(Long movieId){
-        MovieEntity movie = movieRepository.findById(movieId).get();
-        MovieEditMapper mapper = new MovieEditMapper(movie);
-        return mapper.getEditMovieDTO();
-    }
-
-    @Transactional
-    void changeCover(MovieEntity movie, ImageFileDTO newCover){
-        if(!newCover.isEmpty()){
-            MediaEntity oldCover = mediaRepository.findByMovieAndType(movie, "COVER");
-            try {
-                fileSaverService.saveMediaEntity(newCover, movie, "COVER");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if(oldCover != null) fileSaverService.removeMediaEntity(oldCover.getValue());
-        }
-    }
-
-    @Transactional
-    void changeTrailer(MovieEntity movie, String trailerLink){
-        if(!trailerLink.isEmpty()){
-            MediaEntity trailer = mediaRepository.findByMovieAndType(movie, "TRAILER");
-            if(trailer == null) trailer = new MediaEntity();
-            trailer.setMovie(movie);
-            trailer.setValue(trailerLink);
-            trailer.setType("TRAILER");
-            trailer.setAuthor("YouTube");
-            trailer.setDate(new Date());
-            mediaRepository.save(trailer);
-        }
-    }
-
-    @Transactional
-    void removeOldPictures(List<ImageDTO> currentImageDTOS, List<String> oldPictures){
-        for(ImageDTO currImg : currentImageDTOS){
-            if(!oldPictures.contains(currImg.getSource())){
-                fileSaverService.removeMediaEntity(currImg.getSource());
-            }
-        }
-    }
-
-    public MovieEntity saveMovie(EditMovieDTO movieForm, ImageFileDTO cover, List<ImageFileDTO> pictures, List<String> oldPictures){
-        MovieEntity movie = (movieForm.getId() == null) ? new MovieEntity() : movieRepository.findById(movieForm.getId()).get();
-        movie.setTitle(movieForm.getTitle());
-        movie.setDescription(movieForm.getDescription());
-        movie.setDuration(movieForm.getDuration());
-        movie.setYear(movieForm.getProductionYear());
-        movie = movieRepository.save(movie);
-        helperService.saveMoviePersonEntities(movie, movieForm.getDirectors(), movieForm.getScenario(), movieForm.getCharacters());
-        helperService.saveCategoryEntities(movie, movieForm.getCategories());
-        helperService.saveCountryEntities(movie, movieForm.getCountries());
-        changeCover(movie, cover);
-        changeTrailer(movie, movieForm.getTrailerUrl());
-        try {
-            removeOldPictures(helperService.getPictures(movie), oldPictures);
-            for(ImageFileDTO image : pictures) fileSaverService.saveMediaEntity(image, movie, "PICTURE");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return movie;
     }
 
 }

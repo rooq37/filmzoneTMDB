@@ -16,7 +16,7 @@
                         <h1 id="moviePage:movieTitle" class="text-dark" th:text="${movieDetailsDTO.getTitle()}">Title</h1>
                     </div>
                     <div class="col">
-                        <h1 class="text-right"><span class="text-warning">★</span><span id="moviePage:movieRating" class="text-dark" th:text="${movieDetailsDTO.getAvgUsersRating()}">Rating</span></h1>
+                        <h1 class="text-right"><span class="text-warning">★</span><span id="moviePage:movieRating" class="text-dark" title="Średnia ocen TMDB" th:text="${movieDetailsDTO.getTmdbVoteAvg()}">Rating</span></h1>
                     </div>
                 </div>
                 <h5 class="text-muted">
@@ -28,7 +28,7 @@
                 <hr class="my-4">
                 <ul>
                     <li>
-                        <span th:text="'Rok produkcji: ' + ${movieDetailsDTO.getYear()}">Year</span>
+                        <span th:text="'Rok produkcji: ' + ${movieDetailsDTO.getReleaseDate()}">Release date</span>
                     </li>
                     <li th:if="${movieDetailsDTO.getDuration() != 0}">
                         <span th:text="'Czas trwania: ' + ${movieDetailsDTO.getDuration() + ' min'}">Duration</span>
@@ -45,24 +45,22 @@
                 </ul>
             </div>
         </div>
-        <div sec:authorize="hasRole('ROLE_ADMIN')" class="row">
-            <div class="col">
-                <span></span>
-            </div>
-            <div class="col-md-auto">
-                <a th:href="@{/editMovie/{id} (id=${movieDetailsDTO.getMovieId()})}" class="btn btn-dark">Edytuj</a>
-            </div>
-        </div>
     </div>
 
     <div class="jumbotron pb-3 pt-4">
-        <h4 th:text="'Średnia ocena: ' + ${movieDetailsDTO.getAvgUsersRating()}">Average users rating</h4>
+        <h4>Oceny użytkowników</h4>
         <ul>
             <li>
-                <span id="moviePage:numberOfRatings" th:text="${movieDetailsDTO.getNumberOfPeopleWhoWatched()} + ' użytkowników oceniło ten film'">watched</span>
+                <span th:text="'Średnia ocena TMDB: ' + ${movieDetailsDTO.getTmdbVoteAvg()}">Tmdb vote average</span>
             </li>
             <li>
-                <span id="moviePage:numberOfPeopleWhoWantToWatch" th:text="${movieDetailsDTO.getNumberOfPeopleWhoWantToWatch()} + ' chce go zobaczyć'">want to see</span>
+                <span th:text="'Ocen w TMDB: ' + ${movieDetailsDTO.getTmdbVoteCount()}">Tmdb vote count</span>
+            </li>
+            <li>
+                <span th:text="'Średnia ocena Filmzone: ' + ${movieDetailsDTO.getFzVoteAvg()}">Filmzone vote average</span>
+            </li>
+            <li>
+                <span th:text="'Ocen w Filmzone: ' + ${movieDetailsDTO.getFzVoteCount()}">Filmzone vote count</span>
             </li>
         </ul>
         <div sec:authorize="isAuthenticated()">
@@ -70,11 +68,11 @@
             <form th:action="@{/rateMovie}" method="post">
                 <input type="hidden" th:name="rating_movieId" th:value="${movieDetailsDTO.getMovieId()}" />
                 <div class="btn-toolbar" style="justify-content: center; display: flex;" role="toolbar">
-                    <div class="btn-group mr-2" data-toggle="tooltip" data-placement="bottom" th:with="intList=${ {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10} }"
+                    <div class="btn-group mr-2" data-toggle="tooltip" data-placement="bottom" th:with="intList=${ {1, 2, 3, 4, 5, 6, 7, 8, 9, 10} }"
                          th:title="${userRating.getTooltip()}" role="group" aria-label="Rating group">
                         <div class="btn btn-outline-dark bg-dark text-white" th:text="${userRating.getHeader()}">Movie rating</div>
                         <button type="submit" th:each="i : ${intList}" th:classappend="${userRating.getRate() == i}? text-warning : text-white" class="btn btn-outline-dark bg-dark"
-                                th:name="rating" th:text="${i != 0} ? |${i}| : 'Chcę obejrzeć'" th:value="|${i}|">1</button>
+                                th:name="rating" th:text="|${i}|" th:value="|${i}|">1</button>
                     </div>
                 </div>
             </form>
@@ -148,10 +146,10 @@
         <h4>Obsada</h4>
         <div th:each="character : ${movieDetailsDTO.getCharacters()}" class="row">
             <div class="col">
-                <p class="text-right font-weight-bold" th:text="${character.getActor().getName()} + ' ' + ${character.getActor().getSurname()}">Actor name</p>
+                <p class="text-right font-weight-bold" th:text="${character.getName()}">Actor name</p>
             </div>
             <div class="col">
-                <p class="text-left" th:text="${character.getRole()}">Don Vito Corleone</p>
+                <p class="text-left" th:text="${character.getCharacter()}">Character</p>
             </div>
         </div>
     </div>
