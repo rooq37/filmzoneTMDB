@@ -24,7 +24,6 @@ public class FavouriteListService {
     private FavouriteListRepository favouriteListRepository;
     @Autowired
     private UserService userService;
-
     public List<String> getUserAllLists(String userEmail){
         return favouriteListRepository.findFavouriteListEntitiesByUser_Email(userEmail)
                 .stream().map(FavouriteListEntity::getName).collect(Collectors.toList());
@@ -43,10 +42,11 @@ public class FavouriteListService {
         return null;
     }
 
+    @Transactional
     public void addMovieToFavouriteList(int tmdbMovieId, String userEmail, String listName){
         FavouriteListEntity fle = favouriteListRepository.findFavouriteListEntityByNameAndUser_Email(listName, userEmail);
         fle.getTmdbMovieIds().add(tmdbMovieId);
-        favouriteListRepository.save(fle);
+        favouriteListRepository.saveAndFlush(fle);
     }
 
     public MyMoviesDTO getMyMovies(int movieId, String userEmail){
@@ -69,6 +69,8 @@ public class FavouriteListService {
         List<MovieSimpleDTO> list = (fle != null) ? fle.getTmdbMovieIds().stream().map(movieId ->
                 new MovieSimpleMapper(movies.getMovie(movieId, "pl")).getMovieSimpleDTO()).collect(Collectors.toList()) : Collections.emptyList();
 
+        list.sort(Comparator.comparingInt(MovieSimpleDTO::getMovieId));
+
         PagedListHolder<MovieSimpleDTO> pagedListHolder = new PagedListHolder<>(list);
         pagedListHolder.setPageSize(pageSize);
         pagedListHolder.setPage(currentPage);
@@ -81,7 +83,7 @@ public class FavouriteListService {
         FavouriteListEntity fle = favouriteListRepository.findFavouriteListEntityByNameAndUser_Email(listName, userEmail);
         if(fle != null){
             fle.getTmdbMovieIds().remove(new Integer(movieId));
-            favouriteListRepository.save(fle);
+            favouriteListRepository.saveAndFlush(fle);
             TmdbApi api = new TmdbApi(API_KEY);
             TmdbMovies movies = api.getMovies();
             return "Pomyślnie usunięto film o nazwie " + movies.getMovie(movieId, "pl").getTitle() + " z listy o nazwie " + listName + ".";

@@ -1,8 +1,8 @@
 package com.rooq37.filmzone.entities;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "FAVOURITE_LIST")
@@ -19,8 +19,11 @@ public class FavouriteListEntity {
     @JoinColumn(name = "id_author")
     private UserEntity user;
 
-    @ElementCollection
-    private List<Integer> tmdbMovieIds = new ArrayList<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Integer> tmdbMovieIds = new HashSet<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<Integer> recommendationIds = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -46,12 +49,20 @@ public class FavouriteListEntity {
         this.user = user;
     }
 
-    public List<Integer> getTmdbMovieIds() {
+    public Set<Integer> getTmdbMovieIds() {
         return tmdbMovieIds;
     }
 
-    public void setTmdbMovieIds(List<Integer> tmdbMovieIds) {
+    public void setTmdbMovieIds(Set<Integer> tmdbMovieIds) {
         this.tmdbMovieIds = tmdbMovieIds;
+    }
+
+    public Set<Integer> getRecommendationIds() {
+        return recommendationIds;
+    }
+
+    public void setRecommendationIds(Set<Integer> recommendationIds) {
+        this.recommendationIds = recommendationIds;
     }
 
 }

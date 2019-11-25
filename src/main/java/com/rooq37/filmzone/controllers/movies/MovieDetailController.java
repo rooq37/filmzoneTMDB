@@ -4,6 +4,7 @@ import com.rooq37.filmzone.entities.CommentEntity;
 import com.rooq37.filmzone.notifications.NotificationService;
 import com.rooq37.filmzone.services.FavouriteListService;
 import com.rooq37.filmzone.services.MovieService;
+import com.rooq37.filmzone.services.RecommendationService;
 import com.rooq37.filmzone.services.ViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,8 +20,6 @@ import java.security.Principal;
 @Controller
 public class MovieDetailController {
 
-    public static final String I_WANT_TO_WATCH_LIST = "Chcę obejrzeć";
-
     @Autowired
     private MovieService movieService;
     @Autowired
@@ -29,6 +28,9 @@ public class MovieDetailController {
     private FavouriteListService favouriteListService;
     @Autowired
     private NotificationService notificationService;
+    @Autowired
+    private RecommendationService recommendationService;
+
 
     @RequestMapping(value = "/movie/{id}", method = RequestMethod.GET)
     public String displayMovie(Principal principal,
@@ -84,9 +86,11 @@ public class MovieDetailController {
                 return "redirect:/movie/" + movieId;
             }else{
                 favouriteListService.addMovieToFavouriteList(Integer.valueOf(movieId), principal.getName(), newListName);
+                recommendationService.findSimilarMovies(principal.getName(), newListName);
             }
         }else if(action.equals("add")){
             favouriteListService.addMovieToFavouriteList(Integer.valueOf(movieId), principal.getName(), selectedList);
+            recommendationService.findSimilarMovies(principal.getName(),  selectedList);
         }
 
         return "redirect:/movie/" + movieId + "#mymovies";

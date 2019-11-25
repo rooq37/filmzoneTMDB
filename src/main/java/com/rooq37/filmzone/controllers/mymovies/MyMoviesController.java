@@ -3,6 +3,7 @@ package com.rooq37.filmzone.controllers.mymovies;
 import com.rooq37.filmzone.dtos.MovieSimpleDTO;
 import com.rooq37.filmzone.notifications.NotificationService;
 import com.rooq37.filmzone.services.FavouriteListService;
+import com.rooq37.filmzone.services.RecommendationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.support.PagedListHolder;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,8 @@ public class MyMoviesController {
     private NotificationService notificationService;
     @Autowired
     private FavouriteListService favouriteListService;
+    @Autowired
+    private RecommendationService recommendationService;
 
     @RequestMapping(value = "/myMovies", method = RequestMethod.GET)
     public String displayMyMovies(Model model,
@@ -65,6 +68,7 @@ public class MyMoviesController {
                                 @RequestParam(value = "movieId") String movieId){
 
         notificationService.addInfoMessage(favouriteListService.removeMovieFromList(principal.getName(), listName, Integer.valueOf(movieId)));
+        recommendationService.findSimilarMovies(principal.getName(), listName);
         return "redirect:/myMovies?listName=" + listName;
     }
 
