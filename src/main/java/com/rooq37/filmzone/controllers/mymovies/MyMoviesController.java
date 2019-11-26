@@ -47,6 +47,7 @@ public class MyMoviesController {
         }
 
         model.addAttribute("moviesListPage", page);
+        model.addAttribute("recommendations", favouriteListService.getRecommendations(principal.getName(), listName));
         model.addAttribute("userAllLists", favouriteListService.getUserAllLists(principal.getName()));
         model.addAttribute("selectedList", listName);
         return "mymovies/myMoviesPage.html";

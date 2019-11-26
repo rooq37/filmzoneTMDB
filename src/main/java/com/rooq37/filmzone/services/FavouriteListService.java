@@ -78,6 +78,17 @@ public class FavouriteListService {
         return pagedListHolder;
     }
 
+    public List<MovieSimpleDTO> getRecommendations(String userEmail, String listName){
+        if(listName.equals("-1")) return Collections.emptyList();
+
+        TmdbApi api = new TmdbApi(API_KEY);
+        TmdbMovies movies = api.getMovies();
+
+        FavouriteListEntity fle = favouriteListRepository.findFavouriteListEntityByNameAndUser_Email(listName, userEmail);
+        return  (fle != null) ? fle.getRecommendationIds().stream().map(movieId ->
+                new MovieSimpleMapper(movies.getMovie(movieId, "pl")).getMovieSimpleDTO()).collect(Collectors.toList()) : Collections.emptyList();
+    }
+
     @Transactional
     public String removeMovieFromList(String userEmail, String listName, int movieId){
         FavouriteListEntity fle = favouriteListRepository.findFavouriteListEntityByNameAndUser_Email(listName, userEmail);

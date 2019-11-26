@@ -94,8 +94,34 @@
 
             </div>
 
-        <h2 class="mt-2">Proponowane filmy</h2>
+        <h2 class="mt-4">Proponowane filmy</h2>
         <hr class="my-4">
+        <p class="text-center" th:if="${recommendations.size() == 0}">Rekomendacje jeszcze nie zostały obliczone. Wróć za chwilę.</p>
+        <div th:if="${recommendations.size() > 0}">
+
+            <form >
+                <div class="card-deck">
+                    <div class="w-25 d-flex align-items-stretch" th:each="movie : ${recommendations}">
+                        <div class="card text-white bg-dark mt-2">
+                            <div>
+                                <img th:src="${movie.getCover().getSource()}" data-toggle="tooltip" data-placement="bottom" class="img-fluid" th:alt="${movie.getTitle()}"
+                                     th:title="'@Author: ' + ${movie.getCover().getAuthor()}" style="height:250px; width:100%;">
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <h7>
+                                    <a class="text-white" th:href="@{movie/{id} (id=${movie.getMovieId()})}" th:text="${movie.getTitle()}">Title</a>
+                                    <button th:attr="onclick='confirmMovieFromListRemoval(\'' + ${movie.getTitle()} +'\',\''+ ${movie.getMovieId()} + '\',\''+ ${selectedList} + '\');'"
+                                            type="button" class="close text-danger mt-auto text-right" aria-label="Remove" data-toggle="tooltip" data-placement="bottom" title="Usuń z listy">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </h7>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </div>
 
 
     </div>

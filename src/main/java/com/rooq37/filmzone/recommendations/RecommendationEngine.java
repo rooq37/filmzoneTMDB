@@ -22,9 +22,6 @@ public class RecommendationEngine {
         this.similarMovies = similarMovies;
         this.numberOfMovies = numberOfMovies;
         mostSimilar = new HashMap<>();
-        for(MovieDb mov : moviesFromList){
-            System.out.println(mov.getTitle());
-        }
     }
 
     private List<String> getMostPopularSublistFromMap(Map<String, Integer> map, int maxSize){
@@ -107,11 +104,11 @@ public class RecommendationEngine {
         Set<Integer> recommendations = new HashSet<>();
         mostSimilar = mostSimilar.entrySet().stream().sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
-        int i = 0;
+        List<String> titles = moviesFromList.stream().map(MovieDb::getTitle).collect(Collectors.toList());
         for(Map.Entry<String, Double> entry : mostSimilar.entrySet()){
-            if(i++ < numberOfMovies){
+            if(recommendations.size() < numberOfMovies){
                 for(MovieDb similar : similarMovies){
-                    if(similar.getTitle().equals(entry.getKey())){
+                    if(similar.getTitle().equals(entry.getKey()) && !titles.contains(similar.getTitle())){
                         recommendations.add(similar.getId());
                     }
                 }
