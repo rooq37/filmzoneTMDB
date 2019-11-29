@@ -6,7 +6,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 public abstract class BasePage {
 
     private static final String PROPERTY_KEY = "webdriver.gecko.driver";
-    private static final String PROPERTY_VALUE = "C:/Projekty/Java/filmzone/lib/geckodriver-v0.24.0-win64/geckodriver.exe";
+    private static final String PROPERTY_VALUE = "C:/Projekty/Java/filmzoneTMDB/lib/geckodriver-v0.24.0-win64/geckodriver.exe";
 
     private static WebDriver driver;
 

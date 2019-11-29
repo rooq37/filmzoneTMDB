@@ -26,7 +26,7 @@ public class Movie {
                 assertThat(moviePage.getCategories()).describedAs("Kategorie").contains(expectedText);
                 break;
             case "Opis":
-                assertThat(moviePage.getDescription()).describedAs("Opis").isEqualTo(expectedText);
+                assertThat(moviePage.getDescription()).describedAs("Opis").contains(expectedText);
                 break;
             case "Rok produkcji":
             case "Czas trwania":

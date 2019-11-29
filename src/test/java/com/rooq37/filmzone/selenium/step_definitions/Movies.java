@@ -26,9 +26,6 @@ public class Movies extends IntegrationTest {
             case "Lata produkcji":
                 moviesPage.enterInYearsRange(min, max);
                 break;
-            case "Ocena":
-                moviesPage.enterInRatingRange(min, max);
-                break;
 
             default:
                 throw new IllegalArgumentException("Nie ma takiego filtra jak " + rangeName + " na stronie Filmy");
@@ -54,7 +51,7 @@ public class Movies extends IntegrationTest {
 
     @Then("^Sprawdź czy lista wyników zawiera film \"([^\"]*)\"$")
     public void checkIfResultsListContainsMovie(String movieName) {
-        assertThat(moviesPage.getMovieTitlesResultList()).describedAs("Tytułu filmów z listy wyników").contains(movieName);
+        assertThat(moviesPage.getMovieTitlesResultList()).describedAs("Tytuły filmów z listy wyników").contains(movieName);
     }
 
     @When("^Zaznacz w filtrze \"([^\"]*)\" opcję \"([^\"]*)\"$")
