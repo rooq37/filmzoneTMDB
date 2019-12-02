@@ -14,6 +14,11 @@ public class NavPage extends BasePage{
     private static final String xpathMenuOption = "//nav//a[@class='nav-link' and text()='MENU_OPTION']";
     private static final By selectorSearchInput = By.xpath("//input[@placeholder='Szukaj filmu']");
     private static final By selectorSearchButton = By.xpath("//button[@class='btn btn-outline-light my-2 my-sm-0' and text()='Szukaj']");
+    private static final By selectorRegisterButton = By.xpath("//button[@class='btn btn-outline-warning ml-2 my-2 my-sm-0' and text()='Rejestracja']");
+    private static final By selectorLoginButton = By.xpath("//button[@class='btn btn-outline-warning ml-2 my-2 my-sm-0' and text()='Logowanie']");
+    private static final By selectorNotificationSuccess = By.xpath("//div[contains(@class,'alert alert-success alert-dismissible')]");
+    private static final By selectorUserOptions = By.id("userOptions");
+    private static final String xpathUserMenuOption = "//div//a[@class='dropdown-item' and text()='MENU_OPTION']";
 
 
     public List<String> getMenuOptions(){
@@ -29,10 +34,35 @@ public class NavPage extends BasePage{
         getDriver().findElement(By.xpath(xpath)).click();
     }
 
+    public void goToRegisterPage(){
+        getDriver().findElement(selectorRegisterButton).click();
+    }
+
+    public void goToLoginPage(){
+        getDriver().findElement(selectorLoginButton).click();
+    }
+
     public void searchMovieByName(String movieName){
         getDriver().findElement(selectorSearchInput).clear();
         getDriver().findElement(selectorSearchInput).sendKeys(movieName);
         getDriver().findElement(selectorSearchButton).click();
+    }
+
+    public String getTextFromSuccessNotificationAlert(){
+        return getDriver().findElement(selectorNotificationSuccess).getText();
+    }
+
+    public String getLoggedUserName(){
+        return getDriver().findElement(selectorUserOptions).getText();
+    }
+
+    public void expandUserOptionsMenu(){
+        getDriver().findElement(selectorUserOptions).click();
+    }
+
+    public void selectOptionFromUserOptionsMenu(String option){
+        String xpath = xpathUserMenuOption.replaceAll("MENU_OPTION", option);
+        getDriver().findElement(By.xpath(xpath)).click();
     }
 
 }

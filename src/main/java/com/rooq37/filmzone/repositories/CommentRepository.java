@@ -13,3 +13,5 @@ public interface CommentRepository
     Page<CommentEntity> findAllByTmdbMovieId(int tmdbMovieId, Pageable pageable);
 
 }
+
+

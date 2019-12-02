@@ -26,11 +26,6 @@ public class MovieDetailController {
     private ViewService viewService;
     @Autowired
     private FavouriteListService favouriteListService;
-    @Autowired
-    private NotificationService notificationService;
-    @Autowired
-    private RecommendationService recommendationService;
-
 
     @RequestMapping(value = "/movie/{id}", method = RequestMethod.GET)
     public String displayMovie(Principal principal,
@@ -56,6 +51,12 @@ public class MovieDetailController {
 
         return "movies/movieDetailPage";
     }
+
+
+    @Autowired
+    private NotificationService notificationService;
+    @Autowired
+    private RecommendationService recommendationService;
 
     @RequestMapping(value = "/rateMovie", method = RequestMethod.POST)
     public String rateMovie(Principal principal, @RequestParam(value = "rating") String rating, @RequestParam(value = "rating_movieId") String movieId){

@@ -48,6 +48,7 @@
     </div>
 
     <div class="jumbotron pb-3 pt-4">
+
         <h4>Oceny użytkowników</h4>
         <ul>
             <li>
@@ -63,6 +64,7 @@
                 <span th:text="'Ocen w Filmzone: ' + ${movieDetailsDTO.getFzVoteCount()}">Filmzone vote count</span>
             </li>
         </ul>
+
         <div sec:authorize="isAuthenticated()">
             <hr class="my-4">
             <form th:action="@{/rateMovie}" method="post">

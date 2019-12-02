@@ -1,6 +1,7 @@
 package com.rooq37.filmzone.selenium.pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 
 import java.util.ArrayList;
@@ -20,6 +21,17 @@ public class MoviePage extends BasePage {
 
     private static final By selectorActors = By.xpath("//h4[text()='Obsada']/ancestor::div//div[@class='col'][1]/p");
     private static final By selectorCharacters = By.xpath("//h4[text()='Obsada']/ancestor::div//div[@class='col'][2]/p");
+
+    private static final By selectorNewCommentArea = By.xpath("//textarea[@name='comment_content']");
+    private static final By selectorAddCommentButton = By.xpath("//button[text()='Dodaj komentarz']");
+
+    private static final String xpathComment = "//div[@class='card border-dark mb-2' and contains(.,'USERNAME') and contains(.,'CONTENT')]";
+
+    private static final String xpathRating = "//button[@name='rating' and @value='RATING']";
+
+    private static final By selectorNewListInput = By.xpath("//input[@name='newListName']");
+    private static final By selectorCreateNewListButon = By.xpath("//button[@value='create' and text()='Utwórz']");
+    private static final By selectorLists = By.xpath("//div[@id='mymovies']//ul");
 
     public String getTitle(){
         return getDriver().findElement(selectorTitle).getText();
@@ -59,5 +71,44 @@ public class MoviePage extends BasePage {
             resultList.add(actors.get(i) + " - " + characters.get(i));
         return resultList;
     }
+
+    public void enterInNewCommentArea(String text){
+        getDriver().findElement(selectorNewCommentArea).clear();
+        getDriver().findElement(selectorNewCommentArea).sendKeys(text);
+    }
+
+    public void clickAddCommentButton(){
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
+        js.executeScript("arguments[0].scrollIntoView();", getDriver().findElement(selectorAddCommentButton));
+        getDriver().findElement(selectorAddCommentButton).click();
+    }
+
+    public boolean checkIfCommentExists(String username, String content){
+        String xpath = xpathComment.replaceAll("USERNAME", username);
+        xpath = xpath.replaceAll("CONTENT", content);
+        return getDriver().findElements(By.xpath(xpath)).size() > 0;
+    }
+
+    public void clickRating(String rating){
+        String xpath = xpathRating.replaceAll("RATING", rating);
+        By selector = By.xpath(xpath);
+        getDriver().findElement(selector).click();
+    }
+
+    public void enterNameOfNewList(String name){
+        getDriver().findElement(selectorNewListInput).clear();
+        getDriver().findElement(selectorNewListInput).sendKeys(name);
+    }
+
+    public void clickCreateNewListButton(){
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
+        js.executeScript("window.scrollBy(0,500)");
+        getDriver().findElement(selectorCreateNewListButon).click();
+    }
+
+    public String getListNames(){
+        return getDriver().findElement(selectorLists).getText();
+    }
+
 
 }

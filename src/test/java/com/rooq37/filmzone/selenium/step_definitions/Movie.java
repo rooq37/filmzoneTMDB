@@ -2,6 +2,7 @@ package com.rooq37.filmzone.selenium.step_definitions;
 
 import com.rooq37.filmzone.selenium.pages.MoviePage;
 import cucumber.api.java.en.Then;
+import cucumber.api.java.en.When;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -48,6 +49,33 @@ public class Movie {
             default:
                 throw new IllegalArgumentException("Nie ma takiego pola jak " + fieldName + "na stronie Film.");
         }
+    }
+
+    @When("^Dodaj nowy komentarz o treści \"([^\"]*)\"$")
+    public void addNewComment(String content) {
+        moviePage.enterInNewCommentArea(content);
+        moviePage.clickAddCommentButton();
+    }
+
+    @Then("^Sprawdź czy lista komentarzy zawiera komentarz użytkownika \"([^\"]*)\" o treści \"([^\"]*)\"$")
+    public void checkIfListOfCommentsContainsComment(String username, String content) {
+        assertThat(moviePage.checkIfCommentExists(username, content)).isTrue();
+    }
+
+    @When("^Oceń film na ocenę \"([^\"]*)\"$")
+    public void rateMovie(String rating) {
+        moviePage.clickRating(rating);
+    }
+
+    @When("^Dodaj film do nowej listy o nazwie \"([^\"]*)\"$")
+    public void addMovieToNewList(String listName) {
+        moviePage.enterNameOfNewList(listName);
+        moviePage.clickCreateNewListButton();
+    }
+
+    @Then("^Sprawdź czy film znajduje się na liście \"([^\"]*)\"$")
+    public void checkIfMovieIsOnTheList(String listName) {
+        assertThat(moviePage.getListNames()).describedAs("Listy na których znajduje się film").contains(listName);
     }
 
 }

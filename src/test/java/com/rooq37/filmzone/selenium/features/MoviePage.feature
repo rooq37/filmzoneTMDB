@@ -23,3 +23,50 @@ Feature: Film
     And Sprawdź czy pole "Obsada" zawiera tekst "James Caan - Santino 'Sonny' Corleone"
     And Sprawdź czy pole "Obsada" zawiera tekst "Richard S. Castellano - Pete Clemenza"
     And Sprawdź czy pole "Obsada" zawiera tekst "Robert Duvall - Tom Hagen"
+
+  @Komentarze
+  Scenario: Dodaj nowy komentarz
+    Given Otwórz stronę główną
+    When Idź do opcji menu "Logowanie"
+    And Wpisz w pole "Adres email" wartość "user@email.pl" na stronie Logowanie
+    And Wpisz w pole "Hasło" wartość "pass" na stronie Logowanie
+    And Kliknij przycisk "Zaloguj się" na stronie Logowanie
+    Then Sprawdź czy użytkownik o nazwie "user@email.pl" jest zalogowany
+    When Wpisz w wyszukiwarkę na pasku tytuł "Ojciec chrzestny" i kliknij Szukaj
+    Then Sprawdź czy lista wyników zawiera film "Ojciec Chrzestny (1972)"
+    When Otwórz widok szczegółowy filmu o tytule "Ojciec Chrzestny (1972)"
+    Then Sprawdź czy strona Filmy została wyświetlona
+    When Dodaj nowy komentarz o treści "Wspaniały film"
+    Then Sprawdź czy lista komentarzy zawiera komentarz użytkownika "user" o treści "Wspaniały film"
+
+  @Oceny
+  Scenario: Oceń film
+    Given Otwórz stronę główną
+    When Idź do opcji menu "Logowanie"
+    And Wpisz w pole "Adres email" wartość "user@email.pl" na stronie Logowanie
+    And Wpisz w pole "Hasło" wartość "pass" na stronie Logowanie
+    And Kliknij przycisk "Zaloguj się" na stronie Logowanie
+    Then Sprawdź czy użytkownik o nazwie "user@email.pl" jest zalogowany
+    When Wpisz w wyszukiwarkę na pasku tytuł "Ojciec chrzestny" i kliknij Szukaj
+    Then Sprawdź czy lista wyników zawiera film "Ojciec Chrzestny (1972)"
+    When Otwórz widok szczegółowy filmu o tytule "Ojciec Chrzestny (1972)"
+    Then Sprawdź czy strona Filmy została wyświetlona
+    When Oceń film na ocenę "8"
+    And Idź do opcji z menu użytkownika "Mój profil"
+    Then Sprawdź czy na liście ocenionych filmów znajduje się film "Ojciec Chrzestny"
+    And Sprawdź czy na liście ocenionych filmów "Ojciec Chrzestny" otrzymał ocenę "8"
+
+  @Listy
+  Scenario: Dodaj film do listy
+    Given Otwórz stronę główną
+    When Idź do opcji menu "Logowanie"
+    And Wpisz w pole "Adres email" wartość "user@email.pl" na stronie Logowanie
+    And Wpisz w pole "Hasło" wartość "pass" na stronie Logowanie
+    And Kliknij przycisk "Zaloguj się" na stronie Logowanie
+    Then Sprawdź czy użytkownik o nazwie "user@email.pl" jest zalogowany
+    When Wpisz w wyszukiwarkę na pasku tytuł "Ojciec chrzestny" i kliknij Szukaj
+    Then Sprawdź czy lista wyników zawiera film "Ojciec Chrzestny (1972)"
+    When Otwórz widok szczegółowy filmu o tytule "Ojciec Chrzestny (1972)"
+    Then Sprawdź czy strona Filmy została wyświetlona
+    When Dodaj film do nowej listy o nazwie "Klasyka"
+    Then Sprawdź czy film znajduje się na liście "Klasyka"

@@ -22,10 +22,11 @@ import java.util.List;
 @Service
 public class MovieService {
 
-    private static final String API_KEY = "5a46d5b61d76c153823d4be68aed3798";
-
     @Autowired
     private CommentRepository commentRepository;
+
+    private static final String API_KEY = "5a46d5b61d76c153823d4be68aed3798";
+
     @Autowired
     private RatingRepository ratingRepository;
     @Autowired
@@ -35,6 +36,20 @@ public class MovieService {
 
     public Page<CommentEntity> getMovieComments(int tmdbMovieId, Pageable pageable) {
         return commentRepository.findAllByTmdbMovieId(tmdbMovieId, pageable);
+    }
+
+    public void addCommentToMovie(int movieId, String userEmail, String content){
+        CommentEntity commentEntity = new CommentEntity();
+        commentEntity.setTmdbMovieId(movieId);
+        commentEntity.setUser(userService.getUserByEmail(userEmail));
+        commentEntity.setContent(content);
+        commentEntity.setDate(new Date());
+        commentRepository.save(commentEntity);
+    }
+
+    @Transactional
+    public void removeComment(Long commentId){
+        commentRepository.deleteById(commentId);
     }
 
     public String getBasicImageUrl(){
@@ -109,20 +124,6 @@ public class MovieService {
         userRating.setDate(new Date());
         userRating.setValue(newRating);
         ratingRepository.save(userRating);
-    }
-
-    public void addCommentToMovie(int movieId, String userEmail, String content){
-        CommentEntity commentEntity = new CommentEntity();
-        commentEntity.setTmdbMovieId(movieId);
-        commentEntity.setUser(userService.getUserByEmail(userEmail));
-        commentEntity.setContent(content);
-        commentEntity.setDate(new Date());
-        commentRepository.save(commentEntity);
-    }
-
-    @Transactional
-    public void removeComment(Long commentId){
-        commentRepository.deleteById(commentId);
     }
 
 }
