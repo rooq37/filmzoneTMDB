@@ -91,6 +91,8 @@ public class MoviePage extends BasePage {
 
     public void clickRating(String rating){
         String xpath = xpathRating.replaceAll("RATING", rating);
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
+        js.executeScript("window.scrollBy(0,500)");
         By selector = By.xpath(xpath);
         getDriver().findElement(selector).click();
     }
